@@ -63,3 +63,29 @@ test_that(".read_inventory_data returns lazy_dt for ffi", {
   expect_s3_class(test_res <- .read_inventory_data(test_cmd, header = TRUE), "dtplyr_step_first")
   expect_false(nrow(test_res) > 0)
 })
+
+test_that(".read_inventory_data returns lazy_dt for ifn", {
+  # IFN2
+  test_file_ifn2 <- fs::path(Sys.getenv("ifn_path"), "PIESMA24.DBF")
+
+  expect_s3_class(test_res_ifn2 <- .read_inventory_data(test_file_ifn2, .ifn = TRUE), "dtplyr_step_first")
+  expect_true(nrow(test_res_ifn2) > 0)
+
+  # IFN3
+  test_file_ifn3 <- fs::path(Sys.getenv("ifn_path"), "Ifn3p24.accdb")
+
+  expect_s3_class(
+    test_res_ifn3 <- .read_inventory_data(test_file_ifn3, tables = "PCMayores", .ifn = TRUE),
+    "dtplyr_step_first"
+  )
+  expect_true(nrow(test_res_ifn3) > 0)
+
+  # IFN4
+  test_file_ifn4 <- fs::path(Sys.getenv("ifn_path"), "Ifn4_Leвn.accdb")
+
+  expect_s3_class(
+    test_res_ifn4 <- .read_inventory_data(test_file_ifn4, tables = "PCMayores", .ifn = TRUE),
+    "dtplyr_step_first"
+  )
+  expect_true(nrow(test_res_ifn4) > 0)
+})

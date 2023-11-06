@@ -1,7 +1,46 @@
-## FIA states Dict
+
+# FIA states dict -----------------------------------------------------------------------------
+
 fia_states_dictionary <- FIESTA::ref_statecd
 
-# FFI growth habit data
+# IFN provinces dictionary --------------------------------------------------------------------
+
+ifn_provinces_dictionary <- readxl::read_xls(
+  "data-raw/090471228013528a_tcm30-278472.xls", sheet = "NUTS",
+  skip = 1
+) |>
+  dplyr::select(
+    province_code = `CÓDIGO PROVINCIA INE`,
+    province_name_original = `NOMBRE PROVINCIA`,
+    ca_name_original = `NOMBRE COMUNIDAD AUTÓNOMA`
+  ) |>
+  tidyr::fill(ca_name_original, .direction = "down") |>
+  dplyr::mutate(
+    # add zeros to province code
+    province_code = as.character(province_code) |> stringr::str_pad(2, 'left', "0"),
+    # for some reason castilla y león aparece mal en el archivo original
+    ca_name_original = dplyr::if_else(
+      ca_name_original == "Datos espaciales (IFNXX_MCA)", "Castilla y León", ca_name_original
+    ),
+    # ifn4 labels, as they mixed provinces and ccaa
+    ifn4_files_labels = dplyr::case_when(
+      ca_name_original == "Principado de Asturias" ~ "Asturias",
+      ca_name_original == "Islas Baleares" ~ "Baleares",
+      ca_name_original == "Canarias" ~ "Canarias",
+      ca_name_original == "Cataluña" ~ "Cataluña",
+      ca_name_original == "Extremadura" ~ "Extremadura",
+      ca_name_original == "Región de Murcia" ~ "Murcia",
+      ca_name_original == "Comunidad Foral de Navarra" ~ "Navarra",
+      ca_name_original == "Pais Vasco" ~ "País Vasco",
+      .default = province_name_original
+    )# TODO, convert to NA_chr the missing provinces in the IFN4
+    # ifn4_files_labels = dplyr::if_else(
+    #   ifn4_files_labels %in% c()
+    # )
+  )
+
+# FFI growth habit data -----------------------------------------------------------------------
+
 # Usaremos GIFT con su paquete de R para acceder a los datos de growth form
 cd_ref_edit <- readr::read_delim(
   file = fs::path(Sys.getenv("ffi_path"), "metadonnees.csv"),
@@ -58,32 +97,12 @@ growth_form_lignified_france <- growth_form |>
   )
 
 
-# growth_form_lignified_france <- readr::read_delim("data-raw/27398.txt",
-#                        delim = "\t", escape_double = FALSE,
-#                        trim_ws = TRUE) |>
-#   tibble::tibble() |>
-#   dplyr::filter(DataName == "Plant growth form simple consolidated from GIFT") |>
-#   dplyr::rename(
-#   GrowthForm = OrigValueStr
-# ) |>
-#   dplyr::filter(
-#     AccSpeciesName %in% fr_species_cdref
-#   ) |>
-#   dplyr::filter(grepl("shrub|tree", GrowthForm)) |>
-#   dplyr::mutate(Genus = stringr::word(AccSpeciesName, 1, sep = " ")) |>
-#   dplyr::arrange(GrowthForm,AccSpeciesName) |>
-#   dplyr::group_by(GrowthForm) |>
-#   dplyr::select(
-#     AccSpeciesName,
-#     TraitID,
-#     DatasetID,
-#     GrowthForm,
-#     Genus) |>
-#   unique()
 
-# use internal data
+# use internal data ---------------------------------------------------------------------------
+
 usethis::use_data(
   fia_states_dictionary,
   growth_form_lignified_france,
+  ifn_provinces_dictionary,
   overwrite = TRUE, internal = TRUE
 )
