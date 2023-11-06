@@ -96,11 +96,21 @@ show_plots_from <- function(inventory = c("FIA", "FFI", "IFN"), folder = ".", ..
 #' \code{\link{.build_ffi_file_path}}. See there for details about the \code{grep} usage.
 #' @param ... optional arguments for \code{\link[data.table]{fread}}. Most usually fo providing
 #'   a list of columns to read with the \code{select} argument.
+#' @param .ifn logical value (default \code{FALSE}), indicating if the inventory read is the IFN.
+#'   This is needed because the IFN is in DB formats, not csv formats.
 #'
 #' @return A \code{\link[dtplyr]{lazy_dt}} object, with immutable set to TRUE (to avoid shenanigans
 #'   with caching if used)
 #' @noRd
-.read_inventory_data <- function(input, ...) {
+.read_inventory_data <- function(input, ..., .ifn = FALSE) {
+
+  # check if we are reading IFN data
+  if (isTRUE(.ifn)) {
+    res <- .read_ifn_data(input, ...) |>
+      dtplyr::lazy_dt(immutable = TRUE)
+
+    return(res)
+  }
 
   # check if special input is provided
   if (stringr::str_detect(input, "^grep")) {
