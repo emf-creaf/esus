@@ -16,23 +16,52 @@
 
   # first, if ifn3 or ifn4 we have file name and table name in a character separated by "|" but if
   # we have ifn2 we have the name of the corresponding file.
-  table <- NULL
+  table_name <- NULL
   if (stringr::str_detect(input, "\\|")) {
     file_and_table <- stringr::str_split(input, "\\|", n = 2, simplify = TRUE)
     input <- file_and_table[1]
-    table <- file_and_table[2]
+    table_name <- file_and_table[2]
   }
 
   # we need to check if dbf or accdb, and use the correct function to
   # simply read and return, the main function .read_inventory_data will take care of the rest
   file_ext <- fs::path_ext(input)
+
   res <- switch(
     file_ext,
     "DBF" = foreign::read.dbf(input),
-    "accdb" = Hmisc::mdb.get(input, tables = table)
+    "accdb" = .read_accdb_data(input, table_name)
   )
 
   return(res)
+}
+
+.read_accdb_data <- function(input, table_name) {
+
+  # first thing check the SO
+  so <- .Platform$OS.type
+
+  # unix or windows?
+  if (so == "unix") {
+    if (isFALSE(
+      .sys_cmd_warning("mdb-tables", c(
+        "x" = "{.emph mdbtools} system utility not found.",
+        "i" = "{.emph mdbtools} is needed to read Spanish inventory (IFN) data versions 3 and 4.",
+        "i" = "Please check your package manager (apt, brew, port...) to install it.",
+        "i" = "More info at https://github.com/mdbtools/mdbtools"
+      ))
+    )) {
+      cli::cli_abort("Aborting")
+    }
+
+    res <- Hmisc::mdb.get(input, tables = table_name)
+  } else {
+    res <- ODBC::odbcConnectAccess2007(input) |>
+      RODBC::sqlFetch(table_name)
+  }
+
+  return(res)
+
 }
 
 .ifn4_prov_code_translator <- function(province) {
@@ -49,7 +78,7 @@
     .l = list(province, type, version),
     .f = \(province, type, version) {
 
-      if (version = "ifn2") {
+      if (version == "ifn2") {
         file_name <- switch(
           type,
           "tree" = glue::glue("PIESMA{province}.DBF"),
@@ -63,7 +92,7 @@
         table_path <- fs::path(folder, file_name)
       }
 
-      if (version = "ifn3") {
+      if (version == "ifn3") {
         file_name <- fs::path(folder, glue::glue("Ifn3p{province}.accdb"))
         table_name <- switch(
           type,
@@ -77,7 +106,7 @@
         table_path <- glue::glue("{file_name}|{table_name}")
       }
 
-      if (version = "ifn4") {
+      if (version == "ifn4") {
 
         # this is a little trickier. We don't always have provinces so, we need to translate the
         # province code to the correct ifn4 label

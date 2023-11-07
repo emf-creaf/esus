@@ -129,14 +129,17 @@ show_plots_from <- function(inventory = c("FIA", "FFI", "IFN"), folder = ".", ..
 }
 
 
-.sys_cmd_warning <- function(cmd = "grep") {
+.sys_cmd_warning <- function(
+  cmd = "grep",
+  warn_vector = c(
+    "x" = "{.emph {cmd}} system utility not found.",
+    "i" = "In Windows, {.emph {cmd}} is part of the {.emph RTools} suite, that can be installed from the CRAN page: {.url https://cran.r-project.org/bin/windows/Rtools/}",
+    "i" = "Mac and Linux users should have {.emph {cmd}} already installed, but if it is missing, please check your package manager to install it."
+  )
+) {
   grep_path <- Sys.which(cmd)
   if (stringr::str_length(grep_path) < 4) {
-    cli::cli_warn(c(
-      "x" = "{.emph {cmd}} system utility not found.",
-      "i" = "In Windows, {.emph {cmd}} is part of the {.emph RTools} suite, that can be installed from the CRAN page: {.url https://cran.r-project.org/bin/windows/Rtools/}",
-      "i" = "Mac and Linux users should have {.emph {cmd}} already installed, but if it is missing, please check your package manager to install it."
-    ))
+    cli::cli_warn(warn_vector)
     return(invisible(FALSE))
   }
 
