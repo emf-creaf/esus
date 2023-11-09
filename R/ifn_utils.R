@@ -56,7 +56,7 @@
 
     res <- Hmisc::mdb.get(input, tables = table_name)
   } else {
-    res <- ODBC::odbcConnectAccess2007(input) |>
+    res <- RODBC::odbcConnectAccess2007(input) |>
       RODBC::sqlFetch(table_name)
   }
 
