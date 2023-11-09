@@ -1,3 +1,48 @@
+.build_ifn_input_with <- function(
+    version, provinces, filter_list, folder, .verbose, .call = rlang::caller_env()
+) {
+
+  # first, if is null filter list, create it
+  if (is.null(filter_list)) {
+    filter_list <- list("24" = c(6))
+    ## TODO
+  }
+
+  # inform the user about the amount of plots for this year
+  verbose_msg(
+    cli::cli_inform(c(
+      "Getting ready to retrieve {.strong {filter_list |> purrr::flatten() |> purrr::flatten_dbl() |> length()}} plots for {.val {version}}"
+    )), .verbose
+  )
+
+  filter_list |>
+    tibble::enframe() |>
+    tidyr::unnest(cols = value) |>
+    purrr::set_names(c("province", "plots")) |>
+    dplyr::mutate(
+      plots = as.character(plots)
+    ) |>
+    dplyr::select(province, plots) |>
+    dplyr::mutate(
+      plot_table = .build_ifn_file_path(
+        province,
+        type = "plot",
+        version,
+        folder,
+        .call = .call
+      ),
+      tree_table = .build_ifn_file_path(
+        province,
+        type = "tree",
+        version,
+        folder,
+        .call = .call
+      )
+      ## TODO add all the other tables needed
+    )
+}
+
+
 #' Read IFN data
 #'
 #' Read the different IFN db formats
@@ -81,6 +126,7 @@
       if (version == "ifn2") {
         file_name <- switch(
           type,
+          "plot" = glue::glue("DATEST{province}.DBF"),
           "tree" = glue::glue("PIESMA{province}.DBF"),
           "shrub" = glue::glue("MATORR{province}.DBF"),
           "regen" = glue::glue("PIESME{province}.DBF"),
@@ -124,6 +170,15 @@
         table_path <- glue::glue("{file_name}|{table_name}")
       }
 
+      # check file exists
+      if (!fs::file_exists(file_name)) {
+        cli::cli_warn(c(
+          "{.path {file_name}} file doesn't exists",
+          "!" = "Please check if {.path {folder}} is the correct path",
+          "i" = "Skipping {.path {file_name}}"
+        ), call = .call)
+        return(NA_character_)
+      }
       return(table_path)
     }
   )
