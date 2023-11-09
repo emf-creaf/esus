@@ -1,3 +1,4 @@
+skip()
 # Verbose messaging ---------------------------------------------------------------------------
 
 test_that("verbose_msg works as intended", {

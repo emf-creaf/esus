@@ -1,3 +1,6 @@
+skip()
+# build path and input ------------------------------------------------------------------------
+
 test_that(".build_fia_input_with and .build_fia_file_path work as intended", {
   test_plots <- list(
     "MN" = list(

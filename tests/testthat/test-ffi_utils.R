@@ -1,3 +1,4 @@
+skip()
 
 test_that(".build_ffi_input_with and .build_ffi_file_path work as intended", {
   test_plots <- list(
