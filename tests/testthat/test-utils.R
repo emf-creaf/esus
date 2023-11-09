@@ -28,7 +28,7 @@ test_that("verbose_msg works as intended", {
 })
 
 test_that(".read_inventory_data returns lazy_dt for fia", {
-  test_file <- fs::path("/data/creaf/projects/emf/international_inventories/data/fia/FIA_DATAMART_MARCH_2023/OR_PLOT.csv")
+  test_file <- fs::path(Sys.getenv("fia_path"), "OR_PLOT.csv")
   test_cmd <- glue::glue("grep -E ',INVYR,|,25,(84167|84167.0),' {test_file}")
 
   expect_s3_class(.read_inventory_data(test_file), "dtplyr_step_first")
@@ -73,18 +73,20 @@ test_that(".read_inventory_data returns lazy_dt for ifn", {
 
   # IFN3
   test_file_ifn3 <- fs::path(Sys.getenv("ifn_path"), "Ifn3p24.accdb")
+  test_input_ifn3 <- glue::glue("{test_file_ifn3}|PCMayores")
 
   expect_s3_class(
-    test_res_ifn3 <- .read_inventory_data(test_file_ifn3, tables = "PCMayores", .ifn = TRUE),
+    test_res_ifn3 <- .read_inventory_data(test_input_ifn3, .ifn = TRUE),
     "dtplyr_step_first"
   )
   expect_true(nrow(test_res_ifn3) > 0)
 
   # IFN4
   test_file_ifn4 <- fs::path(Sys.getenv("ifn_path"), "Ifn4_Leвn.accdb")
+  test_input_ifn4 <- glue::glue("{test_file_ifn4}|PCMayores")
 
   expect_s3_class(
-    test_res_ifn4 <- .read_inventory_data(test_file_ifn4, tables = "PCMayores", .ifn = TRUE),
+    test_res_ifn4 <- .read_inventory_data(test_input_ifn4, .ifn = TRUE),
     "dtplyr_step_first"
   )
   expect_true(nrow(test_res_ifn4) > 0)
