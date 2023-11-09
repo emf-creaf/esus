@@ -1,4 +1,7 @@
-skip()
+skip_if(
+  any(c(Sys.getenv("fia_path"), Sys.getenv("ffi_path"), Sys.getenv("ifn_path")) == ""),
+  "No testing data found skipping tests"
+)
 # build path and input ------------------------------------------------------------------------
 
 test_that(".build_fia_input_with and .build_fia_file_path work as intended", {

@@ -1,4 +1,7 @@
-skip()
+skip_if(
+  any(c(Sys.getenv("fia_path"), Sys.getenv("ffi_path"), Sys.getenv("ifn_path")) == ""),
+  "No testing data found skipping tests"
+)
 # Verbose messaging ---------------------------------------------------------------------------
 
 test_that("verbose_msg works as intended", {
