@@ -129,9 +129,7 @@
           "plot" = glue::glue("DATEST{province}.DBF"),
           "tree" = glue::glue("PIESMA{province}.DBF"),
           "shrub" = glue::glue("MATORR{province}.DBF"),
-          "regen" = glue::glue("PIESME{province}.DBF"),
-          "tiposp" = glue::glue("TIPOSP{province}.DBF"),
-          "tiposx" = glue::glue("TIPOSX{province}.DBF")
+          "regen" = glue::glue("PIESME{province}.DBF")
         )
 
         # return path
@@ -146,6 +144,8 @@
           "shrub" = "PCMatorral",
           "regen" = "PCRegenera",
           "plot" = "PCParcelas"
+          # "coord" = "PCDatosMap"
+          # "coord" = "Listado definitivo"
           # others needed
         )
 
@@ -164,6 +164,7 @@
           "shrub" = "PCMatorral",
           "regen" = "PCRegenera",
           "plot" = "PCParcelas"
+          # "coord" = "PCDatosMap"
           # others needed
         )
 
@@ -171,7 +172,7 @@
       }
 
       # check file exists
-      if (!fs::file_exists(file_name)) {
+      if (!fs::file_exists(table_path)) {
         cli::cli_warn(c(
           "{.path {file_name}} file doesn't exists",
           "!" = "Please check if {.path {folder}} is the correct path",
