@@ -324,7 +324,7 @@ ifn_regen_table_process <- function(regen_data, plot, province, ESPECIES) {
   if (nrow(regen_filtered_data) < 1) {
     # warn the user
     cli::cli_warn(c(
-      "Data missing for thatplot",
+      "Data missing for that plot",
       "i" = "Returning empty tibble for plot {.var {plot}}  "
     ))
     return(dplyr::tibble())
@@ -377,4 +377,253 @@ ifn_regen_table_process <- function(regen_data, plot, province, ESPECIES) {
   
   
 }
+
+
+
+ifn_plot_table_process <- function(plot_data,  plot, province){
+  
+  
+  
+  
+  get_crs <- function(Huso,COORD_SYS){
+    
+    if (Huso == 30 & COORD_SYS == "ED50"){ 
+      crs = 23030
+    }
+    
+    if (Huso == 31 & COORD_SYS == "ED50"){
+      crs =  4326
+    }
+    
+    if (Huso == 29 & COORD_SYS == "ED50" ){
+      crs = 23029
+    }
+    
+    if (Huso == 30 & COORD_SYS == "ETRS89"){
+      crs = 25830
+    }
+    
+    if (Huso == 31 & COORD_SYS == "ETRS89" ){
+      crs = 25831
+    }
+    
+    if (Huso == 29 & COORD_SYS == "ETRS89"){
+      crs = 25829
+    }
+    
+    if (Huso == 28 & COORD_SYS == "ED50"){
+      crs = 23028
+    }
+    
+    if (Huso == 28 & COORD_SYS == "WGS84"){
+      crs =32628
+    }
+    
+    return(crs)
+    
+  }
+  
+  
+  # Assertions  and checks/validations
+  files_validation <- assertthat::validate_that(
+    !any(is.na(c(plot_data)))
+    # !any(c(plot_data) == NA_character_)
+  )
+  
+  # If any file is missing abort and return an empty tibble??
+  if (is.character(files_validation)) {
+    cli::cli_warn(c(
+      "Some files can't be found",
+      "i" = "Skipping regen data for plot {.var {plot}} "
+    ))
+    
+    return(dplyr::tibble())
+  }
+  
+  # 2. col names
+  
+  
+  plot_filtered_data <- read_inventory_data(
+      plot_data,
+      select = dplyr::any_of(c(
+        "PROVINCIA", 
+        "ESTADILLO",
+        "HOJA",
+        "ANO",
+        "COORDEX",
+        "COORDEY",
+        "ALTITUD1",
+        "ALTITUD2",
+        "PENDIEN1",
+        "PENDIEN2",
+        "FRACCION1",
+        "FRACCION2",
+        "CLASUELO",
+        "ESPESOR",
+        "CLACOBER",
+        "CUBIERTA",
+        "ORIENTA1",
+        "ORIENTA2",
+        "MAXPEND1",
+        "MAXPEND2"
+      ),
+      ignore.case = TRUE),
+      #this does not seam to work:
+      colClasses = list(character = c("ESTADILLO", "PROVINCIA")),
+      header = TRUE,
+      .ifn = TRUE
+    ) |>
+    dplyr::filter(
+      ESTADILLO == plot,
+      PROVINCIA == province
+    ) |>
+    tibble::as_tibble()
+  
+
+  
+  # ## We check before continuing, because if the filter is too restrictive maybe we dont have rows
+  if (nrow(plot_filtered_data) < 1) {
+    # warn the user
+    cli::cli_warn(c(
+      "Data missing for that plot",
+      "i" = "Returning empty tibble for plot {.var {plot}}  "
+    ))
+    return(dplyr::tibble())
+  }
+  
+  ###########
+  
+  
+  plot_filtered_data <- plot_filtered_data |>
+    dplyr:::mutate(COORDEX = ifelse(grepl("[A-Za-z]", COORDEX), NA, COORDEX),
+                   COORDEY = ifelse(grepl("[A-Za-z]", COORDEY), NA, COORDEY)) %>%
+    {
+      if (any(is.na(.$COORDEY) | is.na(.$COORDEY))) {
+        cli::cli_warn(" File {.file {plot_data}} has   some errors in the coordinates (leters).These records had been substituted by NA")
+      }
+      .
+    }
+  
+  ############## 
+  
+  
+  #we add the id code   
+  info_plot <- plot_filtered_data |>
+    
+    
+    dplyr::mutate(
+      PLOT = ESTADILLO,
+      YEAR = ANO,
+      COUNTRY = "ES",
+      province_code = as.numeric(PROVINCIA),
+      ID_UNIQUE_PLOT = paste("ES", province_code,PLOT,sep = "_"),
+      ALTITUD1 = as.numeric(ALTITUD1),
+      ALTITUD2 = as.numeric(ALTITUD2),
+      ALTITUD1 = ALTITUD1*100,
+      ALTITUD2 = ALTITUD2*100,
+      COORDEX = as.numeric(COORDEX),
+      COORDEY = as.numeric(COORDEY),
+      COORDEX = 1000 * COORDEX,
+      COORDEY = 1000 * COORDEY,
+      ciclo = "IFN2",
+      Huso = case_when(
+        province_code %in% c(35, 38) ~ 28,
+        province_code %in% c(1, 7, 8, 15,17,20, 25, 26,27,28,30,32,33,36,39,43,48,2,3,4,5,6,9,10,11,12,13,14,16,18,19,21,22,23,24,29,31,
+                                34,37,40,41,42,44,45,46,47,49,50) ~ 30
+      ),
+      COORD_SYS = case_when(
+        province_code %in% c(35, 38) ~ "WGS84",
+        province_code %in% c(1, 7, 8, 15,17,20, 25, 26,27,28,30,32,33,36,39,43,48,2,3,4,5,6,9,10,11,12,13,14,16,18,19,21,22,23,24,29,31,
+                                34,37,40,41,42,44,45,46,47,49,50) ~ "ED50") 
+    ) |>
+    
+    dplyr::left_join(
+      y = ProvinciasCCAA |>
+        dplyr::select(
+          province_code = CODIGO ,
+          Provincia_nombre = Provincia,
+          Comunidad_nombre = CCAA
+        ), 
+      by = "province_code") |>
+    dplyr::rename(
+      PLOT = ESTADILLO,
+      SLOPE = MAXPEND2,
+      ELEV = ALTITUD2,
+      ASPECT = ORIENTA2)
+  
+  
+  
+  soil_info <- info_plot |>
+    
+    dplyr::select(
+      ID_UNIQUE_PLOT,
+      province_code,
+      PLOT,
+      IDPARCELA,
+      YEAR) |>
+    dplyr::mutate(
+      soil_field = list(info_plot |>
+                          dplyr::select( 
+                            ID_UNIQUE_PLOT,
+                            province_code,
+                            PLOT,
+                            IDPARCELA,
+                            CLASUELO,
+                            ESPESOR,
+                            CLACOBER,
+                            CUBIERTA))
+    ) |>
+    
+    dplyr::select(
+      ID_UNIQUE_PLOT,
+      province_code,
+      PLOT,
+      IDPARCELA,
+      YEAR,
+      soil_field
+      
+    ) |>
+    tibble::tibble()
+  
+  
+  
+  
+  info_plot <- info_plot |>
+    dplyr::mutate(
+      soils = list(soil_info),
+      
+      #linea provisional
+      crs = get_crs(info_plot$Huso, info_plot$COORD_SYS)) |>
+    
+    
+    dplyr::select(
+      
+      ID_UNIQUE_PLOT,
+      COUNTRY,
+      Comunidad_nombre,
+      Provincia_nombre,
+      province_code,
+      PLOT,
+      IDPARCELA,
+      YEAR,
+      ciclo,
+      HOJA,
+      Huso,
+      COORDEX,
+      COORDEY,
+      COORD_SYS,
+      crs,
+      PENDIEN2,
+      SLOPE,
+      ELEV,
+      ASPECT,
+      soils
+      
+    )
+  
+  
+  # Return plot with soil
+  return(info_plot)
+}
+
 
