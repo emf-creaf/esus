@@ -10,12 +10,12 @@ ifn_to_tibble <- function(
     .verbose = TRUE
 ) {
 
-ESPECIES <-.read_excel_sheet(
-  folder, 
-  "MaximaActualidad_ATOMaDic2022_dd.xlsx", 
-  "ESPECIES"
-  ) |>
-  dplyr::as_tibble()
+# ESPECIES <-.read_excel_sheet(
+#   folder, 
+#   "MaximaActualidad_ATOMaDic2022_dd.xlsx", 
+#   "ESPECIES"
+#   ) |>
+#   dplyr::as_tibble()
 }
 
 #' IFN 2 tree table process
@@ -380,7 +380,7 @@ ifn_regen_table_process <- function(regen_data, plot, province, ESPECIES) {
 
 
 
-ifn_plot_table_process <- function(plot_data,  plot, province){
+ifn_plot_table_process <- function(plot_data,  plot, province, ifn_provinces_dictionary){
   
   
   
@@ -490,9 +490,7 @@ ifn_plot_table_process <- function(plot_data,  plot, province){
     ))
     return(dplyr::tibble())
   }
-  
-  ###########
-  
+
   
   plot_filtered_data <- plot_filtered_data |>
     dplyr:::mutate(COORDEX = ifelse(grepl("[A-Za-z]", COORDEX), NA, COORDEX),
@@ -503,53 +501,52 @@ ifn_plot_table_process <- function(plot_data,  plot, province){
       }
       .
     }
-  
-  ############## 
+
   
   
   #we add the id code   
   info_plot <- plot_filtered_data |>
-    
+  
+    dplyr::rename(
+      PLOT = ESTADILLO,
+      SLOPE = MAXPEND2,
+      ELEV = ALTITUD2,
+      YEAR = ANO,
+      ASPECT = ORIENTA2) |> 
     
     dplyr::mutate(
-      PLOT = ESTADILLO,
-      YEAR = ANO,
+    
       COUNTRY = "ES",
       province_code = as.numeric(PROVINCIA),
       ID_UNIQUE_PLOT = paste("ES", province_code,PLOT,sep = "_"),
-      ALTITUD1 = as.numeric(ALTITUD1),
+      # ALTITUD1 = as.numeric(ALTITUD1),
       ALTITUD2 = as.numeric(ALTITUD2),
-      ALTITUD1 = ALTITUD1*100,
-      ALTITUD2 = ALTITUD2*100,
+      # ALTITUD1 = ALTITUD1*100,
+      ALTITUD2 = ELEV*100,
       COORDEX = as.numeric(COORDEX),
       COORDEY = as.numeric(COORDEY),
       COORDEX = 1000 * COORDEX,
       COORDEY = 1000 * COORDEY,
-      ciclo = "IFN2",
-      Huso = case_when(
+      version = "ifn2",
+      Huso = dplyr::case_when(
         province_code %in% c(35, 38) ~ 28,
         province_code %in% c(1, 7, 8, 15,17,20, 25, 26,27,28,30,32,33,36,39,43,48,2,3,4,5,6,9,10,11,12,13,14,16,18,19,21,22,23,24,29,31,
                                 34,37,40,41,42,44,45,46,47,49,50) ~ 30
       ),
-      COORD_SYS = case_when(
+      COORD_SYS = dplyr::case_when(
         province_code %in% c(35, 38) ~ "WGS84",
         province_code %in% c(1, 7, 8, 15,17,20, 25, 26,27,28,30,32,33,36,39,43,48,2,3,4,5,6,9,10,11,12,13,14,16,18,19,21,22,23,24,29,31,
                                 34,37,40,41,42,44,45,46,47,49,50) ~ "ED50") 
     ) |>
     
     dplyr::left_join(
-      y = ProvinciasCCAA |>
+      y = ifn_provinces_dictionary |>
         dplyr::select(
-          province_code = CODIGO ,
-          Provincia_nombre = Provincia,
-          Comunidad_nombre = CCAA
+          province_code = province_code,
+          province_name_original = province_name_original,
+          ca_name_original = ca_name_original
         ), 
-      by = "province_code") |>
-    dplyr::rename(
-      PLOT = ESTADILLO,
-      SLOPE = MAXPEND2,
-      ELEV = ALTITUD2,
-      ASPECT = ORIENTA2)
+      by = "province_code")
   
   
   
@@ -559,7 +556,6 @@ ifn_plot_table_process <- function(plot_data,  plot, province){
       ID_UNIQUE_PLOT,
       province_code,
       PLOT,
-      IDPARCELA,
       YEAR) |>
     dplyr::mutate(
       soil_field = list(info_plot |>
@@ -567,7 +563,6 @@ ifn_plot_table_process <- function(plot_data,  plot, province){
                             ID_UNIQUE_PLOT,
                             province_code,
                             PLOT,
-                            IDPARCELA,
                             CLASUELO,
                             ESPESOR,
                             CLACOBER,
@@ -578,7 +573,6 @@ ifn_plot_table_process <- function(plot_data,  plot, province){
       ID_UNIQUE_PLOT,
       province_code,
       PLOT,
-      IDPARCELA,
       YEAR,
       soil_field
       
@@ -596,28 +590,28 @@ ifn_plot_table_process <- function(plot_data,  plot, province){
       crs = get_crs(info_plot$Huso, info_plot$COORD_SYS)) |>
     
     
-    dplyr::select(
+    dplyr::select(any_of(c(
       
-      ID_UNIQUE_PLOT,
-      COUNTRY,
-      Comunidad_nombre,
-      Provincia_nombre,
-      province_code,
-      PLOT,
-      IDPARCELA,
-      YEAR,
-      ciclo,
-      HOJA,
-      Huso,
-      COORDEX,
-      COORDEY,
-      COORD_SYS,
-      crs,
-      PENDIEN2,
-      SLOPE,
-      ELEV,
-      ASPECT,
-      soils
+      "ID_UNIQUE_PLOT",
+      "COUNTRY",
+      "ca_name_original",
+      "province_name_original",
+      "province_code",
+      "PLOT",
+      "YEAR",
+      "version",
+      "HOJA",
+      "Huso",
+      "COORDEX",
+      "COORDEY",
+      "COORD_SYS",
+      "crs",
+      "PENDIEN2",
+      "SLOPE",
+      "ELEV",
+      "ASPECT",
+      "soils"
+    ))
       
     )
   

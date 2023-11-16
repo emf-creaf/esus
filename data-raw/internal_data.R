@@ -97,6 +97,13 @@ growth_form_lignified_france <- growth_form |>
   )
 
 
+#ifn data
+
+# IFN species data and provinces -----------------------------------------------------------------------
+
+ESPECIES <- readxl::read_excel("data-raw/MaximaActualidad_ATOMaDic2022_dd.xlsx", sheet = "ESPECIES") |>
+  dplyr::as_tibble()
+
 
 # use internal data ---------------------------------------------------------------------------
 
@@ -104,5 +111,6 @@ usethis::use_data(
   fia_states_dictionary,
   growth_form_lignified_france,
   ifn_provinces_dictionary,
+  ESPECIES,
   overwrite = TRUE, internal = TRUE
 )

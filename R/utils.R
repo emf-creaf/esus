@@ -148,12 +148,4 @@ show_plots_from <- function(inventory = c("FIA", "FFI", "IFN"), folder = ".", ..
 }
 
 
-###
 
-.read_excel_sheet <- function(folder,name_excel_ext, sheet_name) {
-  file <- readxl::read_excel(
-    fs::path(folder, name_excel_ext), sheet = sheet_name)
-  
-  # Devuelve los datos
-  return(file)
-}
