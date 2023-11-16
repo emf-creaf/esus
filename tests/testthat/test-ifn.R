@@ -8,9 +8,9 @@ test_plots <- list(
   "05" = c(61, 140, 328),
   "10" = c(2101,3374,261),
   "13" = c(51, 419,783),
-  "27" = c(90, 190,537)
-   # "91" = c(1406115, 0),
-   #  "tururu" = 3555
+  "27" = c(90, 190,537),
+   "91" = c(1406115, 0),
+    "tururu" = 3555
 )
 
 test_provinces <- names(test_plots)
@@ -82,30 +82,29 @@ test_that("ifn_tree_table_process works as intended", {
   expect_s3_class(test_error, "tbl")
   expect_true(nrow(test_error) < 1)
 
-  # # error in department name, gives an empty tibble
-  # expect_s3_class(
-  #   test_error <- suppressWarnings(ifn_tree_table_process(
-  #     test_input$tree_table[15],
-  #     test_input$plots[15],
-  #     test_input$province[15],
-  #     test_especies
-  #   )),
-  #   "tbl"
-  # )
-  # expect_true(nrow(test_error) < 1)
-  # # error in plot name, should return an empty tibble
-  # expect_s3_class(
-  #   test_error <- suppressWarnings(ifn_tree_table_process(
-  #     test_input$tree_table[13],
-  #     test_input$plots[13],
-  #     test_input$province[13],
-  #     test_especies
-  #   )),
-  #   "tbl"
-  # )
-  # expect_true(nrow(test_error) < 1)
+   # error in department name, gives an empty tibble
+   expect_s3_class(
+     test_error <- suppressWarnings(ifn_tree_table_process(
+       test_input$tree_table[15],
+       test_input$plots[15],
+       test_input$province[15],
+       test_especies
+     )),
+     "tbl"
+   )
+   expect_true(nrow(test_error) < 1)
+   # error in plot name, should return an empty tibble
+   expect_s3_class(
+     test_error <- suppressWarnings(ifn_tree_table_process(
+       test_input$tree_table[13],
+       test_input$plots[13],
+       test_input$province[13],
+       test_especies
+     )),
+     "tbl"
+   )
+   expect_true(nrow(test_error) < 1)
 })
-
 
 test_that("ifn_shrub_table_process works as intended", {
   
@@ -115,7 +114,7 @@ test_that("ifn_shrub_table_process works as intended", {
     "PLOT",
     "SP_CODE",
     "SP_NAME",
-    "HT",
+    "Hm",
     "COVER"
   )
 
@@ -149,6 +148,83 @@ test_that("ifn_shrub_table_process works as intended", {
   expect_warning(
     test_error <- ifn_shrub_table_process(
       NA_character_,
+      test_input$plots[1],
+      test_input$province[1],
+      test_especies
+    ),
+    "Some files"
+  )
+  expect_s3_class(test_error, "tbl")
+  expect_true(nrow(test_error) < 1)
+  
+  # error in department name, gives an empty tibble
+  expect_s3_class(
+    test_error <- suppressWarnings(ifn_shrub_table_process(
+      test_input$shrub_table[15],
+      test_input$plots[15],
+      test_input$province[15],
+      test_especies
+    )),
+    "tbl"
+  )
+  expect_true(nrow(test_error) < 1)
+  # error in plot name, should return an empty tibble
+  expect_s3_class(
+    test_error <- suppressWarnings(ifn_shrub_table_process(
+      test_input$shrub_table[13],
+      test_input$plots[13],
+      test_input$province[13],
+      test_especies
+    )),
+    "tbl"
+  )
+  expect_true(nrow(test_error) < 1)
+})
+
+
+test_that("ifn_regen_table_process works as intended", {
+  
+  expected_names <- c(
+    "ID_UNIQUE_PLOT",
+    "province_code",
+    "PLOT",
+    "SP_CODE",
+    "SP_NAME",
+    "NUMERO",
+    "Hm",
+    "REGENA"
+  )
+  
+  # object
+  
+  
+  expect_s3_class(
+    test_res <- ifn_regen_table_process(
+      test_input$regen_table[3],
+      test_input$plots[3],
+      test_input$province[3],
+      test_especies
+    ),
+    "tbl"
+  )
+  
+  # data integrity
+  expect_named(test_res, expected_names, ignore.order = TRUE)
+  expect_true(nrow(test_res) > 0)
+  
+  
+  expect_length(unique(test_res$PLOT), 1)
+  expect_length(unique(test_res$province_code), 1)
+  
+  
+  expect_identical(unique(test_res$PLOT)|> as.character(), test_input$plots[3] |> as.character())
+  #CHECK THIS AGAIN, BOTH SHOULD BE CHARACTER
+  expect_identical(unique(test_res$province_code) |> as.numeric(), test_input$province[3]|> as.numeric())
+  
+  # errors
+  expect_warning(
+    test_error <- ifn_regen_table_process(
+      NA_character_,
       test_input$plots[3],
       test_input$province[3],
       test_especies
@@ -158,26 +234,27 @@ test_that("ifn_shrub_table_process works as intended", {
   expect_s3_class(test_error, "tbl")
   expect_true(nrow(test_error) < 1)
   
-  # # error in department name, gives an empty tibble
-  # expect_s3_class(
-  #   test_error <- suppressWarnings(ifn_tree_table_process(
-  #     test_input$tree_table[15],
-  #     test_input$plots[15],
-  #     test_input$province[15],
-  #     test_especies
-  #   )),
-  #   "tbl"
-  # )
-  # expect_true(nrow(test_error) < 1)
-  # # error in plot name, should return an empty tibble
-  # expect_s3_class(
-  #   test_error <- suppressWarnings(ifn_tree_table_process(
-  #     test_input$tree_table[13],
-  #     test_input$plots[13],
-  #     test_input$province[13],
-  #     test_especies
-  #   )),
-  #   "tbl"
-  # )
-  # expect_true(nrow(test_error) < 1)
+  # error in department name, gives an empty tibble
+  expect_s3_class(
+    test_error <- suppressWarnings(ifn_regen_table_process(
+      test_input$regen_table[15],
+      test_input$plots[15],
+      test_input$province[15],
+      test_especies
+    )),
+    "tbl"
+  )
+  expect_true(nrow(test_error) < 1)
+  # error in plot name, should return an empty tibble
+  expect_s3_class(
+    test_error <- suppressWarnings(ifn_regen_table_process(
+      test_input$regen_table[13],
+      test_input$plots[13],
+      test_input$province[13],
+      test_especies
+    )),
+    "tbl"
+  )
+  expect_true(nrow(test_error) < 1)
 })
+

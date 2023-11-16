@@ -92,7 +92,7 @@ ifn_tree_table_process <- function(tree_data, plot, province, ESPECIES) {
   if (nrow(tree_filtered_data) < 1) {
     # warn the user
     cli::cli_warn(c(
-      "Data missing for that combination of plot and year",
+      "Data missing for that plot",
       "i" = "Returning empty tibble for plot {.var {plot}} "
     ))
     return(dplyr::tibble())
@@ -116,7 +116,7 @@ ifn_tree_table_process <- function(tree_data, plot, province, ESPECIES) {
       Dn2 = as.numeric(Dn2),
       HT = as.numeric(HT),
       SP_CODE = as.numeric(SP_CODE),
-      ID_UNIQUE_PLOT = paste("ES",province_code,plot,sep="_"),
+      ID_UNIQUE_PLOT = paste("ES",province_code,PLOT,sep="_"),
       # From mm to cm
       DIA = ((Dn1 + Dn2)/2)*0.1,
       # From m to cm
@@ -142,18 +142,17 @@ ifn_tree_table_process <- function(tree_data, plot, province, ESPECIES) {
     dplyr::arrange(SP_CODE) |> 
  
     dplyr::select(
-      dplyr::any_of(c(
-        "ID_UNIQUE_PLOT",
-        "province_code",
-        "PLOT",
-        "SP_CODE",
-        "SP_NAME",
+        ID_UNIQUE_PLOT,
+        province_code,
+        PLOT,
+        SP_CODE,
+        SP_NAME,
         #diameter in cm
-        "DIA",
+        DIA,
         #height in m
-        "HT",
-        "DENSITY"
-      ))
+        HT,
+        DENSITY
+      
     )
 
    
@@ -221,7 +220,7 @@ ifn_shrub_table_process <- function(shrub_data, plot, province, ESPECIES) {
   if (nrow(shrub_filtered_data) < 1) {
     # warn the user
     cli::cli_warn(c(
-      "Data missing for that combination of plot and year",
+      "Data missing for that plot",
       "i" = "Returning empty tibble for plot {.var {plot}}  "
     ))
     return(dplyr::tibble())
@@ -232,14 +231,15 @@ ifn_shrub_table_process <- function(shrub_data, plot, province, ESPECIES) {
   shrub <- shrub_filtered_data |>
     
     dplyr::mutate(
+      PLOT = as.character(ESTADILLO),
+      province_code = as.character(PROVINCIA),
       PLOT = ESTADILLO,
       COVER = FRACCAB,
-      HT = as.numeric(ALTUMED),
+      Hm = as.numeric(ALTUMED),
       #DM TO M
-      HT = HT *0.1 ,
+      Hm = Hm * 0.1 ,
       SP_CODE = as.numeric(ESPECIE),
-      province_code = PROVINCIA,
-      ID_UNIQUE_PLOT = paste("ES",province_code,plot,sep="_")
+      ID_UNIQUE_PLOT = paste("ES",province_code,PLOT,sep = "_")
       
     ) |>
     
@@ -250,7 +250,7 @@ ifn_shrub_table_process <- function(shrub_data, plot, province, ESPECIES) {
     
     
     dplyr::left_join(
-      y =  ESPECIES|>
+      y =  ESPECIES |>
         dplyr::rename(
           name = "Nombre especie"
         ) |> 
@@ -267,7 +267,7 @@ ifn_shrub_table_process <- function(shrub_data, plot, province, ESPECIES) {
       PLOT,
       SP_NAME,
       SP_CODE,
-      HT,
+      Hm,
       COVER
     )
   
@@ -276,3 +276,105 @@ ifn_shrub_table_process <- function(shrub_data, plot, province, ESPECIES) {
   # Return shrub
   return(shrub)
 }
+
+
+
+ifn_regen_table_process <- function(regen_data, plot, province, ESPECIES) {
+  
+  
+  # Assertions  and checks/validations
+  files_validation <- assertthat::validate_that(
+    !any(is.na(c(regen_data)))
+    # !any(c(regen_data) == NA_character_)
+  )
+  
+  # If any file is missing abort and return an empty tibble??
+  if (is.character(files_validation)) {
+    cli::cli_warn(c(
+      "Some files can't be found",
+      "i" = "Skipping regen data for plot {.var {plot}} "
+    ))
+    
+    return(dplyr::tibble())
+  }
+  
+  regen_filtered_data <- .read_inventory_data(
+    regen_data,
+    select = dplyr::any_of(c(
+      "PROVINCIA", 
+      "ESTADILLO", 
+      "ESPECIE",
+      "NUMERO", 
+      "ALTUMED", 
+      "REGENA"
+    ),
+    ignore.case = TRUE),
+    #this does not seam to work:
+    colClasses = list(character = c("ESTADILLO", "PROVINCIA")),
+    header = TRUE,
+    .ifn = TRUE
+  ) |>
+    dplyr::filter(
+      ESTADILLO == plot
+    ) |>
+    tibble::as_tibble()
+  
+  
+  # ## We check before continuing, because if the filter is too restrictive maybe we dont have rows
+  if (nrow(regen_filtered_data) < 1) {
+    # warn the user
+    cli::cli_warn(c(
+      "Data missing for thatplot",
+      "i" = "Returning empty tibble for plot {.var {plot}}  "
+    ))
+    return(dplyr::tibble())
+  }
+  
+  
+  
+  #we add the id code   
+  regeneration <- regen_filtered_data |>
+    
+    dplyr::mutate(
+      PLOT = as.character(ESTADILLO),
+      province_code = as.character(PROVINCIA),
+      
+      #DM TO M ?
+      Hm = as.numeric(ALTUMED) * 0.1,
+      SP_CODE = as.numeric(ESPECIE),
+      ID_UNIQUE_PLOT = paste("ES",province_code,PLOT,sep = "_")) |>
+    
+    # add species info ---> WHAT REFERENCE SHOULD I USEE???
+    dplyr::left_join(
+      y = ESPECIES |>
+        dplyr::rename(
+          name = "Nombre especie"
+        ) |> 
+        dplyr::select(
+          SP_CODE = SPx,
+          SP_NAME = name),
+      by = "SP_CODE"
+    ) |>
+    dplyr::arrange(SP_CODE) |> 
+
+    #selection of final variables 
+    
+    dplyr::select(
+      ID_UNIQUE_PLOT,
+      province_code,
+      PLOT,
+      #codigo
+      SP_CODE,
+      #nombre en latin
+      SP_NAME,
+      NUMERO, 
+      Hm, 
+      REGENA
+    )
+  
+  # Return regen
+  return(regeneration)
+  
+  
+}
+

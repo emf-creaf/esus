@@ -44,6 +44,13 @@
         version,
         folder,
         .call = .call
+      ),
+      regen_table = .build_ifn_file_path(
+        province,
+        type = "regen",
+        version,
+        folder,
+        .call = .call
       )
       
     )
