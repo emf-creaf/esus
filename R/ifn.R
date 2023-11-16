@@ -10,7 +10,10 @@ ifn_to_tibble <- function(
     .verbose = TRUE
 ) {
 
-ESPECIES<-.read_excel_sheet(folder, "MaximaActualidad_ATOMaDic2022_dd.xlsx", "ESPECIES"
+ESPECIES <-.read_excel_sheet(
+  folder, 
+  "MaximaActualidad_ATOMaDic2022_dd.xlsx", 
+  "ESPECIES"
   ) |>
   dplyr::as_tibble()
 }
@@ -62,7 +65,7 @@ ifn_tree_table_process <- function(tree_data, plot, province, ESPECIES) {
   
   tree_filtered_data <-  .read_inventory_data(
     tree_data,
-    select = any_of(c(
+    select = dplyr::any_of(c(
 
       "PROVINCIA",
       "ESTADILLO",
@@ -76,7 +79,7 @@ ifn_tree_table_process <- function(tree_data, plot, province, ESPECIES) {
     ignore.case = TRUE),
     colClasses = list(character = c("ESTADILLO", "PROVINCIA")),
     header = TRUE,
-    .ifn = TRUE,
+    .ifn = TRUE
   ) |>
     dplyr::filter(
       ESTADILLO == plot
@@ -127,7 +130,7 @@ ifn_tree_table_process <- function(tree_data, plot, province, ESPECIES) {
    
     # add species info ---> WHAT REFERENCE SHOULD I USEE???
     dplyr::left_join(
-      y = ESPECIES|>
+      y = ESPECIES |>
         dplyr::rename(
           name = "Nombre especie"
         ) |> 
@@ -139,7 +142,7 @@ ifn_tree_table_process <- function(tree_data, plot, province, ESPECIES) {
     dplyr::arrange(SP_CODE) |> 
  
     dplyr::select(
-      any_of(c(
+      dplyr::any_of(c(
         "ID_UNIQUE_PLOT",
         "province_code",
         "PLOT",
@@ -190,12 +193,13 @@ ifn_shrub_table_process <- function(shrub_data, plot, province, ESPECIES) {
   }
   
  
+
   # 2. col names
-   # browser()
+    # browser()
    
   shrub_filtered_data <- .read_inventory_data(
       shrub_data,
-      select = any_of(c(
+      select = dplyr::any_of(c(
         "PROVINCNA", 
         "ESTADILLO", 
         "ESPECIE",
@@ -206,7 +210,7 @@ ifn_shrub_table_process <- function(shrub_data, plot, province, ESPECIES) {
       #this does not seam to work:
       colClasses = list(character = c("ESTADILLO", "PROVINCIA")),
       header = TRUE,
-      .ifn = TRUE,
+      .ifn = TRUE
     ) |>
     dplyr::filter(
       ESTADILLO == plot

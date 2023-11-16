@@ -37,8 +37,15 @@
         version,
         folder,
         .call = .call
+      ),
+      shrub_table = .build_ifn_file_path(
+        province,
+        type = "shrub",
+        version,
+        folder,
+        .call = .call
       )
-      ## TODO add all the other tables needed
+      
     )
 }
 

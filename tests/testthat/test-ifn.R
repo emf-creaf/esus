@@ -16,11 +16,11 @@ test_plots <- list(
 test_provinces <- names(test_plots)
 test_folder <- Sys.getenv("ifn_path")
 test_input <- .build_ifn_input_with (
-  version="ifn2",
+  version = "ifn2",
   test_provinces,
   test_plots, 
   test_folder,
-  .verbose =TRUE, 
+  .verbose = TRUE, 
 )
 
 
@@ -124,9 +124,9 @@ test_that("ifn_shrub_table_process works as intended", {
   
   expect_s3_class(
     test_res <- ifn_shrub_table_process(
-      test_input$shrub_table[3],
-      test_input$plots[3],
-      test_input$province[3],
+      test_input$shrub_table[1],
+      test_input$plots[1],
+      test_input$province[1],
       test_especies
     ),
     "tbl"
@@ -141,9 +141,9 @@ test_that("ifn_shrub_table_process works as intended", {
   expect_length(unique(test_res$province_code), 1)
   
   
-  expect_identical(unique(test_res$PLOT)|> as.character(), test_input$plots[3] |> as.character())
+  expect_identical(unique(test_res$PLOT)|> as.character(), test_input$plots[1] |> as.character())
   #CHECK THIS AGAIN, BOTH SHOULD BE CHARACTER
-  expect_identical(unique(test_res$province_code) |> as.numeric(), test_input$province[3]|> as.numeric())
+  expect_identical(unique(test_res$province_code) |> as.numeric(), test_input$province[1]|> as.numeric())
   
   # errors
   expect_warning(
