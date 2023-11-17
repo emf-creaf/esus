@@ -1,0 +1,173 @@
+IFNCODE;IFNNAME;COMMONNAME
+1;Heberdenia bahamensis;Aderno
+7;Acacia spp.;Acacia 
+8;Phillyrea latifolia;Labiérnago
+10;Sin asignar;Sin asignar
+11;Ailanthus altissima;Ailanto
+12;Malus sylvestris;Manzano silvestre
+13;Celtis australis;Almez
+14;Taxus baccata;Tejo
+15;Crataegus spp.;Crataegus
+16;Pyrus spp.;Peral silvestre
+17;Cedrus atlantica;Cedro
+18;Chamaecyparis lawsoniana;Chameciparis
+19;Otras coníferas;Otras coníferas
+20;Pinos;Pinos
+21;Pinus sylvestris;Pino silvestre
+22;Pinus uncinata;Pino uncinata
+23;Pinus pinea;Pino piñonero
+24;Pinus halepensis;Pino halepensis
+25;Pinus nigra;Pino laricio
+26;Pinus pinaster;Pino pináster
+27;Pinus canariensis;Pino canario
+28;Pinus radiata;Pino radiata
+29;Otros pinos;Otros pinos
+30;Mezcla de coníferas;Coníferas, excepto pinos
+31;Abies alba;Pinabete
+32;Abies pinsapo;Pinsapo
+33;Picea abies;Pícea
+34;Pseudotsuga menziesii;Seudotsuga
+35;Larix spp.;Alerce
+36;Cupressus sempervirens;Ciprés
+37;Juniperus communis;Enebro común
+38;Juniperus thurifera;Sabina albar
+39;Juniperus phoenicea;Sabina negral
+40;Quercus;Quercus
+41;Quercus robur;Roble pedunculado
+42;Quercus petraea;Roble
+43;Quercus pyrenaica;Rebollo
+44;Quercus faginea;Quejigo fagínea
+45;Quercus ilex ssp. ballota;Encina
+46;Quercus suber;Alcornoque
+47;Quercus canariensis;Quejigo bética
+48;Quercus rubra;Roble americano
+49;Otros quercus;Otros quercus
+50;Mezcla de árboles de ribera;Árboles ripícolas
+51;Populus alba;Álamo
+52;Populus tremula;Chopo temblón
+53;Tamarix spp.;Taraje
+54;Alnus glutinosa;Aliso
+55;Fraxinus angustifolia;Fresno
+56;Ulmus minor;Olmo
+57;Salix spp.;Sauce
+58;Populus nigra;Chopo
+59;Otros árboles ripícolas;Otros árboles ripícolas
+60;Mezcla de eucaliptos;Eucaliptos
+61;Eucalyptus globulus;Eucalipto globulus
+62;Eucalyptus camaldulensis;Eucalipto rostrata
+63;Otros eucaliptos;Otros eucaliptos
+64;Eucalyptus nitens;Eucalipto nitens
+65;Ilex aquifolium;Acebo
+66;Olea europaea;Acebuche
+67;Ceratonia siliqua;Algarrobo
+68;Arbutus unedo ;Madroño
+69;Phoenix spp.;Palmera
+70;Mezcla de frondosas de gran porte;Frondosas de gran porte excepto Quercus (H.t.>10 m)
+71;Fagus sylvatica;Haya
+72;Castanea sativa;Castaño
+73;Betula spp.;Abedul
+74;Corylus avellana;Avellano
+75;Juglans regia;Nogal
+76;Acer campestre;Arce
+77;Tilia spp.;Tilo
+78;Sorbus spp.;Sorbus
+79;Platanus hispanica;Plátano
+80;Laurisilva;Laurisilva
+81;Myrica faya;Faya
+82;Ilex canariensis;Acebiño
+83;Erica arborea;Brezo arbóreo
+84;Persea indica;Viñátigo
+85;Sideroxylon marmulano;Marmulan
+86;Picconia excelsa;Palo blanco
+87;Ocotea phoetens;Til
+88;Apollonias barbujana;Barbusano
+89;Otras laurisilvas;Otras laurisilvas.
+90;Mezcla de pequeñas frondosas;Frondosas de pequeño porte (H.t.<10 m)
+92;Robinia pseudoacacia;Acacia robinia
+94;Laurus nobilis;Laurel
+95;Prunus spp.;Prunus
+96;Rhus coriaria;Zumaque
+97;Sambucus nigra;Saúco negro
+98;Carpinus betulus;Carpe
+99;Otras frondosas;Otras frondosas
+207;Acacia melanoxylon;Acacia melanoxylon
+215;Crataegus monogyna;Majuelo
+217;Cedrus deodara;Cedro deodara
+219;Tetraclinis articulata;Arar
+235;Larix decidua;Alerce común
+236;Cupressus arizonica;Ciprés arizónica
+237;Juniperus oxycedrus;Enebro oxicedro
+238;Juniperus turbinata;Sabina canaria
+243;Quercus pubescens (Q. humilis);Roble húmilis
+244;Quercus lusitanica (Q. fruticosa);Quercus lusitanica
+245;Quercus ilex ssp. ilex;Alsina
+253;Tamarix canariensis;Tarajal
+255;Fraxinus excelsior;Fresno excelsior
+256;Ulmus glabra;Olmo montano
+257;Salix alba;Sauce blanco
+258;Populus x canadensis;Chopo híbrido
+264;Eucalyptus viminalis;Eucalipto viminalis
+268;Arbutus canariensis;Madroño canario
+273;Betula alba;Abedul pubescens
+275;Juglans nigra;Nogal
+276;Acer monspessulanum;Arce de Montpelier
+277;Tilia cordata;Tilo cordata
+278;Sorbus aria;Mostajo
+279;Platanus orientalis;Plátano oriental
+281;Myrica rivas-martinezii;Faya herreña
+282;Ilex platyphylla;Naranjero
+283;Erica scoparia;Tejo, brezo arbóreo escopario
+289;Pleiomeris canariensis;Delfino
+292;Sophora japonica;Acacia sofora
+293;Pistacia atlantica;Cornicabra canaria
+294;Laurus azorica;Loro, laurel
+299;Ficus carica;Higuera
+307;Acacia dealbata;Acacia dealbata
+315;Crataegus laevigata;Espino majuelo
+317;Cedrus libani;Cedrus libani
+319;Thuja spp.;Thuja
+335;Larix leptolepis;Alerce leptolepis
+336;Cupressus lusitanica;Ciprés lambertiana
+337;Juniperus cedrus;Enebro canario
+344;Quercus alpestris;
+355;Fraxinus ornus;Fresno orno
+356;Ulmus pumila;Olmo pumilo
+357;Salix atrocinerea;Bardaguera
+364;Eucalyptus gomphocephalus;Eucalipto gonfo
+373;Betula pendula;Abedul péndula
+376;Acer negundo;Arce negundo
+377;Tilia platyphyllos;Tilo común
+378;Sorbus aucuparia;Serbal de cazadores
+389;Rhamnus glandulosa;Sanguino
+392;Gleditsia triacanthos;Acacia gleditsia
+395;Prunus avium;Cerezo silvestre
+399;Morus spp.;Morera
+415;Crataegus lacinata;Majoleto
+435;Larix x eurolepis;Alerce híbrido
+436;Cupressus macrocarpa;Ciprés americano
+455;Fraxinus spp.;Fresno
+456;Ulmus spp.;Olmo
+457;Salix babylonica;Sauce llorón
+464;Eucalyptus robusta;Eucalipto robusto
+469;Phoenix canariensis;Palmera
+476;Acer opalus;Arce ópalus
+478;Sorbus domestica;Serbal común
+489;Visnea mocanera;Mocan
+495;Prunus lusitanica;Loro, Hija
+499;Morus alba;Morera blanca
+515;Crataegus azarolus;Espino
+557;Salix cantabrica;Sauce cantábrico
+569;Dracaena draco;Drago
+576;Acer pseudoplatanus;Arce seudoplátano
+578;Sorbus torminalis;Serbal torminal
+595;Prunus padus;Prunus padus
+599;Morus nigra;Morera negra
+657;Salix caprea;Sauce cabruno
+676;Acer platanoides;Arce platanoide
+678;Sorbus latifolia;Serbal de hoja ancha
+757;Salix elaeagnos;Sarga
+776;Acer spp. ;Arce
+778;Sorbus chamaemespilus;Serbal chame
+857;Salix fragilis;Mimbre
+858;Salix canariensis;Sauce canario
+957;Salix purpurea;Mimbrera
