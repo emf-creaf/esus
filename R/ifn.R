@@ -1,5 +1,6 @@
 
 
+
 ifn_to_tibble <- function(
     provinces,
     ifn,
@@ -9,6 +10,7 @@ ifn_to_tibble <- function(
     .parallel_options = furrr::furrr_options(scheduling = 1L, stdout = TRUE),
     .verbose = TRUE
 ) {
+}
 
 # ESPECIES <-.read_excel_sheet(
 #   folder, 
@@ -16,7 +18,111 @@ ifn_to_tibble <- function(
 #   "ESPECIES"
 #   ) |>
 #   dplyr::as_tibble()
-}
+  
+  ifn_tables_process <- function(
+    provinces, version, filter_list, folder,
+    .parallel_options, .verbose, ...
+  ) {
+    
+    # debug
+    # browser()
+    
+    # Create input df for year
+
+    input_df <- .build_ifn_input_with(version, provinces, filter_list, folder, .verbose)
+    
+    temp_res <- furrr::future_pmap(
+      # temp_res <- purrr::pmap(
+      .progress = .verbose,
+      .l = input_df,
+      .f = \(province, plots, tree_table, plot_table, shrub_table, regen_table) {
+      
+      #browser()
+      
+      plot_info <- ifn_plot_table_process(plot_table,  plot, province, ifn_provinces_dictionary)
+      
+      
+      tree <- ifn_tree_table_process(tree_table, plot, province, ESPECIES)
+      
+      
+      shrub <- ifn_shrub_table_process(shrub_table, plot, province, ESPECIES)
+      
+      
+      regen <- ifn_regen_table_process(regen_table, plot, province,ESPECIES)
+      
+      
+      
+      # we put together all tables in a data frame
+      
+      
+      understory <- plot_info |>
+        dplyr::select(
+          ID_UNIQUE_PLOT,
+          YEAR,
+          province_code,
+          PLOT)|>
+        
+        dplyr::mutate(
+          shrub = list(shrub))
+      
+      
+      plot_info |>
+        dplyr::mutate(
+          tree = list(tree),
+          understory = list(understory),
+          regen = list(regen)
+        ) |>
+        
+        dplyr::rename(
+          COORD1 = COORDEX,
+          COORD2 = COORDEY,
+          
+        )|>
+        
+        dplyr::select(
+          ID_UNIQUE_PLOT,
+          COUNTRY,
+          YEAR,
+          ca_name_original,
+          province_name_original,
+          province_code,
+          PLOT,
+          YEAR,
+          version,
+          HOJA,
+          COORD_SYS,
+          COORD1,
+          COORD2,
+          crs,
+          PENDIEN2,
+          SLOPE, 
+          ELEV,
+          ASPECT,
+          tree,
+          understory,
+          regen,
+          soils
+          
+        )
+      
+    }
+  ) |>
+    purrr::list_rbind()
+  
+  
+    # something went wrong (bad counties and plots, wrong filter list...)
+    if (nrow(temp_res) < 1) {
+      cli::cli_abort("Ooops! Something went wrong, exiting...")
+    }
+    
+    temp_res |>
+      # filtering the missing plots. This is done based on the fact plot table functions returns NAs
+      # for all vars, including coords, when the plot is not found
+      dplyr::filter(!(is.na(COORDEX) & is.na(COORDEX_ORIGINAL) & is.na(COORDEY) & is.na(COORDEY_ORIGINAL)))
+  }
+
+  
+
 
 #' IFN 2 tree table process
 #'
@@ -115,7 +221,7 @@ ifn_tree_table_process <- function(tree_data, plot, province, ESPECIES) {
       Dn1 = as.numeric(Dn1),
       Dn2 = as.numeric(Dn2),
       HT = as.numeric(HT),
-      SP_CODE = as.numeric(SP_CODE),
+      SP_CODE = as.character(SP_CODE),
       ID_UNIQUE_PLOT = paste("ES",province_code,PLOT,sep="_"),
       # From mm to cm
       DIA = ((Dn1 + Dn2)/2)*0.1,
@@ -131,12 +237,9 @@ ifn_tree_table_process <- function(tree_data, plot, province, ESPECIES) {
     # add species info ---> WHAT REFERENCE SHOULD I USEE???
     dplyr::left_join(
       y = ESPECIES |>
-        dplyr::rename(
-          name = "Nombre especie"
-        ) |> 
         dplyr::select(
-          SP_CODE = SPx,
-          SP_NAME = name),
+          SP_CODE ,
+          SP_NAME ),
       by = "SP_CODE"
     ) |>
     dplyr::arrange(SP_CODE) |> 
@@ -238,7 +341,7 @@ ifn_shrub_table_process <- function(shrub_data, plot, province, ESPECIES) {
       Hm = as.numeric(ALTUMED),
       #DM TO M
       Hm = Hm * 0.1 ,
-      SP_CODE = as.numeric(ESPECIE),
+      SP_CODE = as.character(ESPECIE),
       ID_UNIQUE_PLOT = paste("ES",province_code,PLOT,sep = "_")
       
     ) |>
@@ -251,12 +354,9 @@ ifn_shrub_table_process <- function(shrub_data, plot, province, ESPECIES) {
     
     dplyr::left_join(
       y =  ESPECIES |>
-        dplyr::rename(
-          name = "Nombre especie"
-        ) |> 
         dplyr::select(
-          SP_CODE = SPx,
-          SP_NAME = name),
+          SP_CODE ,
+          SP_NAME ),
       by = "SP_CODE"
     ) |>
     dplyr::arrange(SP_CODE) |> 
@@ -341,18 +441,16 @@ ifn_regen_table_process <- function(regen_data, plot, province, ESPECIES) {
       
       #DM TO M ?
       Hm = as.numeric(ALTUMED) * 0.1,
-      SP_CODE = as.numeric(ESPECIE),
+      SP_CODE = as.character(ESPECIE),
       ID_UNIQUE_PLOT = paste("ES",province_code,PLOT,sep = "_")) |>
     
     # add species info ---> WHAT REFERENCE SHOULD I USEE???
     dplyr::left_join(
       y = ESPECIES |>
-        dplyr::rename(
-          name = "Nombre especie"
-        ) |> 
+        
         dplyr::select(
-          SP_CODE = SPx,
-          SP_NAME = name),
+          SP_CODE,
+          SP_NAME ),
       by = "SP_CODE"
     ) |>
     dplyr::arrange(SP_CODE) |> 

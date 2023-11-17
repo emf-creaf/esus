@@ -343,3 +343,125 @@ test_that("ifn_plot_table_process works as intended", {
   expect_true(nrow(test_error) < 1)
 })
 
+# tables process -----------------------------------------------------------------------------------
+
+test_that("ffi_tables_process works as intended", {
+  
+  ### TODO
+  # - test what happens when some tables are NAs (not found when building the input)
+  # -
+  #
+  
+  # tests config
+  test_parallel_conf <- furrr::furrr_options(scheduling = 2L, stdout = TRUE)
+  future::plan(future::multisession, workers = 3)
+  withr::defer(future::plan(future::sequential))
+  
+  # tests data
+  expected_names <- c(
+    "ID_UNIQUE_PLOT",
+    "COUNTRY",
+    "YEAR",
+    "ca_name_original",
+    "province_name_original",
+    "province_code",
+    "PLOT",
+    "YEAR",
+    "version",
+    "HOJA",
+    "COORD_SYS",
+    "COORD1",
+    "COORD2",
+    "crs",
+    "PENDIEN2",
+    "SLOPE", 
+    "ELEV",
+    "ASPECT",
+    "tree",
+    "understory",
+    "regen",
+    "soils"
+  )
+  
+  # object
+  expect_s3_class(
+    test_res <- suppressWarnings(ifn_tables_process(
+      test_provinces, test_input$version, test_plots, test_folder,
+      .parallel_options = test_parallel_conf,
+      .verbose = FALSE
+    )),
+    "tbl"
+  )
+  
+  # data integrity
+  expect_named(test_res, expected_names)
+  expect_true(all(unique(test_res$provinces) %in% names(test_plots)))
+  
+  # ### missing tables/plots
+  # # tururu state shouldn't appear
+  # # inexistent plots (91-0) shouldn't
+  # # be present, so 31 of 33 elements in filter list
+  # expect_false("tururu" %in% unique(test_res$province))
+  # expect_identical(nrow(test_res), 31L)
+  # 
+  # ### missing random files
+  # # we test here what happens when some files are missing (ARBRE, ECOLOGIE...)
+  # test_folder <- fs::path(Sys.getenv("ffi_path"), "missing_files_test")
+  # # FLORE, without flore, the understory should be empty
+  # fs::file_move(fs::path(test_folder, "FLORE.csv"), fs::path(test_folder, "_FLORE.csv"))
+  # withr::defer({
+  #   if (fs::file_exists(fs::path(test_folder, "_FLORE.csv"))) {
+  #     fs::file_move(fs::path(test_folder, "_FLORE.csv"), fs::path(test_folder, "FLORE.csv"))
+  #   }
+  # })
+  # expect_true(
+  #   suppressWarnings(ffi_tables_process(
+  #     test_departments, test_year, test_plots, test_folder,
+  #     .parallel_options = test_parallel_conf,
+  #     .verbose = FALSE
+  #   ) |>
+  #     dplyr::pull(understory) |>
+  #     purrr::list_rbind() |>
+  #     dplyr::pull(shrub) |>
+  #     purrr::list_rbind() |>
+  #     nrow()) < 1
+  # )
+  # fs::file_move(fs::path(test_folder, "_FLORE.csv"), fs::path(test_folder, "FLORE.csv"))
+  # 
+  # # ARBRE, without ARBRE, the tree should be empty
+  # fs::file_move(fs::path(test_folder, "ARBRE.csv"), fs::path(test_folder, "_ARBRE.csv"))
+  # withr::defer({
+  #   if (fs::file_exists(fs::path(test_folder, "_ARBRE.csv"))) {
+  #     fs::file_move(fs::path(test_folder, "_ARBRE.csv"), fs::path(test_folder, "ARBRE.csv"))
+  #   }
+  # })
+  # expect_true(
+  #   suppressWarnings(ffi_tables_process(
+  #     test_departments, test_year, test_plots, test_folder,
+  #     .parallel_options = test_parallel_conf,
+  #     .verbose = FALSE
+  #   ) |>
+  #     dplyr::pull(tree) |>
+  #     purrr::list_rbind() |>
+  #     nrow()) < 1
+  # )
+  # fs::file_move(fs::path(test_folder, "_ARBRE.csv"), fs::path(test_folder, "ARBRE.csv"))
+  # 
+  # # ECOLOGIE, without ECOLOGIE, the soils should be empty, but also the plot info.
+  # fs::file_move(fs::path(test_folder, "ECOLOGIE.csv"), fs::path(test_folder, "_ECOLOGIE.csv"))
+  # withr::defer({
+  #   if (fs::file_exists(fs::path(test_folder, "_ECOLOGIE.csv"))) {
+  #     fs::file_move(fs::path(test_folder, "_ECOLOGIE.csv"), fs::path(test_folder, "ECOLOGIE.csv"))
+  #   }
+  # })
+  # expect_error(
+  #   suppressWarnings(ffi_tables_process(
+  #     test_departments, test_year, test_plots, test_folder,
+  #     .parallel_options = test_parallel_conf,
+  #     .verbose = FALSE
+  #   )),
+  #   "Ooops!"
+  # )
+  # fs::file_move(fs::path(test_folder, "_ECOLOGIE.csv"), fs::path(test_folder, "ECOLOGIE.csv"))
+  # 
+})
