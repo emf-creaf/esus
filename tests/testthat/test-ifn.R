@@ -5,7 +5,7 @@ skip_if(
 # test data -----------------------------------------------------------------------------------
 
 test_plots <- list(
-  "05" = c(61, 140, 328),
+  "05" = c(61, 14, 328),
   "10" = c(2101,3374,261),
   "13" = c(51, 419,783),
    "27" = c(90, 190,537)
@@ -260,9 +260,9 @@ test_that("ifn_plot_table_process works as intended", {
   expected_names <- c(
     "ID_UNIQUE_PLOT",
     "COUNTRY",
-    "community_name",
-    "province_name",
     "province_code",
+    "province_name_original",
+    "ca_name_original",
     "PLOT",
     "YEAR",
     "version",
@@ -284,9 +284,9 @@ test_that("ifn_plot_table_process works as intended", {
   
   expect_s3_class(
     test_res <- ifn_plot_table_process(
-      test_input$plot_table[1],
-      test_input$plots[1],
-      test_input$province[1],
+      test_input$plot_table[7],
+      test_input$plots[7],
+      test_input$province[7],
       test_provinces_dictionary
       
     ),
@@ -302,9 +302,9 @@ test_that("ifn_plot_table_process works as intended", {
   expect_length(unique(test_res$province_code), 1)
   
   
-  expect_identical(unique(test_res$PLOT)|> as.character(), test_input$plots[1] |> as.character())
+  expect_identical(unique(test_res$PLOT)|> as.character(), test_input$plots[7] |> as.character())
   #CHECK THIS AGAIN, BOTH SHOULD BE CHARACTER
-  expect_identical(unique(test_res$province_code) |> as.numeric(), test_input$province[1]|> as.numeric())
+  expect_identical(unique(test_res$province_code) |> as.numeric(), test_input$province[7]|> as.numeric())
   
   # errors
   expect_warning(

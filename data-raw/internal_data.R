@@ -101,7 +101,9 @@ growth_form_lignified_france <- growth_form |>
 
 # IFN species data and provinces -----------------------------------------------------------------------
 
-ESPECIES <- readxl::read_excel("data-raw/MaximaActualidad_ATOMaDic2022_dd.xlsx", sheet = "ESPECIES") |>
+ESPECIES <- readxl::read_excel(
+  "data-raw/MaximaActualidad_ATOMaDic2022_dd.xlsx", 
+  sheet = "ESPECIES") |>
   dplyr::as_tibble()
 
 

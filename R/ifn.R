@@ -443,7 +443,7 @@ ifn_plot_table_process <- function(plot_data,  plot, province, ifn_provinces_dic
   # 2. col names
   
   
-  plot_filtered_data <- read_inventory_data(
+  plot_filtered_data <- .read_inventory_data(
       plot_data,
       select = dplyr::any_of(c(
         "PROVINCIA", 
@@ -517,12 +517,12 @@ ifn_plot_table_process <- function(plot_data,  plot, province, ifn_provinces_dic
     dplyr::mutate(
     
       COUNTRY = "ES",
-      province_code = as.numeric(PROVINCIA),
+      province_code = as.character(PROVINCIA),
       ID_UNIQUE_PLOT = paste("ES", province_code,PLOT,sep = "_"),
       # ALTITUD1 = as.numeric(ALTITUD1),
-      ALTITUD2 = as.numeric(ALTITUD2),
+      ELEV = as.numeric(ELEV),
       # ALTITUD1 = ALTITUD1*100,
-      ALTITUD2 = ELEV*100,
+      ELEV = ELEV*100,
       COORDEX = as.numeric(COORDEX),
       COORDEY = as.numeric(COORDEY),
       COORDEX = 1000 * COORDEX,

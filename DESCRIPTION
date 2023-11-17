@@ -20,6 +20,7 @@ Imports:
     Hmisc,
     purrr,
     readr,
+    readxl,
     RODBC,
     rlang,
     sf,
