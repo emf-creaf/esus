@@ -8,9 +8,9 @@ test_plots <- list(
   "05" = c(61, 14, 328),
   "10" = c(2101,3374,261),
   "13" = c(51, 419,783),
-   "27" = c(90, 190,537)
-  #  "91" = c(1406115, 0),
-    # "tururu" = 3555
+  "27" = c(90, 190,537),
+  "91" = c(1406115, 0),
+  "tururu" = 3555
 )
 
 test_provinces <- names(test_plots)
@@ -400,68 +400,13 @@ test_that("ffi_tables_process works as intended", {
   # ### missing tables/plots
   # # tururu state shouldn't appear
   # # inexistent plots (91-0) shouldn't
-  # # be present, so 31 of 33 elements in filter list
-  # expect_false("tururu" %in% unique(test_res$province))
-  # expect_identical(nrow(test_res), 31L)
-  # 
+  # # be present, so 13 of 15 elements in filter list
+  expect_false("tururu" %in% unique(test_res$province))
+  expect_identical(nrow(test_res), 13L)
+
   # ### missing random files
   # # we test here what happens when some files are missing (ARBRE, ECOLOGIE...)
-  # test_folder <- fs::path(Sys.getenv("ffi_path"), "missing_files_test")
-  # # FLORE, without flore, the understory should be empty
-  # fs::file_move(fs::path(test_folder, "FLORE.csv"), fs::path(test_folder, "_FLORE.csv"))
-  # withr::defer({
-  #   if (fs::file_exists(fs::path(test_folder, "_FLORE.csv"))) {
-  #     fs::file_move(fs::path(test_folder, "_FLORE.csv"), fs::path(test_folder, "FLORE.csv"))
-  #   }
-  # })
-  # expect_true(
-  #   suppressWarnings(ffi_tables_process(
-  #     test_departments, test_year, test_plots, test_folder,
-  #     .parallel_options = test_parallel_conf,
-  #     .verbose = FALSE
-  #   ) |>
-  #     dplyr::pull(understory) |>
-  #     purrr::list_rbind() |>
-  #     dplyr::pull(shrub) |>
-  #     purrr::list_rbind() |>
-  #     nrow()) < 1
-  # )
-  # fs::file_move(fs::path(test_folder, "_FLORE.csv"), fs::path(test_folder, "FLORE.csv"))
-  # 
-  # # ARBRE, without ARBRE, the tree should be empty
-  # fs::file_move(fs::path(test_folder, "ARBRE.csv"), fs::path(test_folder, "_ARBRE.csv"))
-  # withr::defer({
-  #   if (fs::file_exists(fs::path(test_folder, "_ARBRE.csv"))) {
-  #     fs::file_move(fs::path(test_folder, "_ARBRE.csv"), fs::path(test_folder, "ARBRE.csv"))
-  #   }
-  # })
-  # expect_true(
-  #   suppressWarnings(ffi_tables_process(
-  #     test_departments, test_year, test_plots, test_folder,
-  #     .parallel_options = test_parallel_conf,
-  #     .verbose = FALSE
-  #   ) |>
-  #     dplyr::pull(tree) |>
-  #     purrr::list_rbind() |>
-  #     nrow()) < 1
-  # )
-  # fs::file_move(fs::path(test_folder, "_ARBRE.csv"), fs::path(test_folder, "ARBRE.csv"))
-  # 
-  # # ECOLOGIE, without ECOLOGIE, the soils should be empty, but also the plot info.
-  # fs::file_move(fs::path(test_folder, "ECOLOGIE.csv"), fs::path(test_folder, "_ECOLOGIE.csv"))
-  # withr::defer({
-  #   if (fs::file_exists(fs::path(test_folder, "_ECOLOGIE.csv"))) {
-  #     fs::file_move(fs::path(test_folder, "_ECOLOGIE.csv"), fs::path(test_folder, "ECOLOGIE.csv"))
-  #   }
-  # })
-  # expect_error(
-  #   suppressWarnings(ffi_tables_process(
-  #     test_departments, test_year, test_plots, test_folder,
-  #     .parallel_options = test_parallel_conf,
-  #     .verbose = FALSE
-  #   )),
-  #   "Ooops!"
-  # )
-  # fs::file_move(fs::path(test_folder, "_ECOLOGIE.csv"), fs::path(test_folder, "ECOLOGIE.csv"))
-  # 
+ 
+  
+  
 })

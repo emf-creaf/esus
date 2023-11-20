@@ -44,7 +44,7 @@ ifn_provinces_dictionary <- readxl::read_xls(
 # Usaremos GIFT con su paquete de R para acceder a los datos de growth form
 cd_ref_edit <- readr::read_delim(
   file = fs::path(Sys.getenv("ffi_path"), "metadonnees.csv"),
-  skip = 412
+  skip = 331
 ) |>
   dplyr::as_tibble() |>
   dplyr::rename(
@@ -101,62 +101,62 @@ growth_form_lignified_france <- growth_form |>
 
 # IFN species data and provinces -----------------------------------------------------------------------
 
-ESPECIES <- readxl::read_excel(
-  "data-raw/MaximaActualidad_ATOMaDic2022_dd.xlsx", 
-  sheet = "ESPECIES") |>
-  dplyr::as_tibble() |> 
-  dplyr::select(c(3,4,6,7)
-  )  
-
-
-ESPECIES_2 <- data.frame(
-  SP_CODE = c(ESPECIES$SPx, ESPECIES$Spx),
-  SP_NAME = c(ESPECIES$`Nombre especie`, ESPECIES$`Nombre (especies arbóreas)`)
-  ) |> 
-  dplyr::arrange(SP_CODE) |> 
-  unique() |> 
-  dplyr::mutate(
-    SP_CODE= as.character(SP_CODE)
-  )
-
-
-
-MFE50_arboreas <- read_excel("data-raw/MFE50_DD_tcm30-154309.xls", 
-                                    sheet = "SP ARBOREAS")|>
-  dplyr::as_tibble() |> 
-  dplyr::select(c(2,3,5,6)
-  ) |> 
-  dplyr::rename(
-    SP_CODE = `CLAVE IFN`,
-    SP_NAME = `NOMBRE IFN3` 
-  ) |> 
-  dplyr::mutate(
-    SP_CODE= as.character(SP_CODE)
-  )
-
-
-MFE50_arbustivas <- read_excel("data-raw/MFE50_DD_tcm30-154309.xls", 
-                             sheet = "SP ARBUSTIVAS")|>
-  dplyr::as_tibble()|> 
-  dplyr::rename(
-    SP_NAME = DEFINICIÓN,
-    SP_CODE = CÓDIGO
-  )
-
-
-mfe25_especies<- readxl::read_excel(
-  "data-raw/mfe25_adic2022_dd_tcm30-528965.xlsx", 
-  sheet = "Especies (arbóreas)")|>
-  dplyr::as_tibble() |>
-  dplyr::mutate(
-    SP_CODE = as.character(Código)
-  ) |> 
-  dplyr::rename(
-    SP_NAME = Nombre
-  ) |>  dplyr::select(
-    SP_NAME,
-    SP_CODE
-  )
+# ESPECIES <- readxl::read_excel(
+#   "data-raw/MaximaActualidad_ATOMaDic2022_dd.xlsx", 
+#   sheet = "ESPECIES") |>
+#   dplyr::as_tibble() |> 
+#   dplyr::select(c(3,4,6,7)
+#   )  
+# 
+# 
+# ESPECIES_2 <- data.frame(
+#   SP_CODE = c(ESPECIES$SPx, ESPECIES$Spx),
+#   SP_NAME = c(ESPECIES$`Nombre especie`, ESPECIES$`Nombre (especies arbóreas)`)
+#   ) |> 
+#   dplyr::arrange(SP_CODE) |> 
+#   unique() |> 
+#   dplyr::mutate(
+#     SP_CODE= as.character(SP_CODE)
+#   )
+# 
+# 
+# 
+# MFE50_arboreas <- readxl::read_excel("data-raw/MFE50_DD_tcm30-154309.xls", 
+#                                     sheet = "SP ARBOREAS")|>
+#   dplyr::as_tibble() |> 
+#   dplyr::select(c(2,3,5,6)
+#   ) |> 
+#   dplyr::rename(
+#     SP_CODE = `CLAVE IFN`,
+#     SP_NAME = `NOMBRE IFN3` 
+#   ) |> 
+#   dplyr::mutate(
+#     SP_CODE= as.character(SP_CODE)
+#   )
+# 
+# 
+# MFE50_arbustivas <- readxl::read_excel("data-raw/MFE50_DD_tcm30-154309.xls", 
+#                              sheet = "SP ARBUSTIVAS")|>
+#   dplyr::as_tibble()|> 
+#   dplyr::rename(
+#     SP_NAME = DEFINICIÓN,
+#     SP_CODE = CÓDIGO
+#   )
+# 
+# 
+# mfe25_especies<- readxl::read_excel(
+#   "data-raw/mfe25_adic2022_dd_tcm30-528965.xlsx", 
+#   sheet = "Especies (arbóreas)")|>
+#   dplyr::as_tibble() |>
+#   dplyr::mutate(
+#     SP_CODE = as.character(Código)
+#   ) |> 
+#   dplyr::rename(
+#     SP_NAME = Nombre
+#   ) |>  dplyr::select(
+#     SP_NAME,
+#     SP_CODE
+#   )
 
 shrub_codes_ifn4 <- readr::read_delim(
   "data-raw/shrub_codes_ifn4.csv",delim = ";",
@@ -201,17 +201,19 @@ SpeciesCodesIFN23 <- readr::read_delim(
     SP_CODE
   )
 
-ESPECIES_DEF <- ESPECIES_2 |> 
-  dplyr::full_join(MFE50_arboreas, by = c("SP_NAME","SP_CODE")) |> 
-  dplyr::full_join(mfe25_especies, by = c("SP_NAME","SP_CODE")) |>
-  dplyr::full_join(MFE50_arbustivas, by = c("SP_NAME","SP_CODE")) |> 
-  dplyr::full_join(shrub_codes_ifn4, by = c("SP_NAME","SP_CODE")) |>  
-dplyr::full_join(tree_codes_ifn4, by = c("SP_NAME","SP_CODE")) |> 
-dplyr::full_join(SpeciesCodesIFN23, by = c("SP_NAME","SP_CODE")) |> 
+# ESPECIES_DEF <- ESPECIES_2 |> 
+#   dplyr::full_join(MFE50_arboreas, by = c("SP_NAME","SP_CODE")) |> 
+#   dplyr::full_join(mfe25_especies, by = c("SP_NAME","SP_CODE")) |>
+#   dplyr::full_join(MFE50_arbustivas, by = c("SP_NAME","SP_CODE")) |> 
+#   
+#   unique()
+# 
+# 
+
+ESPECIES<- shrub_codes_ifn4 |> 
+  dplyr::full_join(tree_codes_ifn4, by = c("SP_NAME","SP_CODE")) |> 
+  dplyr::full_join(SpeciesCodesIFN23, by = c("SP_NAME","SP_CODE")) |> 
   unique()
-
-ESPECIES<-ESPECIES_DEF
-
 # use internal data ---------------------------------------------------------------------------
 
 usethis::use_data(
