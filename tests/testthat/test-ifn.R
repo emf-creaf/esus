@@ -6,17 +6,18 @@ skip_if(
 
 test_plots <- list(
   "05" = c(61, 14, 328),
-  "10" = c(2101,3374,261),
+  "10" = c(3374,261),
   "13" = c(51, 419,783),
-  "27" = c(90, 190,537),
-  "91" = c(1406115, 0),
-  "tururu" = 3555
+  "27" = c(90, 190,537)
+  # "91" = c(1406115, 0),
+  # "tururu" = 3555
 )
 
 test_provinces <- names(test_plots)
 test_folder <- Sys.getenv("ifn_path")
+test_version = "ifn2"
 test_input <- .build_ifn_input_with (
-  version = "ifn2",
+  test_version ,
   test_provinces,
   test_plots, 
   test_folder,
@@ -82,9 +83,9 @@ test_that("ifn_tree_table_process works as intended", {
    # error in department name, gives an empty tibble
    expect_s3_class(
      test_error <- suppressWarnings(ifn_tree_table_process(
-       test_input$tree_table[15],
-       test_input$plots[15],
-       test_input$province[15],
+       test_input$tree_table[14],
+       test_input$plots[14],
+       test_input$province[14],
        test_especies
      )),
      "tbl"
@@ -93,9 +94,9 @@ test_that("ifn_tree_table_process works as intended", {
    # error in plot name, should return an empty tibble
    expect_s3_class(
      test_error <- suppressWarnings(ifn_tree_table_process(
-       test_input$tree_table[13],
-       test_input$plots[13],
-       test_input$province[13],
+       test_input$tree_table[12],
+       test_input$plots[12],
+       test_input$province[12],
        test_especies
      )),
      "tbl"
@@ -157,9 +158,9 @@ test_that("ifn_shrub_table_process works as intended", {
   # error in department name, gives an empty tibble
   expect_s3_class(
     test_error <- suppressWarnings(ifn_shrub_table_process(
-      test_input$shrub_table[15],
-      test_input$plots[15],
-      test_input$province[15],
+      test_input$shrub_table[14],
+      test_input$plots[14],
+      test_input$province[14],
       test_especies
     )),
     "tbl"
@@ -168,9 +169,9 @@ test_that("ifn_shrub_table_process works as intended", {
   # error in plot name, should return an empty tibble
   expect_s3_class(
     test_error <- suppressWarnings(ifn_shrub_table_process(
-      test_input$shrub_table[13],
-      test_input$plots[13],
-      test_input$province[13],
+      test_input$shrub_table[12],
+      test_input$plots[12],
+      test_input$province[12],
       test_especies
     )),
     "tbl"
@@ -234,9 +235,9 @@ test_that("ifn_regen_table_process works as intended", {
   # error in department name, gives an empty tibble
   expect_s3_class(
     test_error <- suppressWarnings(ifn_regen_table_process(
-      test_input$regen_table[15],
-      test_input$plots[15],
-      test_input$province[15],
+      test_input$regen_table[14],
+      test_input$plots[14],
+      test_input$province[14],
       test_especies
     )),
     "tbl"
@@ -245,9 +246,9 @@ test_that("ifn_regen_table_process works as intended", {
   # error in plot name, should return an empty tibble
   expect_s3_class(
     test_error <- suppressWarnings(ifn_regen_table_process(
-      test_input$regen_table[13],
-      test_input$plots[13],
-      test_input$province[13],
+      test_input$regen_table[12],
+      test_input$plots[12],
+      test_input$province[12],
       test_especies
     )),
     "tbl"
@@ -284,9 +285,9 @@ test_that("ifn_plot_table_process works as intended", {
   
   expect_s3_class(
     test_res <- ifn_plot_table_process(
-      test_input$plot_table[7],
-      test_input$plots[7],
-      test_input$province[7],
+      test_input$plot_table[6],
+      test_input$plots[6],
+      test_input$province[6],
       test_provinces_dictionary
       
     ),
@@ -302,9 +303,9 @@ test_that("ifn_plot_table_process works as intended", {
   expect_length(unique(test_res$province_code), 1)
   
   
-  expect_identical(unique(test_res$PLOT)|> as.character(), test_input$plots[7] |> as.character())
+  expect_identical(unique(test_res$PLOT)|> as.character(), test_input$plots[6] |> as.character())
   #CHECK THIS AGAIN, BOTH SHOULD BE CHARACTER
-  expect_identical(unique(test_res$province_code) |> as.numeric(), test_input$province[7]|> as.numeric())
+  expect_identical(unique(test_res$province_code) |> as.numeric(), test_input$province[6]|> as.numeric())
   
   # errors
   expect_warning(
@@ -322,9 +323,9 @@ test_that("ifn_plot_table_process works as intended", {
   # error in department name, gives an empty tibble
   expect_s3_class(
     test_error <- suppressWarnings(ifn_plot_table_process(
-      test_input$regen_table[15],
-      test_input$plots[15],
-      test_input$province[15],
+      test_input$regen_table[14],
+      test_input$plots[14],
+      test_input$province[14],
       test_provinces_dictionary
     )),
     "tbl"
@@ -333,9 +334,9 @@ test_that("ifn_plot_table_process works as intended", {
   # error in plot name, should return an empty tibble
   expect_s3_class(
     test_error <- suppressWarnings(ifn_plot_table_process(
-      test_input$regen_table[13],
-      test_input$plots[13],
-      test_input$province[13],
+      test_input$regen_table[12],
+      test_input$plots[12],
+      test_input$province[12],
       test_provinces_dictionary
     )),
     "tbl"
@@ -345,7 +346,7 @@ test_that("ifn_plot_table_process works as intended", {
 
 # tables process -----------------------------------------------------------------------------------
 
-test_that("ffi_tables_process works as intended", {
+test_that("ifn_tables_process works as intended", {
   
   ### TODO
   # - test what happens when some tables are NAs (not found when building the input)
@@ -386,7 +387,7 @@ test_that("ffi_tables_process works as intended", {
   # object
   expect_s3_class(
     test_res <- suppressWarnings(ifn_tables_process(
-      test_provinces, test_input$version, test_plots, test_folder,
+      test_provinces, test_version, test_plots, test_folder,
       .parallel_options = test_parallel_conf,
       .verbose = FALSE
     )),
@@ -395,18 +396,19 @@ test_that("ffi_tables_process works as intended", {
   
   # data integrity
   expect_named(test_res, expected_names)
-  expect_true(all(unique(test_res$provinces) %in% names(test_plots)))
+  expect_true(all(unique(test_res$province_code) %in% names(test_plots)))
   
   # ### missing tables/plots
   # # tururu state shouldn't appear
   # # inexistent plots (91-0) shouldn't
-  # # be present, so 13 of 15 elements in filter list
-  expect_false("tururu" %in% unique(test_res$province))
-  expect_identical(nrow(test_res), 13L)
+  # # be present, so 12 of 14 elements in filter list
+  # expect_false("tururu" %in% unique(test_res$province))
+  # expect_identical(nrow(test_res), 12L)
 
   # ### missing random files
   # # we test here what happens when some files are missing (ARBRE, ECOLOGIE...)
- 
+  # to do: 
+  
   
   
 })

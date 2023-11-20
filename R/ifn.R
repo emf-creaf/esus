@@ -1,6 +1,56 @@
-
-
-
+#' Raw ifn data to tibble
+#'
+#' Transform raw IFN plot data into tidy data for use in models
+#'
+#' This function will take every year indicated and retrieve and transform the plot data for the departments and
+#' plots provided. For that, csv files from IFN must reside in the folder indicated in the
+#' \code{folder} argument.
+#'
+#' @param provinces A character vector with the code for the departments.
+#' @param version A character vector with the ifn version.
+#' @param filter_list A list of provinces and plots to extract the data from. 
+#' @param folder The path to the folder containing the IFN csv files, as character.
+#' @param ... Not used at the moment
+#' @param .parallel_options An object of class \code{furrr_options}. See
+#'   \code{\link[furrr]{furrr_options}}.
+#' @param .verbose Logical controlling if progress messages are shown.
+#'
+#' @section Filter list:
+#'   If no \code{filter_list} argument is provided, \code{ifn_to_tibble} will attempt to process all
+#'   plots for the provinces and ifn version provided. This will result in sometimes hundred of thousands
+#'   plots to be extracted, processed and returned, will in turn will cause a big use of memory and
+#'   long times of calculation (specially when parallelising). Is better to provide a list of departments
+#'   with the counties and plots to look after to narrow the process. This \code{filter_list} should
+#'   have the following structure:
+#'   \preformatted{
+#'    list(
+#'    "01" = 1404119,
+#'    "10" = 900863,
+#'    "11" = c(1436508, 1410492))
+#'
+#'   )
+#'   }
+#'   \code{esus} package offers workflows to create this automatically, see
+#'   \code{vignette("filtering_plots", pkg = "esus")} for more details.
+#'
+#' @section Parallel:
+#'   Processing the plots from within a year can be done in parallel (\code{esus} uses internally the
+#'   \code{\link[furrr]{furrr}} package for this). This means that, if parallelization is active,
+#'   several processes are launched to retrieve the plots data for that year. This is repeated for
+#'   all years provided.
+#'
+#'   \code{.parallel_options} controls the finer details of how parallelization is performed (see
+#'   \code{\link[furrr]{furrr_options}}). But no parallelization can occur without setting first
+#'   a \code{\link[future]{plan}}. By default, the chosen plan is \code{\link[future]{sequential}},
+#'   so no parellization is done. Changing the plan, i.e. to \code{\link[future]{multisession}} or
+#'   to \code{\link[future.callr]{callr}}, will allow \code{ifn_to_tibble} to use parallelization
+#'   when retrieving the data.
+#'
+#' @return A nested tibble. This tibble contains a row per plot/year combination, with the plot
+#'   metadata included, as well as columns containing tibbles with tree, shrub, herbs and soil
+#'   information. See \code{vignette("inventory_data_tibble", pkg = "esus")}
+#'
+#' @export
 ifn_to_tibble <- function(
     provinces,
     ifn,
@@ -10,14 +60,97 @@ ifn_to_tibble <- function(
     .parallel_options = furrr::furrr_options(scheduling = 1L, stdout = TRUE),
     .verbose = TRUE
 ) {
+  
+  ## Assertions and checks ##
+  # grep
+  assertthat::assert_that(
+    .sys_cmd_warning()
+  )
+  
+  # departments
+  assertthat::assert_that(
+    is.character(provinces), length(provinces) > 0,
+    msg = cli::cli_abort("provinces must be a character vector with at least one department code")
+  )
+  ## TODO
+  # check all provinces are valid
+ 
+ 
+  
+  # folder
+  assertthat::assert_that(
+    fs::dir_exists(folder),
+    msg = cli::cli_abort( "Folder especified ({.path {folder}}) doesn't exists. Please create the folder first and populate it with the needed IFN csv files")
+  )
+  
+  # # filter_list
+  # if (is.null(filter_list)) {
+  #   if (interactive()) {
+  #     cli::cli_inform(c(
+  #       "You haven't specified any plots in the {.arg filter_list} argument.",
+  #       "x" = "This will cause to retrieve {.strong ALL} plots  for the selected departments and years",
+  #       "!" = "This will use a lot of memory and time, as hundred of thousands plots will potentially be evaluated",
+  #       "TODO: add info about how to create the filter list",
+  #       ""
+  #     ))
+  #     
+  #     user_auth <- utils::menu(c("Yes", "No"), title = "Do you wish to continue anyway?")
+  #     if (user_auth == 2L) {
+  #       cli::cli_abort("Aborting per user request")
+  #     }
+  #   }
+  # }
+  ## TODO
+  # Check counties and plots??
+  
+  ## TODO
+  # Check ancillary data is present!!
+  
+  # parallel options
+  assertthat::assert_that(
+    inherits(.parallel_options, "furrr_options"),
+    msg = cli::cli_abort(".parallel_options must come from {.code furrr::furrr_options}")
+  )
+  
+  # verbose
+  assertthat::assert_that(
+    assertthat::is.flag(.verbose),
+    msg = cli::cli_abort(".verbose must be logical (TRUE/FALSE)")
+  )
+  
+
+  
+  ## inform the user
+  verbose_msg(
+    cli::cli_inform(
+      c("Start", "i" = "Processing {length(years)} year{?s}")
+    ),
+    .verbose
+  )
+  
+  ## send the years in loop to process table function
+  purrr::map(
+    years,
+    .f = \(version) {
+      ifn_tables_process(
+        provinces, version, filter_list, folder, .parallel_options, .verbose, ...)
+    },
+    .progress = FALSE
+  ) |>
+    purrr::list_rbind()
 }
 
-# ESPECIES <-.read_excel_sheet(
-#   folder, 
-#   "MaximaActualidad_ATOMaDic2022_dd.xlsx", 
-#   "ESPECIES"
-#   ) |>
-#   dplyr::as_tibble()
+
+#' Inner function to process all tables for one year
+#'
+#' Processing all tables for one year
+#'
+#' This function is intended to be called internally by \code{\link{ifn_to_tibble}} for each
+#' year. This is implemented with furrr to allow parallelization of the plots data retrieval.
+#'
+#' @describeIn ifn_to_tibble 
+#'
+
   
   ifn_tables_process <- function(
     provinces, version, filter_list, folder,
@@ -25,7 +158,7 @@ ifn_to_tibble <- function(
   ) {
     
     # debug
-    # browser()
+     # browser()
     
     # Create input df for year
 
@@ -37,18 +170,18 @@ ifn_to_tibble <- function(
       .l = input_df,
       .f = \(province, plots, tree_table, plot_table, shrub_table, regen_table) {
       
-      #browser()
-      
-      plot_info <- ifn_plot_table_process(plot_table,  plot, province, ifn_provinces_dictionary)
-      
-      
-      tree <- ifn_tree_table_process(tree_table, plot, province, ESPECIES)
+      # browser()
+      # 
+      plot_info <- ifn_plot_table_process(plot_table,  plots, province, ifn_provinces_dictionary)
       
       
-      shrub <- ifn_shrub_table_process(shrub_table, plot, province, ESPECIES)
+      tree <- ifn_tree_table_process(tree_table, plots, province, ESPECIES)
       
       
-      regen <- ifn_regen_table_process(regen_table, plot, province,ESPECIES)
+      shrub <- ifn_shrub_table_process(shrub_table, plots, province, ESPECIES)
+      
+      
+      regen <- ifn_regen_table_process(regen_table, plots, province,ESPECIES)
       
       
       
@@ -118,7 +251,7 @@ ifn_to_tibble <- function(
     temp_res |>
       # filtering the missing plots. This is done based on the fact plot table functions returns NAs
       # for all vars, including coords, when the plot is not found
-      dplyr::filter(!(is.na(COORDEX) & is.na(COORDEX_ORIGINAL) & is.na(COORDEY) & is.na(COORDEY_ORIGINAL)))
+      dplyr::filter(!(is.na(COORD1)  & is.na(COORD2) ))
   }
 
   
@@ -481,46 +614,7 @@ ifn_regen_table_process <- function(regen_data, plot, province, ESPECIES) {
 ifn_plot_table_process <- function(plot_data,  plot, province, ifn_provinces_dictionary){
   
   
-  
-  
-  get_crs <- function(Huso,COORD_SYS){
-    
-    if (Huso == 30 & COORD_SYS == "ED50"){ 
-      crs = 23030
-    }
-    
-    if (Huso == 31 & COORD_SYS == "ED50"){
-      crs =  4326
-    }
-    
-    if (Huso == 29 & COORD_SYS == "ED50" ){
-      crs = 23029
-    }
-    
-    if (Huso == 30 & COORD_SYS == "ETRS89"){
-      crs = 25830
-    }
-    
-    if (Huso == 31 & COORD_SYS == "ETRS89" ){
-      crs = 25831
-    }
-    
-    if (Huso == 29 & COORD_SYS == "ETRS89"){
-      crs = 25829
-    }
-    
-    if (Huso == 28 & COORD_SYS == "ED50"){
-      crs = 23028
-    }
-    
-    if (Huso == 28 & COORD_SYS == "WGS84"){
-      crs =32628
-    }
-    
-    return(crs)
-    
-  }
-  
+
   
   # Assertions  and checks/validations
   files_validation <- assertthat::validate_that(
@@ -540,7 +634,7 @@ ifn_plot_table_process <- function(plot_data,  plot, province, ifn_provinces_dic
   
   # 2. col names
   
-  
+   # browser()
   plot_filtered_data <- .read_inventory_data(
       plot_data,
       select = dplyr::any_of(c(
@@ -592,12 +686,12 @@ ifn_plot_table_process <- function(plot_data,  plot, province, ifn_provinces_dic
   
   plot_filtered_data <- plot_filtered_data |>
     dplyr:::mutate(COORDEX = ifelse(grepl("[A-Za-z]", COORDEX), NA, COORDEX),
-                   COORDEY = ifelse(grepl("[A-Za-z]", COORDEY), NA, COORDEY)) %>%
+                   COORDEY = ifelse(grepl("[A-Za-z]", COORDEY), NA, COORDEY))
     {
-      if (any(is.na(.$COORDEY) | is.na(.$COORDEY))) {
+      if (any(is.na(plot_filtered_data$COORDEY) | is.na(plot_filtered_data$COORDEY))) {
         cli::cli_warn(" File {.file {plot_data}} has   some errors in the coordinates (leters).These records had been substituted by NA")
       }
-      .
+      
     }
 
   
@@ -685,8 +779,20 @@ ifn_plot_table_process <- function(plot_data,  plot, province, ifn_provinces_dic
       soils = list(soil_info),
       
       #linea provisional
-      crs = get_crs(info_plot$Huso, info_plot$COORD_SYS)) |>
+      # crs = get_crs(info_plot$Huso, info_plot$COORD_SYS)) |>
     
+      crs = dplyr::case_when(
+        Huso == 30 & COORD_SYS == "ED50" ~ 23030,
+        Huso == 31 & COORD_SYS == "ED50" ~ 4326,
+        Huso == 29 & COORD_SYS == "ED50" ~ 23029,
+        Huso == 30 & COORD_SYS == "ETRS89" ~ 25830,
+        Huso == 31 & COORD_SYS == "ETRS89" ~ 25831,
+        Huso == 29 & COORD_SYS == "ETRS89" ~ 25829,
+        Huso == 28 & COORD_SYS == "ED50" ~ 23028,
+        Huso == 28 & COORD_SYS == "WGS84" ~ 32628,
+        TRUE ~ NA_integer_
+      ) 
+      ) |> 
     
     dplyr::select(any_of(c(
       

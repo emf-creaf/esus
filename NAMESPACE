@@ -2,6 +2,7 @@
 
 export(ffi_to_tibble)
 export(fia_to_tibble)
+export(ifn_to_tibble)
 export(show_plots_from)
 importFrom(dplyr,desc)
 importFrom(rlang,`:=`)
