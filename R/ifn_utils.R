@@ -52,7 +52,7 @@
         folder,
         .call = .call
       )
-      
+
     )
 }
 
@@ -71,7 +71,7 @@
 #' @return A data.frame with the inventory table
 #'
 #' @noRd
-.read_ifn_data <- function(input, ...) {
+.read_ifn_data <- function(input, colnames, ...) {
 
   # first, if ifn3 or ifn4 we have file name and table name in a character separated by "|" but if
   # we have ifn2 we have the name of the corresponding file.
@@ -88,7 +88,13 @@
 
   res <- switch(
     file_ext,
-    "DBF" = foreign::read.dbf(input, as.is = FALSE),
+    "DBF" = foreign::read.dbf(input, as.is = FALSE) |>
+      dplyr::select(colnames) |>
+      dplyr::mutate(
+        provincia = as.character(provincia),
+        provincia = stringr::str_pad(provincia, width = 2, side = "left", pad = "0"),
+        estadillo = as.character(estadillo)
+    ),
     "accdb" = .read_accdb_data(input, table_name)
   )
 
@@ -200,51 +206,51 @@
 }
 
 #' obtaining crs for different coordinate systems IFN
-#' 
+#'
 #' This function  get_crs reads var huso and coordinate system of plot table process the tree table for one plot and one IFN
-#' 
+#'
 #' @param tree_data file that contains the tree table for that plot
 #' @param plot plot_id code
 #' @param province province code
 #' @param ref_tree_ifn data frame containing the species code reference table
-#' 
+#'
 #' @noRd
 #
-# 
+#
 # get_crs <- function(Huso,COORD_SYS){
-#   
-#   if (Huso == 30 & COORD_SYS == "ED50"){ 
+#
+#   if (Huso == 30 & COORD_SYS == "ED50"){
 #     crs = 23030
 #   }
-#   
+#
 #   if (Huso == 31 & COORD_SYS == "ED50"){
 #     crs =  4326
 #   }
-#   
+#
 #   if (Huso == 29 & COORD_SYS == "ED50" ){
 #     crs = 23029
 #   }
-#   
+#
 #   if (Huso == 30 & COORD_SYS == "ETRS89"){
 #     crs = 25830
 #   }
-#   
+#
 #   if (Huso == 31 & COORD_SYS == "ETRS89" ){
 #     crs = 25831
 #   }
-#   
+#
 #   if (Huso == 29 & COORD_SYS == "ETRS89"){
 #     crs = 25829
 #   }
-#   
+#
 #   if (Huso == 28 & COORD_SYS == "ED50"){
 #     crs = 23028
 #   }
-#   
+#
 #   if (Huso == 28 & COORD_SYS == "WGS84"){
 #     crs =32628
 #   }
-#   
+#
 #   return(crs)
-#   
+#
 # }
