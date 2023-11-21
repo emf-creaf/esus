@@ -634,7 +634,7 @@ ifn_plot_table_process <- function(plot_data,  plot, province, ifn_provinces_dic
   
   # 2. col names
   
-   # browser()
+    # browser()
   plot_filtered_data <- .read_inventory_data(
       plot_data,
       select = dplyr::any_of(c(
@@ -691,6 +691,7 @@ ifn_plot_table_process <- function(plot_data,  plot, province, ifn_provinces_dic
       if (any(is.na(plot_filtered_data$COORDEY) | is.na(plot_filtered_data$COORDEY))) {
         cli::cli_warn(" File {.file {plot_data}} has   some errors in the coordinates (leters).These records had been substituted by NA")
       }
+      
       
     }
 
