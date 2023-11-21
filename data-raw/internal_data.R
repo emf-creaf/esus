@@ -213,6 +213,9 @@ SpeciesCodesIFN23 <- readr::read_delim(
 ESPECIES<- shrub_codes_ifn4 |> 
   dplyr::full_join(tree_codes_ifn4, by = c("SP_NAME","SP_CODE")) |> 
   dplyr::full_join(SpeciesCodesIFN23, by = c("SP_NAME","SP_CODE")) |> 
+  dplyr::mutate(
+    SP_CODE = as.numeric(SP_CODE)
+  ) |> 
   unique()
 # use internal data ---------------------------------------------------------------------------
 

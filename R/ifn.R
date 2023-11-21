@@ -158,7 +158,7 @@ ifn_to_tibble <- function(
   ) {
 
     # debug
-     # browser()
+      # browser()
 
     # Create input df for year
 
@@ -172,16 +172,16 @@ ifn_to_tibble <- function(
 
       # browser()
       #
-      plot_info <- ifn_plot_table_process(plot_table,  plots, province, ifn_provinces_dictionary)
+      plot_info <- ifn_plot_table_process(plot_table, version, plots, province, ifn_provinces_dictionary)
 
 
-      tree <- ifn_tree_table_process(tree_table, plots, province, ESPECIES)
+      tree <- ifn_tree_table_process(tree_table, version, plots, province, ESPECIES)
 
 
-      shrub <- ifn_shrub_table_process(shrub_table, plots, province, ESPECIES)
+      shrub <- ifn_shrub_table_process(shrub_table, version, plots, province, ESPECIES)
 
 
-      regen <- ifn_regen_table_process(regen_table, plots, province,ESPECIES)
+      regen <- ifn_regen_table_process(regen_table, version, plots, province,ESPECIES)
 
 
 
@@ -271,7 +271,7 @@ ifn_to_tibble <- function(
 #' @noRd
 #'
 
-ifn_tree_table_process <- function(tree_data, plot, province, ESPECIES) {
+ifn_tree_table_process <- function(tree_data, version, plot, province, ESPECIES) {
 
   # browser()
 
@@ -301,10 +301,11 @@ ifn_tree_table_process <- function(tree_data, plot, province, ESPECIES) {
 
    # browser()
 
-
+  if (version =="ifn2"){
+    
   tree_filtered_data <-  .read_inventory_data(
     tree_data,
-    select = dplyr::any_of(c(
+    colnames = dplyr::any_of(c(
 
       "PROVINCIA",
       "ESTADILLO",
@@ -314,10 +315,7 @@ ifn_tree_table_process <- function(tree_data, plot, province, ESPECIES) {
       "DIAMETRO1",
       "DIAMETRO2",
       "ALTURA"
-    ),
-    ignore.case = TRUE),
-    colClasses = list(character = c("ESTADILLO", "PROVINCIA")),
-    header = TRUE,
+    )),
     .ifn = TRUE
   ) |>
     dplyr::filter(
@@ -354,7 +352,7 @@ ifn_tree_table_process <- function(tree_data, plot, province, ESPECIES) {
       Dn1 = as.numeric(Dn1),
       Dn2 = as.numeric(Dn2),
       HT = as.numeric(HT),
-      SP_CODE = as.character(SP_CODE),
+      SP_CODE = as.numeric(SP_CODE),
       ID_UNIQUE_PLOT = paste("ES",province_code,PLOT,sep="_"),
       # From mm to cm
       DIA = ((Dn1 + Dn2)/2)*0.1,
@@ -396,12 +394,13 @@ ifn_tree_table_process <- function(tree_data, plot, province, ESPECIES) {
 
   # Return tree
   return(tree)
+  }
 }
 
 
 
 
-ifn_shrub_table_process <- function(shrub_data, plot, province, ESPECIES) {
+ifn_shrub_table_process <- function(shrub_data, version, plot, province, ESPECIES) {
 
 
   # browser()
@@ -426,6 +425,9 @@ ifn_shrub_table_process <- function(shrub_data, plot, province, ESPECIES) {
 
     return(dplyr::tibble())
   }
+  
+  if (version =="ifn2"){
+    
 
 
 
@@ -434,17 +436,13 @@ ifn_shrub_table_process <- function(shrub_data, plot, province, ESPECIES) {
 
   shrub_filtered_data <- .read_inventory_data(
       shrub_data,
-      select = dplyr::any_of(c(
-        "PROVINCNA",
+      colnames = dplyr::any_of(c(
+        "PROVINCIA",
         "ESTADILLO",
         "ESPECIE",
         "FRACCAB",
         "ALTUMED"
-      ),
-      ignore.case = TRUE),
-      #this does not seam to work:
-      colClasses = list(character = c("ESTADILLO", "PROVINCIA")),
-      header = TRUE,
+      )),
       .ifn = TRUE
     ) |>
     dplyr::filter(
@@ -474,7 +472,7 @@ ifn_shrub_table_process <- function(shrub_data, plot, province, ESPECIES) {
       Hm = as.numeric(ALTUMED),
       #DM TO M
       Hm = Hm * 0.1 ,
-      SP_CODE = as.character(ESPECIE),
+      SP_CODE = as.numeric(ESPECIE),
       ID_UNIQUE_PLOT = paste("ES",province_code,PLOT,sep = "_")
 
     ) |>
@@ -508,11 +506,12 @@ ifn_shrub_table_process <- function(shrub_data, plot, province, ESPECIES) {
   #
   # Return shrub
   return(shrub)
+  }
 }
 
 
 
-ifn_regen_table_process <- function(regen_data, plot, province, ESPECIES) {
+ifn_regen_table_process <- function(regen_data, version, plot, province, ESPECIES) {
 
 
   # Assertions  and checks/validations
@@ -531,20 +530,18 @@ ifn_regen_table_process <- function(regen_data, plot, province, ESPECIES) {
     return(dplyr::tibble())
   }
 
+  if (version =="ifn2"){
+    
   regen_filtered_data <- .read_inventory_data(
     regen_data,
-    select = dplyr::any_of(c(
+    colnames = dplyr::any_of(c(
       "PROVINCIA",
       "ESTADILLO",
       "ESPECIE",
       "NUMERO",
       "ALTUMED",
       "REGENA"
-    ),
-    ignore.case = TRUE),
-    #this does not seam to work:
-    colClasses = list(character = c("ESTADILLO", "PROVINCIA")),
-    header = TRUE,
+    )),
     .ifn = TRUE
   ) |>
     dplyr::filter(
@@ -574,7 +571,7 @@ ifn_regen_table_process <- function(regen_data, plot, province, ESPECIES) {
 
       #DM TO M ?
       Hm = as.numeric(ALTUMED) * 0.1,
-      SP_CODE = as.character(ESPECIE),
+      SP_CODE = as.numeric(ESPECIE),
       ID_UNIQUE_PLOT = paste("ES",province_code,PLOT,sep = "_")) |>
 
     # add species info ---> WHAT REFERENCE SHOULD I USEE???
@@ -606,12 +603,12 @@ ifn_regen_table_process <- function(regen_data, plot, province, ESPECIES) {
   # Return regen
   return(regeneration)
 
-
+  }
 }
 
 
 
-ifn_plot_table_process <- function(plot_data,  plot, province, ifn_provinces_dictionary){
+ifn_plot_table_process <- function(plot_data, version, plot, province, ifn_provinces_dictionary){
 
 
 
@@ -633,11 +630,13 @@ ifn_plot_table_process <- function(plot_data,  plot, province, ifn_provinces_dic
   }
 
   # 2. col names
+  # browser()
+  if (version =="ifn2"){
+    
 
-    # browser()
   plot_filtered_data <- .read_inventory_data(
       plot_data,
-      select = dplyr::any_of(c(
+      colnames = dplyr::any_of(c(
         "PROVINCIA",
         "ESTADILLO",
         "HOJA",
@@ -658,15 +657,9 @@ ifn_plot_table_process <- function(plot_data,  plot, province, ifn_provinces_dic
         "ORIENTA2",
         "MAXPEND1",
         "MAXPEND2"
-      ),
-      ignore.case = TRUE),
-      #this does not seam to work:
-      colClasses = list(character = c("ESTADILLO", "PROVINCIA")),
-      header = TRUE,
+      )),
       .ifn = TRUE
     ) |>
-    dplyr::select() |>
-    dplyr::mutate() |>
     dplyr::filter(
       ESTADILLO == plot,
       PROVINCIA == province
@@ -821,10 +814,12 @@ ifn_plot_table_process <- function(plot_data,  plot, province, ifn_provinces_dic
     ))
 
     )
+  return(info_plot)
+  }
 
 
   # Return plot with soil
-  return(info_plot)
+ 
 }
 
 

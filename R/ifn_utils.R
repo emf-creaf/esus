@@ -91,9 +91,9 @@
     "DBF" = foreign::read.dbf(input, as.is = FALSE) |>
       dplyr::select(colnames) |>
       dplyr::mutate(
-        provincia = as.character(provincia),
-        provincia = stringr::str_pad(provincia, width = 2, side = "left", pad = "0"),
-        estadillo = as.character(estadillo)
+        PROVINCIA = as.character(PROVINCIA),
+        PROVINCIA = stringr::str_pad(PROVINCIA, width = 2, side = "left", pad = "0"),
+        ESTADILLO = as.character(ESTADILLO)
     ),
     "accdb" = .read_accdb_data(input, table_name)
   )
