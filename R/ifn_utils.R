@@ -97,7 +97,8 @@
         PROVINCIA = stringr::str_pad(PROVINCIA, width = 2, side = "left", pad = "0"),
         ESTADILLO = as.character(ESTADILLO)
     ),
-    "accdb" = .read_accdb_data(input, table_name)
+    "accdb" = .read_accdb_data(input, table_name) |> 
+      dplyr::select(colnames) 
   )
 
   return(res)

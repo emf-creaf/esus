@@ -307,7 +307,6 @@ ifn_tree_table_process <- function(tree_data, version, plot, province, ESPECIES)
   tree_filtered_data <-  .read_inventory_data(
     tree_data,
     colnames = dplyr::any_of(c(
-
       "PROVINCIA",
       "ESTADILLO",
       "ESPECIE",
@@ -404,19 +403,26 @@ ifn_tree_table_process <- function(tree_data, version, plot, province, ESPECIES)
       tree_data,
       colnames = dplyr::any_of(c(
         
-        "PROVINCIA",
-        "ESTADILLO",
-        "ESPECIE",
-        "NUMORDEN",
-        "ARBOL",
-        "DIAMETRO1",
-        "DIAMETRO2",
-        "ALTURA"
+          "Provincia",
+          "Estadillo", 
+          "Clase", 
+          "Subclase",
+          "Especie",
+          "nArbol",
+          "OrdenIf3",
+          "OrdenIf2",
+          "OrdenIf4",
+          "Dn1", 
+          "Dn2",
+          "Ht",
+          "Calidad", 
+          "Forma"
+        
       )),
       .ifn = TRUE
     ) |>
       dplyr::filter(
-        ESTADILLO == plot
+        Estadillo == plot
       ) |>
       tibble::as_tibble()
     
@@ -437,11 +443,15 @@ ifn_tree_table_process <- function(tree_data, version, plot, province, ESPECIES)
     
     
     tree <- tree_filtered_data |>
+      dplyr::rename(
+        PLOT = Estadillo,
+        HT = Ht,
+        province_code = Provincia,
+      )
       # units transformations
       dplyr::mutate(
-        Provincia_codigo = Provincia,
         # unique inner code
-        ID_UNIQUE_PLOT = paste("ES",Provincia_codigo, Estadillo, sep="_"),
+        ID_UNIQUE_PLOT = paste("ES",province_code, PLOT, sep="_"),
         DIA = (Dn1 + Dn2)/2,
         
         # MM TO CM
@@ -460,29 +470,22 @@ ifn_tree_table_process <- function(tree_data, version, plot, province, ESPECIES)
       #different for ifn3 and 4 ??? 
       
       # add species info
+      
       dplyr::left_join(
-        y = ref_tree_ifn|>
+        y =  ESPECIES |>
           dplyr::select(
-            SP_CODE = IFNCODE,
-            SP_NAME = IFNNAME), 
+            SP_CODE ,
+            SP_NAME ),
         by = "SP_CODE"
-      ) |>
+      ) |> 
       
       
       dplyr::arrange(SP_CODE) |>
       
-      dplyr::rename(
-        PLOT = Estadillo,
-        HT = Ht
-        
-        
-      )|>
-      
-      
       dplyr::select(
         any_of(c(
           "ID_UNIQUE_PLOT", 
-          "Provincia_codigo",
+          "province_code",
           "Clase",
           "Subclase",
           "IDPARCELA",
