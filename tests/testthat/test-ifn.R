@@ -33,6 +33,7 @@ test_plots <- list(
 test_provinces <- names(test_plots)
 test_folder <- Sys.getenv("ifn_path")
 test_version = "ifn2"
+test_version = "ifn3"
 test_input <- .build_ifn_input_with (
   test_version ,
   test_provinces,

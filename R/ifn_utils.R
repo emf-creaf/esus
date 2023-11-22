@@ -73,6 +73,7 @@
 #' @noRd
 .read_ifn_data <- function(input, colnames, ...) {
 
+ 
   # first, if ifn3 or ifn4 we have file name and table name in a character separated by "|" but if
   # we have ifn2 we have the name of the corresponding file.
   table_name <- NULL

@@ -302,7 +302,7 @@ ifn_tree_table_process <- function(tree_data, version, plot, province, ESPECIES)
 
    # browser()
 
-  if (version =="ifn2"){
+  if (version == "ifn2"){
     
   tree_filtered_data <-  .read_inventory_data(
     tree_data,
@@ -395,6 +395,121 @@ ifn_tree_table_process <- function(tree_data, version, plot, province, ESPECIES)
 
   # Return tree
   return(tree)
+  }
+  
+  if (version == "ifn3"){
+    
+    
+    tree_filtered_data <-  .read_inventory_data(
+      tree_data,
+      colnames = dplyr::any_of(c(
+        
+        "PROVINCIA",
+        "ESTADILLO",
+        "ESPECIE",
+        "NUMORDEN",
+        "ARBOL",
+        "DIAMETRO1",
+        "DIAMETRO2",
+        "ALTURA"
+      )),
+      .ifn = TRUE
+    ) |>
+      dplyr::filter(
+        ESTADILLO == plot
+      ) |>
+      tibble::as_tibble()
+    
+    
+    
+    # ## We check before continuing, because if the filter is too restrictive maybe we dont have rows
+    if (nrow(tree_filtered_data) < 1) {
+      # warn the user
+      cli::cli_warn(c(
+        "Data missing for that plot",
+        "i" = "Returning empty tibble for plot {.var {plot}} "
+      ))
+      return(dplyr::tibble())
+    }
+    # browser()
+    
+    
+    
+    
+    tree <- tree_filtered_data |>
+      # units transformations
+      dplyr::mutate(
+        Provincia_codigo = Provincia,
+        # unique inner code
+        ID_UNIQUE_PLOT = paste("ES",Provincia_codigo, Estadillo, sep="_"),
+        DIA = (Dn1 + Dn2)/2,
+        
+        # MM TO CM
+        DIA = DIA * 0.1,
+        SP_CODE = as.numeric(Especie),
+        
+        # density represented by each tree considering  plot design (variable radious)
+        DENSITY = case_when(
+          DIA < 12.5 ~ 127.3239546,
+          DIA >= 12.5 & DIA < 22.5 ~ 31.83098865,
+          DIA >= 22.5 & DIA < 42.5 ~ 14.14710607,
+          DIA >= 42.5 ~ 5.092958185
+        )) |>
+      
+      
+      #different for ifn3 and 4 ??? 
+      
+      # add species info
+      dplyr::left_join(
+        y = ref_tree_ifn|>
+          dplyr::select(
+            SP_CODE = IFNCODE,
+            SP_NAME = IFNNAME), 
+        by = "SP_CODE"
+      ) |>
+      
+      
+      dplyr::arrange(SP_CODE) |>
+      
+      dplyr::rename(
+        PLOT = Estadillo,
+        HT = Ht
+        
+        
+      )|>
+      
+      
+      dplyr::select(
+        any_of(c(
+          "ID_UNIQUE_PLOT", 
+          "Provincia_codigo",
+          "Clase",
+          "Subclase",
+          "IDPARCELA",
+          "IDCLASE",
+          "PLOT",
+          "SP_CODE",
+          "SP_NAME",
+          #tree number id in ifn4
+          "nArbol",
+          #CUALIDAD 6 = dead but providing functions
+          "Calidad",
+          "Forma",
+          #check codes to understand origin and trace of individuals
+          "OrdenIf2",
+          "OrdenIf3",
+          "OrdenIf4",
+          #diameter in cm
+          "DIA",
+          #height in m
+          "HT", 
+          "DENSITY"
+        ))
+      )
+    
+    # Return tree
+    return(tree)
+    
   }
 }
 
