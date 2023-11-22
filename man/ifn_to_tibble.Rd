@@ -7,7 +7,7 @@
 \usage{
 ifn_to_tibble(
   provinces,
-  ifn,
+  version,
   filter_list,
   folder,
   ...,
@@ -28,6 +28,8 @@ ifn_tables_process(
 \arguments{
 \item{provinces}{A character vector with the code for the departments.}
 
+\item{version}{A character vector with the ifn version.}
+
 \item{filter_list}{A list of provinces and plots to extract the data from.}
 
 \item{folder}{The path to the folder containing the IFN csv files, as character.}
@@ -38,8 +40,6 @@ ifn_tables_process(
 \code{\link[furrr]{furrr_options}}.}
 
 \item{.verbose}{Logical controlling if progress messages are shown.}
-
-\item{version}{A character vector with the ifn version.}
 }
 \value{
 A nested tibble. This tibble contains a row per plot/year combination, with the plot

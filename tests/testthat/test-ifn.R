@@ -444,3 +444,141 @@ test_that("ifn_tables_process works as intended", {
   
   
 })
+
+
+# ifn_to_tibble -------------------------------------------------------------------------------
+
+
+test_that("ifn_to_tibble works as intended", {
+  
+  # tests config
+  test_parallel_conf <- furrr::furrr_options(scheduling = 2L, stdout = TRUE)
+  future::plan(future::multisession, workers = 3)
+  withr::defer(future::plan(future::sequential))
+  
+  # tests data
+  expected_names <- c(
+    "ID_UNIQUE_PLOT",
+    "COUNTRY",
+    "YEAR",
+    "ca_name_original",
+    "province_name_original",
+    "province_code",
+    "PLOT",
+    "version",
+    "HOJA",
+    "COORD_SYS",
+    "COORD1",
+    "COORD2",
+    "crs",
+    "PENDIEN2",
+    "SLOPE", 
+    "ELEV",
+    "ASPECT",
+    "tree",
+    "understory",
+    "regen",
+    "soils")
+  test_version <- c("ifn2")
+
+  
+  # object
+  expect_s3_class(
+    test_res <- suppressWarnings(ifn_to_tibble(
+      test_provinces, test_version, test_plots, test_folder,
+      .parallel_options = test_parallel_conf,
+      .verbose = FALSE
+    )),
+    "tbl"
+  )
+  
+  # data integrity
+  expect_named(test_res, expected_names)
+  expect_false("tururu" %in% unique(test_res$province_code))
+  expect_identical(nrow(test_res), 63L) # two plots dont exist, so 2x2=4 rows less
+  expect_true(all(unique(test_res$province_code) %in% names(test_plots)))
+  expect_true(all(unique(test_res$version) %in% test_version))
+  
+  ### test all assertions done in ifn_to_tibble
+  # provinces
+  expect_error(
+    ifn_to_tibble(
+      1:7, test_version, test_plots, test_folder,
+      .parallel_options = test_parallel_conf,
+      .verbose = FALSE
+    ),
+    "provinces must be a character vector with at least one"
+  )
+  expect_error(
+    ifn_to_tibble(
+      character(), test_version, test_plots, test_folder,
+      .parallel_options = test_parallel_conf,
+      .verbose = FALSE
+    ),
+    "departments must be a character vector with at least one"
+  )
+  # years
+  expect_error(
+    ifn_to_tibble(
+      test_departments, as.character(test_years), test_plots, test_folder,
+      .parallel_options = test_parallel_conf,
+      .verbose = FALSE
+    ),
+    "years must be a numeric vector with at least one"
+  )
+  expect_error(
+    ifn_to_tibble(
+      test_provinces, charater(), test_plots, test_folder,
+      .parallel_options = test_parallel_conf,
+      .verbose = FALSE
+    ),
+    "years must be a character vector with at least one"
+  )
+  # folder
+  expect_error(
+    ifn_to_tibble(
+      test_provinces, test_version, test_plots, "nonexistantfolder",
+      .parallel_options = test_parallel_conf,
+      .verbose = FALSE
+    ),
+    "Folder especified"
+  )
+  # filter list (TODO as testng interactive commands is tricky)
+  # parallel options
+  expect_error(
+    ifn_to_tibble(
+      test_provinces, test_version, test_plots, test_folder,
+      .parallel_options = list(scheduling = 2L, stdout = TRUE),
+      .verbose = FALSE
+    ),
+    ".parallel_options"
+  )
+  # verbose
+  expect_error(
+    ifn_to_tibble(
+      test_provinces, test_version, test_plots, test_folder,
+      .parallel_options = test_parallel_conf,
+      .verbose = "FALSE"
+    ),
+    ".verbose"
+  )
+  # ancillary data (tested just by providing an existing wrong folder)
+  expect_error(
+    ifn_to_tibble(
+      test_provinces, test_version, test_plots, ".",
+      .parallel_options = test_parallel_conf,
+      .verbose = FALSE
+    ),
+    "must be present"
+  )
+  
+  # what to expect if departments or filter list are all wrong
+  expect_true(
+    suppressWarnings(ifn_to_tibble(
+      "tururu", test_version, list("tururu" = 0), test_folder,
+      .parallel_options = test_parallel_conf,
+      .verbose = FALSE
+    ) |> nrow()) < 1
+  )
+})
+

@@ -53,7 +53,7 @@
 #' @export
 ifn_to_tibble <- function(
     provinces,
-    ifn,
+    version,
     filter_list,
     folder,
     ...,
@@ -61,6 +61,7 @@ ifn_to_tibble <- function(
     .verbose = TRUE
 ) {
 
+  browser()
   ## Assertions and checks ##
   # grep
   assertthat::assert_that(
@@ -70,7 +71,7 @@ ifn_to_tibble <- function(
   # departments
   assertthat::assert_that(
     is.character(provinces), length(provinces) > 0,
-    msg = cli::cli_abort("provinces must be a character vector with at least one department code")
+    msg = cli::cli_abort("provinces must be a character vector with at least one province code")
   )
   ## TODO
   # check all provinces are valid
@@ -123,14 +124,14 @@ ifn_to_tibble <- function(
   ## inform the user
   verbose_msg(
     cli::cli_inform(
-      c("Start", "i" = "Processing {length(years)} year{?s}")
+      c("Start", "i" = "Processing {length(version)} cicle{?s}")
     ),
     .verbose
   )
 
-  ## send the years in loop to process table function
+  ## send the version in loop to process table function
   purrr::map(
-    years,
+    version,
     .f = \(version) {
       ifn_tables_process(
         provinces, version, filter_list, folder, .parallel_options, .verbose, ...)
@@ -139,7 +140,7 @@ ifn_to_tibble <- function(
   ) |>
     purrr::list_rbind()
 }
-
+ 
 
 #' Inner function to process all tables for one year
 #'
