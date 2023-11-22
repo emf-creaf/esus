@@ -2,6 +2,7 @@
     version, provinces, filter_list, folder, .verbose, .call = rlang::caller_env()
 ) {
 
+  # browser()
   # first, if is null filter list, create it
   if (is.null(filter_list)) {
     filter_list <- list("24" = c(6))
@@ -138,6 +139,8 @@
 
 .build_ifn_file_path <- function(province, type, version, folder = ".", .call = rlang::caller_env()) {
 
+   # browser()
+  # 
   # Ok, so here we need to do some things. Depending on .version (the IFN version) we need to
   # provide different things.
   purrr::pmap_chr(
@@ -153,8 +156,9 @@
           "regen" = glue::glue("PIESME{province}.DBF")
         )
 
+        file_name<-fs::path(folder, file_name)
         # return path
-        table_path <- fs::path(folder, file_name)
+        table_path <- fs::path(file_name)
       }
 
       if (version == "ifn3") {
@@ -193,7 +197,7 @@
       }
 
       # check file exists
-      if (!fs::file_exists(table_path)) {
+      if (!fs::file_exists(file_name)) {
         cli::cli_warn(c(
           "{.path {file_name}} file doesn't exists",
           "!" = "Please check if {.path {folder}} is the correct path",

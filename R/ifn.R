@@ -61,7 +61,7 @@ ifn_to_tibble <- function(
     .verbose = TRUE
 ) {
 
-  browser()
+  # browser()
   ## Assertions and checks ##
   # grep
   assertthat::assert_that(

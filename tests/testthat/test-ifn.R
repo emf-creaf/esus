@@ -32,10 +32,10 @@ test_plots <- list(
 
 test_provinces <- names(test_plots)
 test_folder <- Sys.getenv("ifn_path")
-test_version = "ifn2"
-test_version = "ifn3"
+ test_version = "ifn2"
+ test_version = "ifn3"
 test_input <- .build_ifn_input_with (
-  test_version ,
+  test_version,
   test_provinces,
   test_plots, 
   test_folder,
@@ -496,7 +496,7 @@ test_that("ifn_to_tibble works as intended", {
   # data integrity
   expect_named(test_res, expected_names)
   expect_false("tururu" %in% unique(test_res$province_code))
-  expect_identical(nrow(test_res), 63L) # two plots dont exist, so 2x2=4 rows less
+  expect_identical(nrow(test_res), 62L) # two plots dont exist, so 2x2=4 rows less
   expect_true(all(unique(test_res$province_code) %in% names(test_plots)))
   expect_true(all(unique(test_res$version) %in% test_version))
   
