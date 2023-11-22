@@ -74,7 +74,7 @@
 #' @noRd
 .read_ifn_data <- function(input, colnames, ...) {
 
- 
+
   # first, if ifn3 or ifn4 we have file name and table name in a character separated by "|" but if
   # we have ifn2 we have the name of the corresponding file.
   table_name <- NULL
@@ -140,7 +140,7 @@
 .build_ifn_file_path <- function(province, type, version, folder = ".", .call = rlang::caller_env()) {
 
    # browser()
-  # 
+  #
   # Ok, so here we need to do some things. Depending on .version (the IFN version) we need to
   # provide different things.
   purrr::pmap_chr(
@@ -150,15 +150,14 @@
       if (version == "ifn2") {
         file_name <- switch(
           type,
-          "plot" = glue::glue("DATEST{province}.DBF"),
-          "tree" = glue::glue("PIESMA{province}.DBF"),
-          "shrub" = glue::glue("MATORR{province}.DBF"),
-          "regen" = glue::glue("PIESME{province}.DBF")
+          "plot" = fs::path(folder, glue::glue("DATEST{province}.DBF")),
+          "tree" = fs::path(folder, glue::glue("PIESMA{province}.DBF")),
+          "shrub" = fs::path(folder, glue::glue("MATORR{province}.DBF")),
+          "regen" = fs::path(folder, glue::glue("PIESME{province}.DBF"))
         )
 
-        file_name<-fs::path(folder, file_name)
         # return path
-        table_path <- fs::path(file_name)
+        table_path <- file_name
       }
 
       if (version == "ifn3") {
