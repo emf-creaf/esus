@@ -886,7 +886,7 @@ ifn_regen_table_process <- function(regen_data, version, plot, province, ESPECIE
 
 
 
-ifn_plot_table_process <- function(plot_data, coord_data, version, plot, province, ifn_provinces_dictionary){
+ifn_plot_table_process <- function(plot_data,  version, plot, province, ifn_provinces_dictionary){
 
 
 
@@ -1095,6 +1095,166 @@ ifn_plot_table_process <- function(plot_data, coord_data, version, plot, provinc
   return(info_plot)
   }
 
+  if (version %in% c("ifn3", "ifn4")){
+    
+    
+    plot_filtered_data <- .read_inventory_data(
+      plot_data,
+      colnames = dplyr::any_of(c(
+        
+        # "Provincia", 
+        "Estadillo", 
+        "Clase", 
+        "Subclase",
+        "IDPARCELA", 
+        "IDCLASE", 
+        "ID",
+        "Tipo",
+        "Ano",
+        "Rocosid",
+        "MatOrg", 
+        "TipSuelo1",
+        "TipSuelo2",
+        "TipSuelo3", 
+        "Orienta1",
+        "Orienta2",
+        "MaxPend1",
+        "MaxPend2"
+        
+      )),
+      .ifn = TRUE
+    ) |>
+      dplyr::filter(
+        ESTADILLO == plot
+        # PROVINCIA == province
+      ) |>
+      tibble::as_tibble()
+    
+    
+    
+    # ## We check before continuing, because if the filter is too restrictive maybe we dont have rows
+    if (nrow(plot_filtered_data) < 1) {
+      # warn the user
+      cli::cli_warn(c(
+        "Data missing for that plot",
+        "i" = "Returning empty tibble for plot {.var {plot}}  "
+      ))
+      return(dplyr::tibble())
+    }
+    
+    soil <- plot_filtered_data |>
+      
+      dplyr::mutate(
+        province_code = province,
+        province_code = as.numeric(province_code),
+        PLOT = Estadillo,
+        YEAR = Ano,
+        ID_UNIQUE_PLOT = paste("ES",province_code, PLOT, sep = "_"),
+        soil_field = list(plot_filtered_data |>
+                            dplyr::mutate(
+                              PLOT = Estadillo,
+                              province_code = province,
+                              province_code = as.numeric(province_code),
+                              ID_UNIQUE_PLOT = paste("ES",province_code, PLOT, sep="_"))|>
+                            dplyr::select( ID_UNIQUE_PLOT,
+                                           province_code,
+                                           Clase,
+                                           Subclase,
+                                           Estadillo, 
+                                           YEAR = Ano,
+                                           Rocosid,
+                                           MatOrg, 
+                                           TipSuelo1,
+                                           TipSuelo2,
+                                           TipSuelo3
+                            )))|>
+      
+      #selection of final variables 
+      
+      dplyr::select(
+        ID_UNIQUE_PLOT,
+        province_code,
+        Clase,
+        Subclase,
+        PLOT,
+        IDPARCELA,
+        YEAR,
+        soil_field
+        
+      )
+    
+    #we add the id code   
+    info_plot<- plot_filtered_data |>
+      
+      dplyr::mutate(
+        PLOT = Estadillo,
+        YEAR = Ano,
+        COUNTRY = "ES",
+        province_code = as.numeric(province),
+        ID_UNIQUE_PLOT = paste("ES",province_code, PLOT, sep="_"),
+        #de grados centesimales a sexagesimales??
+        Orienta1 = Orienta1 * 0.9,
+        soils = list(soil),
+        # ciclo = dplyr::case_when( 
+        #   Ano <2009 ~ "ifn3",
+        #   Ano >=2009 ~ "ifn4"),
+        COORD_SYS = case_when(
+          version == "ifn4" & province_code %in% c(1, 7, 8, 15,17,20, 25, 26,27,28,30,32,33,36,39,43,48)  ~ "ED50",
+          version == "ifn4" & province_code %in% c(35, 38) ~ "WGS84",
+          version == "ifn4" & province_code %in% c(2,3,4,5,6,9,10,11,12,13,14,16,18,19,21,22,23,24,29,31,
+                                                    34,37,40,41,42,44,45,46,47,49,50) ~ "ETRS89",
+          
+          version == "ifn4" & province_code %in% c(1, 7, 8, 15,17,20, 25, 26,27,28,30,32,33,36,39,43,48,2,3,4,5,6,9,10,11,12,13,14,16,18,19,21,22,23,24,29,31,
+                                                    34,37,40,41,42,44,45,46,47,49,50, 35, 38) ~ "ED50")
+      )|>
+      
+      
+      dplyr::left_join(
+        y = ifn_provinces_dictionary |>
+          dplyr::select(
+            province_code = province_code,
+            province_name_original = province_name_original,
+            ca_name_original = ca_name_original
+          ),
+        by = "province_code")
+    
+    
+        |>
+      
+      
+      dplyr::rename(
+        ASPECT = Orienta1,
+        SLOPE = MaxPend1,
+        
+      )|>
+      
+      #selection of final variables 
+      
+      dplyr::select(
+        
+        ID_UNIQUE_PLOT,
+        COUNTRY,
+        Comunidad_nombre,
+        Provincia_nombre,
+        Provincia_codigo,
+        PLOT,
+        IDPARCELA,
+        ID,
+        IDCLASE,
+        Clase, 
+        Subclase,
+        COORD_SYS,
+        YEAR,
+        ciclo,
+        Tipo,
+        ASPECT,
+        SLOPE,
+        soils
+        
+      ) 
+    return(info_plot)
+  }
+  
 
   # Return plot with soil
  
