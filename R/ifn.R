@@ -396,7 +396,7 @@ ifn_tree_table_process <- function(tree_data, version, plot, province, ESPECIES)
   return(tree)
   }
   
-  if (version == "ifn3"){
+  if (version %in% c("ifn3", "ifn4")){
     
     
     tree_filtered_data <-  .read_inventory_data(
@@ -405,7 +405,7 @@ ifn_tree_table_process <- function(tree_data, version, plot, province, ESPECIES)
         
           "Provincia",
           "Estadillo", 
-          "Clase", 
+          "Cla", 
           "Subclase",
           "Especie",
           "nArbol",
@@ -446,6 +446,7 @@ ifn_tree_table_process <- function(tree_data, version, plot, province, ESPECIES)
       dplyr::rename(
         PLOT = Estadillo,
         HT = Ht,
+        Clase = Cla,
         province_code = Provincia,
       )
       # units transformations
@@ -626,6 +627,81 @@ ifn_shrub_table_process <- function(shrub_data, version, plot, province, ESPECIE
   # Return shrub
   return(shrub)
   }
+  
+  if (version %in% c("ifn3", "ifn4")){
+    
+    
+    shrub_filtered_data <- .read_inventory_data(
+      shrub_data,
+      colnames = dplyr::any_of(c(
+        "Provincia", 
+        "Estadillo", 
+        "Cla", 
+        "Subclase",
+        "Especie",
+        "Fcc", 
+        "Hm"
+      )),
+      .ifn = TRUE
+    ) |>
+      dplyr::filter(
+        ESTADILLO == plot
+      ) |>
+      tibble::as_tibble()
+    
+    # ## We check before continuing, because if the filter is too restrictive maybe we dont have rows
+    if (nrow(shrub_filtered_data) < 1) {
+      # warn the user
+      cli::cli_warn(c(
+        "Data missing for that plot",
+        "i" = "Returning empty tibble for plot {.var {plot}}  "
+      ))
+      return(dplyr::tibble())
+    }
+
+    shrub<- shrub_filtered_data |>
+      
+      dplyr::rename(
+        PLOT = Estadillo,
+        HT = Hm,
+        Clase = Cla,
+        province_code = Provincia,
+      ) |>
+      dplyr::mutate(
+        COVER = Fcc,
+        #DM TO M
+        HT = HT * 0.1 ,
+        SP_CODE = as.numeric(Especie),
+        ID_UNIQUE_PLOT = paste("ES",province_code, PLOT, sep="_")
+        
+      ) |>
+      
+      
+      # 3. ref_plant_dictionary
+      #we join data from plant ref dictionary
+      # some symbols apply for multiple species
+      
+      dplyr::left_join(
+        y =  ESPECIES |>
+          dplyr::select(
+            SP_CODE ,
+            SP_NAME ),
+        by = "SP_CODE"
+      ) |> 
+      
+      dplyr::select(
+        ID_UNIQUE_PLOT,
+        province_code,
+        Clase, 
+        Subclase,
+        PLOT,
+        SP_NAME,
+        SP_CODE,
+        HT,
+        COVER
+      )
+    
+  }
 }
 
 
@@ -723,11 +799,98 @@ ifn_regen_table_process <- function(regen_data, version, plot, province, ESPECIE
   return(regeneration)
 
   }
+  
+  
+  if (version %iin% c("ifn3", "ifn4")){
+  
+  regen_filtered_data <- .read_inventory_data(
+  regen_data,
+  col_select = dplyr::all_of(c(
+    "Provincia", 
+    "Estadillo", 
+    "Cla", 
+    "Subclase",
+    "Especie",
+    "CatDes", 
+    "Tipo", 
+    "Densidad", 
+    "NumPies",
+    "Hm"
+  )),
+  .ifn = TRUE
+  ) |>
+    dplyr::filter(
+      ESTADILLO == plot
+    ) |>
+    tibble::as_tibble()
+    
+  
+  # ## We check before continuing, because if the filter is too restrictive maybe we dont have rows
+  if (nrow(regen_filtered_data) < 1) {
+    # warn the user
+    cli::cli_warn(c(
+      "Data missing for that plot",
+      "i" = "Returning empty tibble for plot {.var {plot}}  "
+    ))
+    return(dplyr::tibble())
+  }
+  
+  
+  #we add the id code   
+  regeneration<- regen_filtered_data|>
+    
+    dplyr::rename(
+      PLOT = Estadillo,
+      Clase = Cla,
+      province_code = Provincia,
+    )|>
+    
+    dplyr::mutate(
+      #DM TO M
+      Hm = Hm * 0.1,
+      SP_CODE = as.numeric(Especie),
+      ID_UNIQUE_PLOT = paste("ES",province_code, PLOT, sep = "_")) |>
+    
+    dplyr::left_join(
+      y =  ESPECIES |>
+        dplyr::select(
+          SP_CODE ,
+          SP_NAME ),
+      by = "SP_CODE"
+    ) |> 
+    
+    
+    #selection of final variables 
+    
+    dplyr::select(
+      ID_UNIQUE_PLOT,
+      Provincia_codigo,
+      Clase,
+      Subclase,
+      PLOT,
+      #codigo
+      SP_CODE,
+      #nombre en latin
+      SP_NAME,
+      #categoria de desarollo
+      CatDes, 
+      #origen de los pies
+      Tipo, 
+      NumPies,
+      Hm
+    )
+  
+  # Return regen
+  return(regeneration)
+  
+  
+  
+  }
 }
 
 
 
-ifn_plot_table_process <- function(plot_data, version, plot, province, ifn_provinces_dictionary){
+ifn_plot_table_process <- function(plot_data, coord_data, version, plot, province, ifn_provinces_dictionary){
 
 
 
