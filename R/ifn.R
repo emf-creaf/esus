@@ -398,12 +398,11 @@ ifn_tree_table_process <- function(tree_data, version, plot, province, ESPECIES)
   
   if (version %in% c("ifn3", "ifn4")){
     
+    # browser()
     
     tree_filtered_data <-  .read_inventory_data(
       tree_data,
       colnames = dplyr::any_of(c(
-        
-          "Provincia",
           "Estadillo", 
           "Cla", 
           "Subclase",
@@ -447,10 +446,10 @@ ifn_tree_table_process <- function(tree_data, version, plot, province, ESPECIES)
         PLOT = Estadillo,
         HT = Ht,
         Clase = Cla,
-        province_code = Provincia,
-      )
+      ) |> 
       # units transformations
       dplyr::mutate(
+        province_code =  province,
         # unique inner code
         ID_UNIQUE_PLOT = paste("ES",province_code, PLOT, sep="_"),
         DIA = (Dn1 + Dn2)/2,
@@ -460,7 +459,7 @@ ifn_tree_table_process <- function(tree_data, version, plot, province, ESPECIES)
         SP_CODE = as.numeric(Especie),
         
         # density represented by each tree considering  plot design (variable radious)
-        DENSITY = case_when(
+        DENSITY = dplyr::case_when(
           DIA < 12.5 ~ 127.3239546,
           DIA >= 12.5 & DIA < 22.5 ~ 31.83098865,
           DIA >= 22.5 & DIA < 42.5 ~ 14.14710607,
@@ -489,8 +488,6 @@ ifn_tree_table_process <- function(tree_data, version, plot, province, ESPECIES)
           "province_code",
           "Clase",
           "Subclase",
-          "IDPARCELA",
-          "IDCLASE",
           "PLOT",
           "SP_CODE",
           "SP_NAME",
@@ -634,7 +631,6 @@ ifn_shrub_table_process <- function(shrub_data, version, plot, province, ESPECIE
     shrub_filtered_data <- .read_inventory_data(
       shrub_data,
       colnames = dplyr::any_of(c(
-        "Provincia", 
         "Estadillo", 
         "Cla", 
         "Subclase",
@@ -645,7 +641,7 @@ ifn_shrub_table_process <- function(shrub_data, version, plot, province, ESPECIE
       .ifn = TRUE
     ) |>
       dplyr::filter(
-        ESTADILLO == plot
+        Estadillo == plot
       ) |>
       tibble::as_tibble()
     
@@ -664,10 +660,10 @@ ifn_shrub_table_process <- function(shrub_data, version, plot, province, ESPECIE
       dplyr::rename(
         PLOT = Estadillo,
         HT = Hm,
-        Clase = Cla,
-        province_code = Provincia,
+        Clase = Cla
       ) |>
       dplyr::mutate(
+        province_code = province,
         COVER = Fcc,
         #DM TO M
         HT = HT * 0.1 ,
@@ -700,7 +696,8 @@ ifn_shrub_table_process <- function(shrub_data, version, plot, province, ESPECIE
         HT,
         COVER
       )
-    
+    return(shrub)
+        
   }
 }
 
@@ -801,12 +798,11 @@ ifn_regen_table_process <- function(regen_data, version, plot, province, ESPECIE
   }
   
   
-  if (version %iin% c("ifn3", "ifn4")){
+  if (version %in% c("ifn3", "ifn4")){
   
   regen_filtered_data <- .read_inventory_data(
   regen_data,
-  col_select = dplyr::all_of(c(
-    "Provincia", 
+  colnames = dplyr::all_of(c(
     "Estadillo", 
     "Cla", 
     "Subclase",
@@ -820,7 +816,7 @@ ifn_regen_table_process <- function(regen_data, version, plot, province, ESPECIE
   .ifn = TRUE
   ) |>
     dplyr::filter(
-      ESTADILLO == plot
+      Estadillo == plot
     ) |>
     tibble::as_tibble()
     
@@ -841,15 +837,15 @@ ifn_regen_table_process <- function(regen_data, version, plot, province, ESPECIE
     
     dplyr::rename(
       PLOT = Estadillo,
-      Clase = Cla,
-      province_code = Provincia,
-    )|>
+      Clase = Cla
+    ) |>
     
     dplyr::mutate(
+      province_code = province,
       #DM TO M
       Hm = Hm * 0.1,
       SP_CODE = as.numeric(Especie),
-      ID_UNIQUE_PLOT = paste("ES",province_code, PLOT, sep = "_")) |>
+      ID_UNIQUE_PLOT = paste("ES",province, PLOT, sep = "_")) |>
     
     dplyr::left_join(
       y =  ESPECIES |>
@@ -864,7 +860,7 @@ ifn_regen_table_process <- function(regen_data, version, plot, province, ESPECIE
     
     dplyr::select(
       ID_UNIQUE_PLOT,
-      Provincia_codigo,
+      province_code,
       Clase,
       Subclase,
       PLOT,
