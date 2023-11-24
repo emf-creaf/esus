@@ -169,11 +169,11 @@ ifn_to_tibble <- function(
       # temp_res <- purrr::pmap(
       .progress = .verbose,
       .l = input_df,
-      .f = \(province, plots, tree_table, plot_table, shrub_table, regen_table) {
+      .f = \(province, plots, tree_table, plot_table, shrub_table, regen_table, coord_table) {
 
       # browser()
       #
-      plot_info <- ifn_plot_table_process(plot_table, version, plots, province, ifn_provinces_dictionary)
+      plot_info <- ifn_plot_table_process(plot_table, coord_table, version, plots, province, ifn_provinces_dictionary)
 
 
       tree <- ifn_tree_table_process(tree_table, version, plots, province, ESPECIES)
@@ -211,7 +211,7 @@ ifn_to_tibble <- function(
           COORD1 = COORDEX,
           COORD2 = COORDEY,
 
-        )|>
+        ) |>
 
         dplyr::select(
           ID_UNIQUE_PLOT,
@@ -886,9 +886,9 @@ ifn_regen_table_process <- function(regen_data, version, plot, province, ESPECIE
 
 
 
-ifn_plot_table_process <- function(plot_data,  version, plot, province, ifn_provinces_dictionary){
+ifn_plot_table_process <- function(plot_data, coord_data, version, plot, province, ifn_provinces_dictionary){
 
-
+browser()
 
 
   # Assertions  and checks/validations
@@ -1101,8 +1101,7 @@ ifn_plot_table_process <- function(plot_data,  version, plot, province, ifn_prov
     plot_filtered_data <- .read_inventory_data(
       plot_data,
       colnames = dplyr::any_of(c(
-        
-        # "Provincia", 
+
         "Estadillo", 
         "Cla", 
         "Subclase",
@@ -1123,7 +1122,6 @@ ifn_plot_table_process <- function(plot_data,  version, plot, province, ifn_prov
     ) |>
       dplyr::filter(
         Estadillo == plot
-        # PROVINCIA == province
       ) |>
       tibble::as_tibble()
     
@@ -1139,7 +1137,7 @@ ifn_plot_table_process <- function(plot_data,  version, plot, province, ifn_prov
       return(dplyr::tibble())
     }
     
-    plot_filtered_data<-plot_filtered_data |> 
+    plot_filtered_data <- plot_filtered_data |> 
       dplyr::rename(
         YEAR = Ano,
         PLOT = Estadillo,
@@ -1159,27 +1157,27 @@ ifn_plot_table_process <- function(plot_data,  version, plot, province, ifn_prov
         # PLOT = Estadillo,
         # YEAR = Ano,
         # ID_UNIQUE_PLOT = paste("ES",province_code, PLOT, sep = "_"),
-        soil_field = list(plot_filtered_data |>
-                            # dplyr::mutate(
-                            #   PLOT = Estadillo,
-                            #   province_code = province,
-                            #   province_code = as.numeric(province_code),
-                            #   ID_UNIQUE_PLOT = paste("ES",province_code, PLOT, sep="_"))|>
-                            dplyr::select( ID_UNIQUE_PLOT,
-                                           province_code,
-                                           Clase,
-                                           Subclase,
-                                           PLOT, 
-                                           YEAR,
-                                           Rocosid,
-                                           MatOrg, 
-                                           TipSuelo1,
-                                           TipSuelo2,
-                                           TipSuelo3
-                            )))|>
-      
-     
-      
+          soil_field = list(
+            plot_filtered_data |>
+            # dplyr::mutate(
+            #   PLOT = Estadillo,
+            #   province_code = province,
+            #   province_code = as.numeric(province_code),
+            #   ID_UNIQUE_PLOT = paste("ES",province_code, PLOT, sep="_"))|>
+              dplyr::select( 
+                ID_UNIQUE_PLOT,
+                 province_code,
+                 Clase,
+                 Subclase,
+                 PLOT, 
+                 YEAR,
+                 Rocosid,
+                 MatOrg, 
+                 TipSuelo1,
+                 TipSuelo2,
+                 TipSuelo3
+                ))) |>
+
       #selection of final variables 
       
       dplyr::select(
@@ -1191,16 +1189,14 @@ ifn_plot_table_process <- function(plot_data,  version, plot, province, ifn_prov
         PLOT,
         YEAR,
         soil_field
-        
       )
     
     #we add the id code   
     info_plot <- plot_filtered_data |>
       dplyr::rename(
         ASPECT = Orienta1,
-        SLOPE = MaxPend1,
-        
-      )|>
+        SLOPE = MaxPend1
+      ) |>
       dplyr::mutate(
         # PLOT = Estadillo,
         # YEAR = Ano,
@@ -1210,19 +1206,13 @@ ifn_plot_table_process <- function(plot_data,  version, plot, province, ifn_prov
         #de grados centesimales a sexagesimales??
         ASPECT = ASPECT * 0.9,
         soils = list(soil),
-        # ciclo = dplyr::case_when( 
-        #   Ano <2009 ~ "ifn3",
-        #   Ano >=2009 ~ "ifn4"),
         COORD_SYS = dplyr::case_when(
-          version == "ifn4" & province_code %in% c(1, 7, 8, 15,17,20, 25, 26,27,28,30,32,33,36,39,43,48)  ~ "ED50",
-          version == "ifn4" & province_code %in% c(35, 38) ~ "WGS84",
-          version == "ifn4" & province_code %in% c(2,3,4,5,6,9,10,11,12,13,14,16,18,19,21,22,23,24,29,31,
-                                                    34,37,40,41,42,44,45,46,47,49,50) ~ "ETRS89",
-          version == "ifn3" & province_code %in% c(1, 7, 8, 15,17,20, 25, 26,27,28,30,32,33,36,39,43,48,2,3,4,5,6,9,10,11,12,13,14,16,18,19,21,22,23,24,29,31,
-                                                    34,37,40,41,42,44,45,46,47,49,50, 35, 38) ~ "ED50")
+          version == "ifn4" & province_code %in% c("01", "07", "08", "15","17","20", "25", "26","27","28","30","32","33","36","39","43","48")  ~ "ED50",
+          version == "ifn4" & province_code %in% c("35", "38") ~ "WGS84",
+          version == "ifn4" & province_code %in% c("02","03","04","05","06","09","10","11","12","13","14","16","18","19","21","22","23","24","29","31","34","37","40","41","42","44","45","46","47","49","50") ~ "ETRS89",
+          version == "ifn3" & province_code %in% c("01", "07", "08", "15","17","20", "25", "26","27","28","30","32","33","36","39","43","48","02","03","04","05","06","09","10","11","12","13","14","16","18","19","21","22","23","24","29","31","34","37","40","41","42","44","45","46","47","49","50", "35", "38") ~ "ED50")
       ) |>
-      
-      
+
       dplyr::left_join(
         y = ifn_provinces_dictionary |>
           dplyr::select(
@@ -1256,64 +1246,131 @@ ifn_plot_table_process <- function(plot_data,  version, plot, province, ifn_prov
       ) 
     return(info_plot)
     
-  #   
-  #   coords_filtered_data <- transform_data_ifn(coords_data)|>
-  #     dplyr::select(
-  #       any_of(c(
-  #         
-  #         "Provincia",
-  #         "Estadillo",
-  #         "Clase",
-  #         "Subclase",
-  #         "IDPARCELA",
-  #         "IDCLASE",
-  #         "ID",
-  #         "Hoja50",
-  #         "CoorX",
-  #         "CoorY",
-  #         "Huso"
-  #       )))|>
-  #     
-  #     dplyr::rename(
-  #       COORD1 = CoorX,
-  #       COORD2 = CoorY)|>
-  #     
-  #     
-  #     
-  #     dplyr::mutate(
-  #       Provincia_codigo = as.numeric(Provincia),
-  #       ID_UNIQUE_PLOT = paste("ES",Provincia_codigo, Estadillo, sep="_")
-  #     )|>
-  #     
-  #     
-  #     crs = dplyr::case_when(
-  #       Huso == 30 & COORD_SYS == "ED50" ~ 23030,
-  #       Huso == 31 & COORD_SYS == "ED50" ~ 4326,
-  #       Huso == 29 & COORD_SYS == "ED50" ~ 23029,
-  #       Huso == 30 & COORD_SYS == "ETRS89" ~ 25830,
-  #       Huso == 31 & COORD_SYS == "ETRS89" ~ 25831,
-  #       Huso == 29 & COORD_SYS == "ETRS89" ~ 25829,
-  #       Huso == 28 & COORD_SYS == "ED50" ~ 23028,
-  #       Huso == 28 & COORD_SYS == "WGS84" ~ 32628,
-  #       TRUE ~ NA_integer_
-  #       
-  #     ) |> 
-  #     #we filter by plot year and province
-  #     dplyr::filter(
-  #       IDPARCELA == plot,
-  #       Provincia == province
-  #     )
-  # } 
-  # 
-  # 
-  #   
+    
+        if (version %in% c( "ifn3","ifn4")){
+
+  files_validation <- assertthat::validate_that(
+    !any(is.na(c(coord_data)))
+    # !any(c(coord_data) == NA_character_)
+    )
+  
+   coords_filtered_data <- .read_inventory_data(
+    coord_data,
+    colnames = dplyr::any_of(c(
+          "Estadillo",
+          "Clase",
+          "Subclase",
+          "Hoja50",
+          "CoorX",
+          "CoorY",
+          "Huso"
+    )),
+  .ifn = TRUE
+   ) |>
+     dplyr::filter(
+       Estadillo == plot
+     ) |>
+     tibble::as_tibble()
+   
+   
+   
+   
+   # ## We check before continuing, because if the filter is too restrictive maybe we dont have rows
+   if (nrow(coords_filtered_data) < 1) {
+     # warn the user
+     cli::cli_warn(c(
+       "Data missing for that plot",
+       "i" = "Returning empty tibble for plot {.var {plot}}  "
+     ))
+     return(dplyr::tibble())
+   }
+   
+  
+   
+   coords_data <- coords_filtered_data |> 
+     
+     
+      dplyr::rename(
+        PLOT = Estadillo,
+        COORD1 = CoorX,
+        COORD2 = CoorY
+        ) |>
+   
+      dplyr::mutate(
+        province_code = province,
+        province_code = as.character(province_code),
+        version = version,
+        ID_UNIQUE_PLOT = paste("ES",province_code, PLOT, sep = "_"),
+        Huso = dplyr::case_when(
+          version =="ifn3" ~ NA,
+          TRUE ~ Huso))  
+
+    
+   } 
+    
+
+
+
+       info_plot <- info_plot|>
+         
+     dplyr::left_join(
+           y = coords_data|>
+             dplyr::select(any_of(c(
+               "ID_UNIQUE_PLOT" ,
+               "Clase",
+               "COORD1"  ,
+               "COORD2" ,
+               "Hoja50" ,
+               "Huso"
+             ))
+             ),
+           by = c("ID_UNIQUE_PLOT", "Clase")
+         ) |>
+         dplyr::mutate(
+
+       crs = dplyr::case_when(
+         Huso == 30 & COORD_SYS == "ED50" ~ 23030,
+         Huso == 31 & COORD_SYS == "ED50" ~ 4326,
+         Huso == 29 & COORD_SYS == "ED50" ~ 23029,
+         Huso == 30 & COORD_SYS == "ETRS89" ~ 25830,
+         Huso == 31 & COORD_SYS == "ETRS89" ~ 25831,
+         Huso == 29 & COORD_SYS == "ETRS89" ~ 25829,
+         Huso == 28 & COORD_SYS == "ED50" ~ 23028,
+         Huso == 28 & COORD_SYS == "WGS84" ~ 32628,
+         TRUE ~ NA_integer_)
+         ) |> 
+         
+     dplyr::select(
+       any_of(c(
+         "ID_UNIQUE_PLOT",
+         "COUNTRY",
+         "YEAR",
+         "ca_name_original",
+         "province_code",
+         "province_name_original",
+         "PLOT",
+         "Clase", 
+         "Subclase",
+         "YEAR",
+         "version",
+         "Tipo",
+         "ASPECT",
+         "SLOPE",
+         "COORD_SYS",
+         "COORD1",
+         "COORD2",
+         "Hoja50",
+         "Huso",
+         "soils"
+       ))
+     )
     
     
   }
   
 
   # Return plot with soil
- 
+  return(info_plot)
 }
 
 

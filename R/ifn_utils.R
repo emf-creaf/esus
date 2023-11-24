@@ -16,7 +16,7 @@
     )), .verbose
   )
 
-  filter_list |>
+  filter_list<-filter_list |>
     tibble::enframe() |>
     tidyr::unnest(cols = value) |>
     purrr::set_names(c("province", "plots")) |>
@@ -52,9 +52,24 @@
         version,
         folder,
         .call = .call
+      ),
+      coord_table = NA)
+  
+  if (version %in% c( "ifn3", "ifn4")){
+    
+    filter_list |> 
+      dplyr::mutate(
+        coord_table = .build_ifn_file_path(
+          province,
+          type = "coord",
+          version,
+          folder,
+          .call = .call
+        )
       )
-
-    )
+    
+    
+  }
 }
 
 
@@ -168,8 +183,8 @@
           "tree" = "PCMayores",
           "shrub" = "PCMatorral",
           "regen" = "PCRegenera",
-          "plot" = "PCParcelas"
-          # "coord" = "PCDatosMap"
+          "plot" = "PCParcelas",
+          "coord" = "PCDatosMap"
           # "coord" = "Listado definitivo"
           # others needed
         )
@@ -188,8 +203,8 @@
           "tree" = "PCMayores",
           "shrub" = "PCMatorral",
           "regen" = "PCRegenera",
-          "plot" = "PCParcelas"
-          # "coord" = "PCDatosMap"
+          "plot" = "PCParcelas",
+          "coord" = "PCDatosMap"
           # others needed
         )
 

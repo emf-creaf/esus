@@ -856,7 +856,7 @@ test_that("ifn_regen_table_process for ifn4 works as intended", {
   
   test_plots <- list(
     # "01" = c(19,80,1120),
-    # # "02"= c(11,444,1839),
+    # "02"= c(11,444,1839),
     # "03"= c(626,1021,23),
     # "04"= c(233,5,445),
     # "05" = c(61, 14, 328),
@@ -874,14 +874,14 @@ test_that("ifn_regen_table_process for ifn4 works as intended", {
     # "31" = c(135,761,1518),
     # "38" = c(672,426,1557),
     # "40" = c(412,1216,1728),
-    # # "50" = c(172, 479,744),
+    # "50" = c(172, 479,744),
     # "49" = c(105,99,532),
     # "91" = c(1406115, 0),
-    #  "tururu" = 3555
+    # "tururu" = 3555
   )
   
   test_provinces <- names(test_plots)
-  test_version<- "ifn4"
+  test_version <- "ifn4"
   test_input <- .build_ifn_input_with (
     test_version,
     test_provinces,
@@ -972,300 +972,300 @@ test_that("ifn_regen_table_process for ifn4 works as intended", {
 })
 
 
-# test_that("ifn_plot_table_process works as intended", {
-# 
-#   expected_names <- c(
-#     "ID_UNIQUE_PLOT",
-#     "COUNTRY",
-#     "province_code",
-#     "province_name_original",
-#     "ca_name_original",
-#     "PLOT",
-#     "YEAR",
-#     "version",
-#     "HOJA",
-#     "Huso",
-#     "COORDEX",
-#     "COORDEY",
-#     "COORD_SYS",
-#     "crs",
-#     "PENDIEN2",
-#     "SLOPE",
-#     "ELEV",
-#     "ASPECT",
-#     "soils"
-#   )
-# 
-#   # object
-# 
-# 
-#   expect_s3_class(
-#     test_res <- ifn_plot_table_process(
-#       test_input$plot_table[6],
-#       test_version,
-#       test_input$plots[6],
-#       test_input$province[6],
-#       test_provinces_dictionary
-# 
-#     ),
-#     "tbl"
-#   )
-# 
-#   # data integrity
-#   expect_named(test_res, expected_names, ignore.order = TRUE)
-#   expect_true(nrow(test_res) > 0)
-# 
-# 
-#   expect_length(unique(test_res$PLOT), 1)
-#   expect_length(unique(test_res$province_code), 1)
-# 
-# 
-#   expect_identical(unique(test_res$PLOT)|> as.character(), test_input$plots[6] |> as.character())
-#   #CHECK THIS AGAIN, BOTH SHOULD BE CHARACTER
-#   expect_identical(unique(test_res$province_code) |> as.numeric(), test_input$province[6]|> as.numeric())
-# 
-#   # errors
-#   expect_warning(
-#     test_error <- ifn_plot_table_process(
-#       NA_character_,
-#       test_version,
-#       test_input$plots[3],
-#       test_input$province[3],
-#       test_provinces_dictionary
-#     ),
-#     "Some files"
-#   )
-#   expect_s3_class(test_error, "tbl")
-#   expect_true(nrow(test_error) < 1)
-# 
-#   # error in department name, gives an empty tibble
-#   expect_s3_class(
-#     test_error <- suppressWarnings(ifn_plot_table_process(
-#       test_input$regen_table[66],
-#       test_version,
-#       test_input$plots[66],
-#       test_input$province[66],
-#       test_provinces_dictionary
-#     )),
-#     "tbl"
-#   )
-#   expect_true(nrow(test_error) < 1)
-#   # error in plot name, should return an empty tibble
-#   expect_s3_class(
-#     test_error <- suppressWarnings(ifn_plot_table_process(
-#       test_input$regen_table[64],
-#       test_version,
-#       test_input$plots[64],
-#       test_input$province[64],
-#       test_provinces_dictionary
-#     )),
-#     "tbl"
-#   )
-#   expect_true(nrow(test_error) < 1)
-# })
-# 
+test_that("ifn_plot_table_process works as intended", {
+
+  expected_names <- c(
+    "ID_UNIQUE_PLOT",
+    "COUNTRY",
+    "province_code",
+    "province_name_original",
+    "ca_name_original",
+    "PLOT",
+    "YEAR",
+    "version",
+    "HOJA",
+    "Huso",
+    "COORDEX",
+    "COORDEY",
+    "COORD_SYS",
+    "crs",
+    "PENDIEN2",
+    "SLOPE",
+    "ELEV",
+    "ASPECT",
+    "soils"
+  )
+
+  # object
+
+
+  expect_s3_class(
+    test_res <- ifn_plot_table_process(
+      test_input$plot_table[6],
+      test_version,
+      test_input$plots[6],
+      test_input$province[6],
+      test_provinces_dictionary
+
+    ),
+    "tbl"
+  )
+
+  # data integrity
+  expect_named(test_res, expected_names, ignore.order = TRUE)
+  expect_true(nrow(test_res) > 0)
+
+
+  expect_length(unique(test_res$PLOT), 1)
+  expect_length(unique(test_res$province_code), 1)
+
+
+  expect_identical(unique(test_res$PLOT)|> as.character(), test_input$plots[6] |> as.character())
+  #CHECK THIS AGAIN, BOTH SHOULD BE CHARACTER
+  expect_identical(unique(test_res$province_code) |> as.numeric(), test_input$province[6]|> as.numeric())
+
+  # errors
+  expect_warning(
+    test_error <- ifn_plot_table_process(
+      NA_character_,
+      test_version,
+      test_input$plots[3],
+      test_input$province[3],
+      test_provinces_dictionary
+    ),
+    "Some files"
+  )
+  expect_s3_class(test_error, "tbl")
+  expect_true(nrow(test_error) < 1)
+
+  # error in department name, gives an empty tibble
+  expect_s3_class(
+    test_error <- suppressWarnings(ifn_plot_table_process(
+      test_input$regen_table[66],
+      test_version,
+      test_input$plots[66],
+      test_input$province[66],
+      test_provinces_dictionary
+    )),
+    "tbl"
+  )
+  expect_true(nrow(test_error) < 1)
+  # error in plot name, should return an empty tibble
+  expect_s3_class(
+    test_error <- suppressWarnings(ifn_plot_table_process(
+      test_input$regen_table[64],
+      test_version,
+      test_input$plots[64],
+      test_input$province[64],
+      test_provinces_dictionary
+    )),
+    "tbl"
+  )
+  expect_true(nrow(test_error) < 1)
+})
+
 # # tables process -----------------------------------------------------------------------------------
-# 
-# test_that("ifn_tables_process works as intended", {
-#   
-#   ### TODO
-#   # - test what happens when some tables are NAs (not found when building the input)
-#   # -
-#   #
-#   
-#   # tests config
-#   test_parallel_conf <- furrr::furrr_options(scheduling = 2L, stdout = TRUE)
-#   future::plan(future::multisession, workers = 3)
-#   withr::defer(future::plan(future::sequential))
-#   
-#   # tests data
-#   expected_names <- c(
-#     "ID_UNIQUE_PLOT",
-#     "COUNTRY",
-#     "YEAR",
-#     "ca_name_original",
-#     "province_name_original",
-#     "province_code",
-#     "PLOT",
-#     "version",
-#     "HOJA",
-#     "COORD_SYS",
-#     "COORD1",
-#     "COORD2",
-#     "crs",
-#     "PENDIEN2",
-#     "SLOPE", 
-#     "ELEV",
-#     "ASPECT",
-#     "tree",
-#     "understory",
-#     "regen",
-#     "soils"
-#   )
-#   
-#   # object
-#   expect_s3_class(
-#     test_res <- suppressWarnings(ifn_tables_process(
-#       test_provinces, test_version, test_plots, test_folder,
-#       .parallel_options = test_parallel_conf,
-#       .verbose = FALSE
-#     )),
-#     "tbl"
-#   )
-#   
-#   # data integrity
-#   expect_named(test_res, expected_names)
-#   expect_true(all(unique(test_res$province_code) %in% names(test_plots)))
-#   
-#   # ### missing tables/plots
-#   # # tururu state shouldn't appear
-#   # # inexistent plots (91-0) shouldn't
-#   # # be present, so 12 of 14 elements in filter list
-#   # expect_false("tururu" %in% unique(test_res$province))
-#   # expect_identical(nrow(test_res), 12L)
-# 
-#   # ### missing random files
-#   # # we test here what happens when some files are missing (ARBRE, ECOLOGIE...)
-#   # to do: 
-#   
-#   
-#   
-# })
-# 
-# 
-# # ifn_to_tibble -------------------------------------------------------------------------------
-# 
-# 
-# test_that("ifn_to_tibble works as intended", {
-#   
-#   # tests config
-#   test_parallel_conf <- furrr::furrr_options(scheduling = 2L, stdout = TRUE)
-#   future::plan(future::multisession, workers = 3)
-#   withr::defer(future::plan(future::sequential))
-#   
-#   # tests data
-#   expected_names <- c(
-#     "ID_UNIQUE_PLOT",
-#     "COUNTRY",
-#     "YEAR",
-#     "ca_name_original",
-#     "province_name_original",
-#     "province_code",
-#     "PLOT",
-#     "version",
-#     "HOJA",
-#     "COORD_SYS",
-#     "COORD1",
-#     "COORD2",
-#     "crs",
-#     "PENDIEN2",
-#     "SLOPE", 
-#     "ELEV",
-#     "ASPECT",
-#     "tree",
-#     "understory",
-#     "regen",
-#     "soils")
-#   test_version <- c("ifn2")
-# 
-#   
-#   # object
-#   expect_s3_class(
-#     test_res <- suppressWarnings(ifn_to_tibble(
-#       test_provinces, test_version, test_plots, test_folder,
-#       .parallel_options = test_parallel_conf,
-#       .verbose = FALSE
-#     )),
-#     "tbl"
-#   )
-#   
-#   # data integrity
-#   expect_named(test_res, expected_names)
-#   expect_false("tururu" %in% unique(test_res$province_code))
-#   expect_identical(nrow(test_res), 62L) # two plots dont exist, so 2x2=4 rows less
-#   expect_true(all(unique(test_res$province_code) %in% names(test_plots)))
-#   expect_true(all(unique(test_res$version) %in% test_version))
-#   
-#   ### test all assertions done in ifn_to_tibble
-#   # provinces
-#   expect_error(
-#     ifn_to_tibble(
-#       1:7, test_version, test_plots, test_folder,
-#       .parallel_options = test_parallel_conf,
-#       .verbose = FALSE
-#     ),
-#     "provinces must be a character vector with at least one"
-#   )
-#   expect_error(
-#     ifn_to_tibble(
-#       character(), test_version, test_plots, test_folder,
-#       .parallel_options = test_parallel_conf,
-#       .verbose = FALSE
-#     ),
-#     "departments must be a character vector with at least one"
-#   )
-#   # years
-#   expect_error(
-#     ifn_to_tibble(
-#       test_departments, as.character(test_years), test_plots, test_folder,
-#       .parallel_options = test_parallel_conf,
-#       .verbose = FALSE
-#     ),
-#     "years must be a numeric vector with at least one"
-#   )
-#   expect_error(
-#     ifn_to_tibble(
-#       test_provinces, charater(), test_plots, test_folder,
-#       .parallel_options = test_parallel_conf,
-#       .verbose = FALSE
-#     ),
-#     "years must be a character vector with at least one"
-#   )
-#   # folder
-#   expect_error(
-#     ifn_to_tibble(
-#       test_provinces, test_version, test_plots, "nonexistantfolder",
-#       .parallel_options = test_parallel_conf,
-#       .verbose = FALSE
-#     ),
-#     "Folder especified"
-#   )
-#   # filter list (TODO as testng interactive commands is tricky)
-#   # parallel options
-#   expect_error(
-#     ifn_to_tibble(
-#       test_provinces, test_version, test_plots, test_folder,
-#       .parallel_options = list(scheduling = 2L, stdout = TRUE),
-#       .verbose = FALSE
-#     ),
-#     ".parallel_options"
-#   )
-#   # verbose
-#   expect_error(
-#     ifn_to_tibble(
-#       test_provinces, test_version, test_plots, test_folder,
-#       .parallel_options = test_parallel_conf,
-#       .verbose = "FALSE"
-#     ),
-#     ".verbose"
-#   )
-#   # ancillary data (tested just by providing an existing wrong folder)
-#   expect_error(
-#     ifn_to_tibble(
-#       test_provinces, test_version, test_plots, ".",
-#       .parallel_options = test_parallel_conf,
-#       .verbose = FALSE
-#     ),
-#     "must be present"
-#   )
-#   
-#   # what to expect if departments or filter list are all wrong
-#   expect_true(
-#     suppressWarnings(ifn_to_tibble(
-#       "tururu", test_version, list("tururu" = 0), test_folder,
-#       .parallel_options = test_parallel_conf,
-#       .verbose = FALSE
-#     ) |> nrow()) < 1
-#   )
-# })
-# 
+
+test_that("ifn_tables_process works as intended", {
+
+  ### TODO
+  # - test what happens when some tables are NAs (not found when building the input)
+  # -
+  #
+
+  # tests config
+  test_parallel_conf <- furrr::furrr_options(scheduling = 2L, stdout = TRUE)
+  future::plan(future::multisession, workers = 3)
+  withr::defer(future::plan(future::sequential))
+
+  # tests data
+  expected_names <- c(
+    "ID_UNIQUE_PLOT",
+    "COUNTRY",
+    "YEAR",
+    "ca_name_original",
+    "province_name_original",
+    "province_code",
+    "PLOT",
+    "version",
+    "HOJA",
+    "COORD_SYS",
+    "COORD1",
+    "COORD2",
+    "crs",
+    "PENDIEN2",
+    "SLOPE",
+    "ELEV",
+    "ASPECT",
+    "tree",
+    "understory",
+    "regen",
+    "soils"
+  )
+
+  # object
+  expect_s3_class(
+    test_res <- suppressWarnings(ifn_tables_process(
+      test_provinces, test_version, test_plots, test_folder,
+      .parallel_options = test_parallel_conf,
+      .verbose = FALSE
+    )),
+    "tbl"
+  )
+
+  # data integrity
+  expect_named(test_res, expected_names)
+  expect_true(all(unique(test_res$province_code) %in% names(test_plots)))
+
+  # ### missing tables/plots
+  # # tururu state shouldn't appear
+  # # inexistent plots (91-0) shouldn't
+  # # be present, so 12 of 14 elements in filter list
+  # expect_false("tururu" %in% unique(test_res$province))
+  # expect_identical(nrow(test_res), 12L)
+
+  # ### missing random files
+  # # we test here what happens when some files are missing (ARBRE, ECOLOGIE...)
+  # to do:
+
+
+
+})
+
+
+# ifn_to_tibble -------------------------------------------------------------------------------
+
+
+test_that("ifn_to_tibble works as intended", {
+
+  # tests config
+  test_parallel_conf <- furrr::furrr_options(scheduling = 2L, stdout = TRUE)
+  future::plan(future::multisession, workers = 3)
+  withr::defer(future::plan(future::sequential))
+
+  # tests data
+  expected_names <- c(
+    "ID_UNIQUE_PLOT",
+    "COUNTRY",
+    "YEAR",
+    "ca_name_original",
+    "province_name_original",
+    "province_code",
+    "PLOT",
+    "version",
+    "HOJA",
+    "COORD_SYS",
+    "COORD1",
+    "COORD2",
+    "crs",
+    "PENDIEN2",
+    "SLOPE",
+    "ELEV",
+    "ASPECT",
+    "tree",
+    "understory",
+    "regen",
+    "soils")
+  test_version <- c("ifn2")
+
+
+  # object
+  expect_s3_class(
+    test_res <- suppressWarnings(ifn_to_tibble(
+      test_provinces, test_version, test_plots, test_folder,
+      .parallel_options = test_parallel_conf,
+      .verbose = FALSE
+    )),
+    "tbl"
+  )
+
+  # data integrity
+  expect_named(test_res, expected_names)
+  expect_false("tururu" %in% unique(test_res$province_code))
+  expect_identical(nrow(test_res), 62L) # two plots dont exist, so 2x2=4 rows less
+  expect_true(all(unique(test_res$province_code) %in% names(test_plots)))
+  expect_true(all(unique(test_res$version) %in% test_version))
+
+  ### test all assertions done in ifn_to_tibble
+  # provinces
+  expect_error(
+    ifn_to_tibble(
+      1:7, test_version, test_plots, test_folder,
+      .parallel_options = test_parallel_conf,
+      .verbose = FALSE
+    ),
+    "provinces must be a character vector with at least one"
+  )
+  expect_error(
+    ifn_to_tibble(
+      character(), test_version, test_plots, test_folder,
+      .parallel_options = test_parallel_conf,
+      .verbose = FALSE
+    ),
+    "departments must be a character vector with at least one"
+  )
+  # years
+  expect_error(
+    ifn_to_tibble(
+      test_departments, as.character(test_years), test_plots, test_folder,
+      .parallel_options = test_parallel_conf,
+      .verbose = FALSE
+    ),
+    "years must be a numeric vector with at least one"
+  )
+  expect_error(
+    ifn_to_tibble(
+      test_provinces, charater(), test_plots, test_folder,
+      .parallel_options = test_parallel_conf,
+      .verbose = FALSE
+    ),
+    "years must be a character vector with at least one"
+  )
+  # folder
+  expect_error(
+    ifn_to_tibble(
+      test_provinces, test_version, test_plots, "nonexistantfolder",
+      .parallel_options = test_parallel_conf,
+      .verbose = FALSE
+    ),
+    "Folder especified"
+  )
+  # filter list (TODO as testng interactive commands is tricky)
+  # parallel options
+  expect_error(
+    ifn_to_tibble(
+      test_provinces, test_version, test_plots, test_folder,
+      .parallel_options = list(scheduling = 2L, stdout = TRUE),
+      .verbose = FALSE
+    ),
+    ".parallel_options"
+  )
+  # verbose
+  expect_error(
+    ifn_to_tibble(
+      test_provinces, test_version, test_plots, test_folder,
+      .parallel_options = test_parallel_conf,
+      .verbose = "FALSE"
+    ),
+    ".verbose"
+  )
+  # ancillary data (tested just by providing an existing wrong folder)
+  expect_error(
+    ifn_to_tibble(
+      test_provinces, test_version, test_plots, ".",
+      .parallel_options = test_parallel_conf,
+      .verbose = FALSE
+    ),
+    "must be present"
+  )
+
+  # what to expect if departments or filter list are all wrong
+  expect_true(
+    suppressWarnings(ifn_to_tibble(
+      "tururu", test_version, list("tururu" = 0), test_folder,
+      .parallel_options = test_parallel_conf,
+      .verbose = FALSE
+    ) |> nrow()) < 1
+  )
+})
+
