@@ -171,7 +171,7 @@ ifn_to_tibble <- function(
       .l = input_df,
       .f = \(province, plots, tree_table, plot_table, shrub_table, regen_table, coord_table) {
 
-      # browser()
+       # browser()
       #
       plot_info <- ifn_plot_table_process(plot_table, coord_table, version, plots, province, ifn_provinces_dictionary)
 
@@ -185,6 +185,9 @@ ifn_to_tibble <- function(
       regen <- ifn_regen_table_process(regen_table, version, plots, province,ESPECIES)
 
 
+      if (nrow(plot_info) < 1) {
+        return(tibble::tibble())
+      }
 
       # we put together all tables in a data frame
 
@@ -202,40 +205,43 @@ ifn_to_tibble <- function(
 
       plot_info |>
         dplyr::mutate(
-          tree = list(tree),
-          understory = list(understory),
-          regen = list(regen)
-        ) |>
-
-        dplyr::rename(
           COORD1 = COORDEX,
           COORD2 = COORDEY,
+          tree = list(tree),
+          understory = list(understory),
+          regen = list(regen),
+          
 
         ) |>
 
         dplyr::select(
-          ID_UNIQUE_PLOT,
-          COUNTRY,
-          YEAR,
-          ca_name_original,
-          province_name_original,
-          province_code,
-          PLOT,
-          YEAR,
-          version,
-          HOJA,
-          COORD_SYS,
-          COORD1,
-          COORD2,
-          crs,
-          PENDIEN2,
-          SLOPE,
-          ELEV,
-          ASPECT,
-          tree,
-          understory,
-          regen,
-          soils
+          any_of(c(
+          "ID_UNIQUE_PLOT",
+          "COUNTRY",
+          "YEAR",
+          "ca_name_original",
+          "province_name_original",
+          "province_code",
+          "PLOT",
+          "Clase",
+          "YEAR",
+          "version",
+          "Tipo",
+          "HOJA",
+          "Huso",
+          "COORD_SYS",
+          "COORD1",
+          "COORD2",
+          "crs",
+          "PENDIEN2",
+          "SLOPE",
+          "ELEV",
+          "ASPECT",
+          "tree",
+          "understory",
+          "regen",
+          "soils"
+          ))
 
         )
 
@@ -888,7 +894,7 @@ ifn_regen_table_process <- function(regen_data, version, plot, province, ESPECIE
 
 ifn_plot_table_process <- function(plot_data, coord_data, version, plot, province, ifn_provinces_dictionary){
 
-browser()
+  browser()
 
 
   # Assertions  and checks/validations
@@ -1244,10 +1250,9 @@ browser()
         soils
         
       ) 
-    return(info_plot)
+   
     
-    
-        if (version %in% c( "ifn3","ifn4")){
+  
 
   files_validation <- assertthat::validate_that(
     !any(is.na(c(coord_data)))
@@ -1292,8 +1297,9 @@ browser()
      
       dplyr::rename(
         PLOT = Estadillo,
-        COORD1 = CoorX,
-        COORD2 = CoorY
+        COORDEX = CoorX,
+        COORDEY = CoorY,
+        HOJA = Hoja50
         ) |>
    
       dplyr::mutate(
@@ -1303,12 +1309,7 @@ browser()
         ID_UNIQUE_PLOT = paste("ES",province_code, PLOT, sep = "_"),
         Huso = dplyr::case_when(
           version =="ifn3" ~ NA,
-          TRUE ~ Huso))  
-
-    
-   } 
-    
-
+          version =="ifn4" ~ NA))  
 
 
        info_plot <- info_plot|>
@@ -1318,9 +1319,9 @@ browser()
              dplyr::select(any_of(c(
                "ID_UNIQUE_PLOT" ,
                "Clase",
-               "COORD1"  ,
-               "COORD2" ,
-               "Hoja50" ,
+               "COORDEX"  ,
+               "COORDEY" ,
+               "HOJA" ,
                "Huso"
              ))
              ),
@@ -1356,20 +1357,22 @@ browser()
          "Tipo",
          "ASPECT",
          "SLOPE",
+         "crs",
          "COORD_SYS",
-         "COORD1",
-         "COORD2",
-         "Hoja50",
+         "COORDEX",
+         "COORDEY",
+         "HOJA",
          "Huso",
          "soils"
        ))
      )
     
+       return(info_plot)
     
   }
   
-
-  # Return plot with soil
+# 
+#   # Return plot with soil
   return(info_plot)
 }
 
