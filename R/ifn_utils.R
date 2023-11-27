@@ -2,7 +2,7 @@
     version, provinces, filter_list, folder, .verbose, .call = rlang::caller_env()
 ) {
 
-  # browser()
+   # browser()
   # first, if is null filter list, create it
   if (is.null(filter_list)) {
     filter_list <- list("24" = c(6))
@@ -21,9 +21,10 @@
     tidyr::unnest(cols = value) |>
     purrr::set_names(c("province", "plots")) |>
     dplyr::mutate(
-      plots = as.character(plots)
+      plots = as.character(plots),
+      version = as.character(version)
     ) |>
-    dplyr::select(province, plots) |>
+    dplyr::select(province, plots,version) |>
     dplyr::mutate(
       plot_table = .build_ifn_file_path(
         province,

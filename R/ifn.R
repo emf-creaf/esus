@@ -169,7 +169,7 @@ ifn_to_tibble <- function(
       # temp_res <- purrr::pmap(
       .progress = .verbose,
       .l = input_df,
-      .f = \(province, plots, tree_table, plot_table, shrub_table, regen_table, coord_table) {
+      .f = \(province, plots, version, tree_table, plot_table, shrub_table, regen_table, coord_table) {
 
        # browser()
       #
@@ -224,6 +224,7 @@ ifn_to_tibble <- function(
           "province_code",
           "PLOT",
           "Clase",
+          "Subclase",
           "YEAR",
           "version",
           "Tipo",
@@ -894,7 +895,7 @@ ifn_regen_table_process <- function(regen_data, version, plot, province, ESPECIE
 
 ifn_plot_table_process <- function(plot_data, coord_data, version, plot, province, ifn_provinces_dictionary){
 
-  browser()
+  # browser()
 
 
   # Assertions  and checks/validations
@@ -987,7 +988,8 @@ ifn_plot_table_process <- function(plot_data, coord_data, version, plot, provinc
       ASPECT = ORIENTA2) |>
 
     dplyr::mutate(
-
+      
+      HOJA = as.character(HOJA),
       COUNTRY = "ES",
       province_code = as.character(PROVINCIA),
       ID_UNIQUE_PLOT = paste("ES", province_code,PLOT,sep = "_"),
@@ -1001,14 +1003,14 @@ ifn_plot_table_process <- function(plot_data, coord_data, version, plot, provinc
       COORDEY = 1000 * COORDEY,
       version = "ifn2",
       Huso = dplyr::case_when(
-        province_code %in% c(35, 38) ~ 28,
-        province_code %in% c(1, 7, 8, 15,17,20, 25, 26,27,28,30,32,33,36,39,43,48,2,3,4,5,6,9,10,11,12,13,14,16,18,19,21,22,23,24,29,31,
-                                34,37,40,41,42,44,45,46,47,49,50) ~ 30
+        province_code %in% c("35", "38") ~ 28,
+        province_code %in% c("1", "7", "8", "15","17","20", "25", "26","27","28","30","32","33","36","39","43","48","2","3","4","5","6","9","10","11","12","13","14","16","18","19","21","22","23","24","29","31",
+                                "34","37","40","41","42","44","45","46","47","49","50") ~ 30
       ),
       COORD_SYS = dplyr::case_when(
-        province_code %in% c(35, 38) ~ "WGS84",
-        province_code %in% c(1, 7, 8, 15,17,20, 25, 26,27,28,30,32,33,36,39,43,48,2,3,4,5,6,9,10,11,12,13,14,16,18,19,21,22,23,24,29,31,
-                                34,37,40,41,42,44,45,46,47,49,50) ~ "ED50")
+        province_code %in% c("35", "38") ~ "WGS84",
+        province_code %in% c("1", "7", "8", "15","17","20"," 25"," 26","27","28","30","32","33","36","39","43","48","2","3","4","5","6","9","10","11","12","13","14","16","18","19","21","22","23","24","29","31",
+                                "34","37","40","41","42","44","45","46","47","49","50") ~ "ED50")
     ) |>
 
     dplyr::left_join(
@@ -1303,6 +1305,7 @@ ifn_plot_table_process <- function(plot_data, coord_data, version, plot, provinc
         ) |>
    
       dplyr::mutate(
+        HOJA = as.character(HOJA),
         province_code = province,
         province_code = as.character(province_code),
         version = version,
