@@ -77,12 +77,19 @@ ifn_to_tibble <- function(
   # check all provinces are valid
 
 
+  
+  # years
+  assertthat::assert_that(
+    is.character(version), length(version) > 0,
+    msg = cli::cli_abort("version must be a character vector with at least one")
+  )
 
   # folder
   assertthat::assert_that(
     fs::dir_exists(folder),
     msg = cli::cli_abort( "Folder especified ({.path {folder}}) doesn't exists. Please create the folder first and populate it with the needed IFN csv files")
   )
+
 
   # # filter_list
   # if (is.null(filter_list)) {
@@ -987,13 +994,15 @@ ifn_plot_table_process <- function(plot_data, coord_data, version, plot, provinc
       ASPECT = ORIENTA2) |>
 
     dplyr::mutate(
-      
+      YEAR = as.character(YEAR),
       HOJA = as.character(HOJA),
       COUNTRY = "ES",
       province_code = as.character(PROVINCIA),
       ID_UNIQUE_PLOT = paste("ES", province_code,PLOT,sep = "_"),
       # ALTITUD1 = as.numeric(ALTITUD1),
       ELEV = as.numeric(ELEV),
+      SLOPE = as.numeric(SLOPE),
+      ASPECT = as.numeric(ASPECT),
       # ALTITUD1 = ALTITUD1*100,
       ELEV = ELEV*100,
       COORDEX = as.numeric(COORDEX),
@@ -1151,6 +1160,7 @@ ifn_plot_table_process <- function(plot_data, coord_data, version, plot, provinc
         Clase = Cla
       ) |> 
       dplyr::mutate(
+        YEAR = as.character(YEAR),
         version = version,
         province_code = province,
         province_code = as.character(province_code),
@@ -1211,7 +1221,8 @@ ifn_plot_table_process <- function(plot_data, coord_data, version, plot, provinc
         # province_code = as.numeric(province),
         # ID_UNIQUE_PLOT = paste("ES",province_code, PLOT, sep="_"),
         #de grados centesimales a sexagesimales??
-        ASPECT = ASPECT * 0.9,
+        ASPECT = as.numeric(ASPECT)* 0.9,
+        SLOPE = as.numeric(SLOPE),
         soils = list(soil),
         COORD_SYS = dplyr::case_when(
           version == "ifn4" & province_code %in% c("01", "07", "08", "15","17","20", "25", "26","27","28","30","32","33","36","39","43","48")  ~ "ED50",
