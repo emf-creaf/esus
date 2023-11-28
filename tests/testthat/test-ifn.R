@@ -1346,75 +1346,278 @@ test_that("ifn_plot_table_process for ifn4  works as intended", {
   )
   expect_true(nrow(test_error) < 1)
 })
-# # tables process -----------------------------------------------------------------------------------
-# 
-# test_that("ifn_tables_process works as intended", {
-# 
-#   ### TODO
-#   # - test what happens when some tables are NAs (not found when building the input)
-#   # -
-#   #
-# 
-#   # tests config
-#   test_parallel_conf <- furrr::furrr_options(scheduling = 2L, stdout = TRUE)
-#   future::plan(future::multisession, workers = 3)
-#   withr::defer(future::plan(future::sequential))
-# 
-#   # tests data
-#   expected_names <- c(
-#     "ID_UNIQUE_PLOT",
-#     "COUNTRY",
-#     "YEAR",
-#     "ca_name_original",
-#     "province_name_original",
-#     "province_code",
-#     "PLOT",
-#     "version",
-#     "HOJA",
-#     "COORD_SYS",
-#     "COORD1",
-#     "COORD2",
-#     "crs",
-#     "PENDIEN2",
-#     "SLOPE",
-#     "ELEV",
-#     "ASPECT",
-#     "tree",
-#     "understory",
-#     "regen",
-#     "soils"
-#   )
-# 
-#   # object
-#   expect_s3_class(
-#     test_res <- suppressWarnings(ifn_tables_process(
-#       test_provinces, test_version, test_plots, test_folder,
-#       .parallel_options = test_parallel_conf,
-#       .verbose = FALSE
-#     )),
-#     "tbl"
-#   )
-# 
-#   # data integrity
-#   expect_named(test_res, expected_names)
-#   expect_true(all(unique(test_res$province_code) %in% names(test_plots)))
-# 
-#   # ### missing tables/plots
-#   # # tururu state shouldn't appear
-#   # # inexistent plots (91-0) shouldn't
-#   # # be present, so 12 of 14 elements in filter list
-#   # expect_false("tururu" %in% unique(test_res$province))
-#   # expect_identical(nrow(test_res), 12L)
-# 
-#   # ### missing random files
-#   # # we test here what happens when some files are missing (ARBRE, ECOLOGIE...)
-#   # to do:
-# 
-# 
-# 
-# })
-# 
-# 
+# tables process -----------------------------------------------------------------------------------
+
+test_that("ifn_tables_process ifn2 works as intended", {
+
+  
+  test_version = "ifn2"
+  test_input <- .build_ifn_input_with (
+    test_version,
+    test_provinces,
+    test_plots,
+    test_folder,
+    .verbose = TRUE,
+  )
+  
+  ### TODO
+  # - test what happens when some tables are NAs (not found when building the input)
+  # -
+  #
+
+  # tests config
+  test_parallel_conf <- furrr::furrr_options(scheduling = 2L, stdout = TRUE)
+  future::plan(future::multisession, workers = 3)
+  withr::defer(future::plan(future::sequential))
+
+  
+  
+  # tests data
+  expected_names <- c(
+    "ID_UNIQUE_PLOT",
+    "COUNTRY",
+    "YEAR",
+    "ca_name_original",
+    "province_name_original",
+    "province_code",
+    "PLOT",
+    "version",
+    "HOJA",
+    "Huso",
+    "COORD_SYS",
+    "COORD1",
+    "COORD2",
+    "crs",
+    "PENDIEN2",
+    "SLOPE",
+    "ELEV",
+    "ASPECT",
+    "tree",
+    "understory",
+    "regen",
+    "soils"
+  )
+
+  # object
+  expect_s3_class(
+    test_res <- suppressWarnings(ifn_tables_process(
+      test_provinces, test_version, test_plots, test_folder,
+      .parallel_options = test_parallel_conf,
+      .verbose = FALSE
+    )),
+    "tbl"
+  )
+
+  # data integrity
+  expect_named(test_res, expected_names)
+  expect_true(all(unique(test_res$province_code) %in% names(test_plots)))
+
+  # ### missing tables/plots
+  # # tururu state shouldn't appear
+  # # inexistent plots (91-0) shouldn't
+  # # be present, so 12 of 14 elements in filter list
+  # expect_false("tururu" %in% unique(test_res$province))
+  # expect_identical(nrow(test_res), 12L)
+
+  # ### missing random files
+  # # we test here what happens when some files are missing (ARBRE, ECOLOGIE...)
+  # to do:
+
+
+
+})
+
+test_that("ifn_tables_process ifn3 works as intended", {
+  
+  test_plots <- list(
+    
+    "06" = c(2064,1138,325),
+    "07" = c(679,114,499),
+    "10" = c(3374,261),
+    "26" = c(960,495,172),
+    "30" = c(78, 1223),
+    "31" = c(135,761,1518),
+    "33" = c(283),
+    "40" = c(412,1216,1728),
+    "49" = c(105,99,532)
+    
+    # "91" = c(1406115, 0),
+    # "tururu" = 3555
+  )
+  
+  test_provinces <- names(test_plots)
+  test_version <- "ifn3"
+  test_input <- .build_ifn_input_with (
+    test_version,
+    test_provinces,
+    test_plots,
+    test_folder,
+    .verbose = TRUE,
+  )
+  
+  ### TODO
+  # - test what happens when some tables are NAs (not found when building the input)
+  # -
+  #
+  
+  # tests config
+  test_parallel_conf <- furrr::furrr_options(scheduling = 2L, stdout = TRUE)
+  future::plan(future::multisession, workers = 3)
+  withr::defer(future::plan(future::sequential))
+  
+  
+  
+  # tests data
+  expected_names <- c(
+    "ID_UNIQUE_PLOT",
+    "COUNTRY",
+    "YEAR",
+    "ca_name_original",
+    "province_name_original",
+    "province_code",
+    "PLOT",
+    "Clase",
+    "Subclase",
+    "version",
+    "Tipo",
+    "HOJA",
+    "Huso",
+    "COORD_SYS",
+    "COORD1",
+    "COORD2",
+    "crs",
+    "SLOPE",
+    "ASPECT",
+    "tree",
+    "understory",
+    "regen",
+    "soils"
+  )
+  
+  # object
+  expect_s3_class(
+    test_res <- suppressWarnings(ifn_tables_process(
+      test_provinces, test_version, test_plots, test_folder,
+      .parallel_options = test_parallel_conf,
+      .verbose = FALSE
+    )),
+    "tbl"
+  )
+  
+  # data integrity
+  expect_named(test_res, expected_names)
+  expect_true(all(unique(test_res$province_code) %in% names(test_plots)))
+  
+  # ### missing tables/plots
+  # # tururu state shouldn't appear
+  # # inexistent plots (91-0) shouldn't
+  # # be present, so 12 of 14 elements in filter list
+  # expect_false("tururu" %in% unique(test_res$province))
+  # expect_identical(nrow(test_res), 12L)
+  
+  # ### missing random files
+  # # we test here what happens when some files are missing (ARBRE, ECOLOGIE...)
+  # to do:
+  
+  
+  
+})
+
+test_that("ifn_tables_process ifn4 works as intended", {
+  
+  test_plots <- list(
+    
+    "06" = c(2064,1138,325),
+    "07" = c(679,114,499),
+    "10" = c(3374,261),
+    "26" = c(960,495,172),
+    "30" = c(78, 1223),
+    "31" = c(135,761,1518),
+    "33" = c(283),
+    "40" = c(412,1216,1728),
+    "49" = c(105,99,532)
+    
+    # "91" = c(1406115, 0),
+    # "tururu" = 3555
+  )
+  
+  test_provinces <- names(test_plots)
+  test_version <- "ifn4"
+  test_input <- .build_ifn_input_with (
+    test_version,
+    test_provinces,
+    test_plots,
+    test_folder,
+    .verbose = TRUE,
+  )
+  
+  ### TODO
+  # - test what happens when some tables are NAs (not found when building the input)
+  # -
+  #
+  
+  # tests config
+  test_parallel_conf <- furrr::furrr_options(scheduling = 2L, stdout = TRUE)
+  future::plan(future::multisession, workers = 3)
+  withr::defer(future::plan(future::sequential))
+  
+  
+  
+  # tests data
+  expected_names <- c(
+    "ID_UNIQUE_PLOT",
+    "COUNTRY",
+    "YEAR",
+    "ca_name_original",
+    "province_name_original",
+    "province_code",
+    "PLOT",
+    "Clase",
+    "Subclase",
+    "version",
+    "Tipo",
+    "HOJA",
+    "Huso",
+    "COORD_SYS",
+    "COORD1",
+    "COORD2",
+    "crs",
+    "SLOPE",
+    "ASPECT",
+    "tree",
+    "understory",
+    "regen",
+    "soils"
+  )
+  
+  # object
+  expect_s3_class(
+    test_res <- suppressWarnings(ifn_tables_process(
+      test_provinces, test_version, test_plots, test_folder,
+      .parallel_options = test_parallel_conf,
+      .verbose = FALSE
+    )),
+    "tbl"
+  )
+  
+  # data integrity
+  expect_named(test_res, expected_names)
+  expect_true(all(unique(test_res$province_code) %in% names(test_plots)))
+  
+  # ### missing tables/plots
+  # # tururu state shouldn't appear
+  # # inexistent plots (91-0) shouldn't
+  # # be present, so 12 of 14 elements in filter list
+  # expect_false("tururu" %in% unique(test_res$province))
+  # expect_identical(nrow(test_res), 12L)
+  
+  # ### missing random files
+  # # we test here what happens when some files are missing (ARBRE, ECOLOGIE...)
+  # to do:
+  
+  
+  
+})
 # # ifn_to_tibble -------------------------------------------------------------------------------
 # 
 # 
