@@ -116,7 +116,10 @@
         ESTADILLO = as.character(ESTADILLO)
     ),
     "accdb" = .read_accdb_data(input, table_name) |> 
-      dplyr::select(colnames) 
+      dplyr::select(colnames) |> 
+      dplyr::mutate(
+      Estadillo = as.character(Estadillo)
+      )
   )
 
   return(res)
