@@ -895,7 +895,7 @@ ifn_regen_table_process <- function(regen_data, version, plot, province, ESPECIE
 
 ifn_plot_table_process <- function(plot_data, coord_data, version, plot, province, ifn_provinces_dictionary){
 
-  # browser()
+    # browser()
 
 
   # Assertions  and checks/validations
