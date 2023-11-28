@@ -225,7 +225,6 @@ ifn_to_tibble <- function(
           "PLOT",
           "Clase",
           "Subclase",
-          "YEAR",
           "version",
           "Tipo",
           "HOJA",
@@ -895,7 +894,7 @@ ifn_regen_table_process <- function(regen_data, version, plot, province, ESPECIE
 
 ifn_plot_table_process <- function(plot_data, coord_data, version, plot, province, ifn_provinces_dictionary){
 
-    # browser()
+       # browser()
 
 
   # Assertions  and checks/validations
@@ -1355,7 +1354,6 @@ ifn_plot_table_process <- function(plot_data, coord_data, version, plot, provinc
          "PLOT",
          "Clase", 
          "Subclase",
-         "YEAR",
          "version",
          "Tipo",
          "ASPECT",

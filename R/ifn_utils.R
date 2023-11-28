@@ -56,9 +56,9 @@
       ),
       coord_table = NA)
   
-  if (version %in% c( "ifn3", "ifn4")){
+  if (version %in% c("ifn3", "ifn4")){
     
-    filter_list |> 
+    filter_list<- filter_list|> 
       dplyr::mutate(
         coord_table = .build_ifn_file_path(
           province,
@@ -69,7 +69,7 @@
         )
       )
     
-    
+  
   }
   
   return(filter_list)
