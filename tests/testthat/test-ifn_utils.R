@@ -17,8 +17,8 @@ test_that(".build_ifn_input_with and .build_ifn_file_path work as intended for i
     "31" = c(135,761,1518),
     "33" = c(283),
     "40" = c(412,1216,1728),
-    "49" = c(105,99,532)
-     # "tururu" = c(5)
+    "49" = c(105,99,532),
+      "tururu" = c(5)
   )
   
   test_provinces <- names(test_plots)
@@ -89,12 +89,9 @@ test_that(".build_ifn_input_with and .build_ifn_file_path work as intended for i
     test_res[["plot_table"]][24],
     NA_character_
   )
-  # expect_identical(
-  #   test_res[["plot_table"]][33],
-  #   glue::glue('{test_folder}PLACETTE.csv')
-  # )
 
-  # # ## Test filter_list = NULL - this needs to be implemenetd
+
+  # ## Test filter_list = NULL - this needs to be implemenetd
   # expect_s3_class(
   #   test_res_filter_list <- suppressWarnings(
   #     .build_ifn_input_with(test_version, test_provinces, NULL, test_folder, .verbose = FALSE)
@@ -103,7 +100,7 @@ test_that(".build_ifn_input_with and .build_ifn_file_path work as intended for i
   # )
   #  expect_false("tururu" %in% (test_res_filter_list$province |> unique()))
   # expect_true(all((test_res_filter_list$province |> unique()) %in% test_provinces))
-  #  expect_length(test_res_filter_list$province |> unique(), length(test_provinces) - 1)
+  #  # expect_length(test_res_filter_list$province |> unique(), length(test_provinces) - 1)
 })
 test_that(".build_ifn_input_with and .build_ifn_file_path work as intended for ifn3 ", {
   
@@ -117,8 +114,8 @@ test_that(".build_ifn_input_with and .build_ifn_file_path work as intended for i
     "31" = c(135,761,1518),
     "33" = c(283),
     "40" = c(412,1216,1728),
-    "49" = c(105,99,532)
-    # "tururu" = c(5)
+    "49" = c(105,99,532),
+    "tururu" = c(5)
   )
   
   test_provinces <- names(test_plots)
@@ -194,7 +191,7 @@ test_that(".build_ifn_input_with and .build_ifn_file_path work as intended for i
   #   glue::glue('{test_folder}PLACETTE.csv')
   # )
   
-  # # ## Test filter_list = NULL - this needs to be implemenetd
+  # ## Test filter_list = NULL - this needs to be implemenetd
   # expect_s3_class(
   #   test_res_filter_list <- suppressWarnings(
   #     .build_ifn_input_with(test_version, test_provinces, NULL, test_folder, .verbose = FALSE)
@@ -218,8 +215,8 @@ test_that(".build_ifn_input_with and .build_ifn_file_path work as intended for i
     "31" = c(135,761,1518),
     "33" = c(283),
     "40" = c(412,1216,1728),
-    "49" = c(105,99,532)
-    # "tururu" = c(5)
+    "49" = c(105,99,532),
+     "tururu" = c(5)
   )
   
   test_provinces <- names(test_plots)
