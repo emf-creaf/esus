@@ -1326,6 +1326,7 @@ ifn_plot_table_process <- function(plot_data, coord_data, version, plot, provinc
       
 
 
+
        info_plot <- info_plot|>
          
      dplyr::left_join(

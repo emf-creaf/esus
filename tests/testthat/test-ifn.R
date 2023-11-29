@@ -1865,9 +1865,10 @@ test_that("ifn_to_tibble  ifn 2-3-4 works as intended", {
   )
   
   test_input <- rbind(test_input_ifn2,test_input_ifn3,test_input_ifn4)
+
   
   test_version <- c("ifn2", "ifn3", "ifn4")
-  
+
   
   # tests config
   test_parallel_conf <- furrr::furrr_options(scheduling = 2L, stdout = TRUE)
