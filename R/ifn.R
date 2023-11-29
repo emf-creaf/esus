@@ -901,7 +901,7 @@ ifn_regen_table_process <- function(regen_data, version, plot, province, ESPECIE
 
 ifn_plot_table_process <- function(plot_data, coord_data, version, plot, province, ifn_provinces_dictionary){
 
-       # browser()
+        # browser()
 
 
   # Assertions  and checks/validations
@@ -1320,9 +1320,10 @@ ifn_plot_table_process <- function(plot_data, coord_data, version, plot, provinc
         province_code = as.character(province_code),
         version = version,
         ID_UNIQUE_PLOT = paste("ES",province_code, PLOT, sep = "_"),
-        Huso = dplyr::case_when(
-          version =="ifn3" ~ NA,
-          version =="ifn4" ~ NA))  
+        Huso = ifelse("Huso" %in% names(coords_filtered_data), coords_filtered_data$Huso, NA)
+        )
+        
+      
 
 
        info_plot <- info_plot|>
