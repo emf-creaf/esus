@@ -16,7 +16,7 @@
     )), .verbose
   )
 
-  filter_list<-filter_list |>
+  filter_list <- filter_list |>
     tibble::enframe() |>
     tidyr::unnest(cols = value) |>
     purrr::set_names(c("province", "plots")) |>
@@ -24,7 +24,7 @@
       plots = as.character(plots),
       version = as.character(version)
     ) |>
-    dplyr::select(province, plots,version) |>
+    dplyr::select(province, plots, version) |>
     dplyr::mutate(
       plot_table = .build_ifn_file_path(
         province,
@@ -54,24 +54,35 @@
         folder,
         .call = .call
       ),
-      coord_table = NA)
-  
-  if (version %in% c("ifn3", "ifn4")){
-    
-    filter_list<- filter_list|> 
-      dplyr::mutate(
-        coord_table = .build_ifn_file_path(
+      coord_table = ifelse(
+        test = version %in% c("ifn3", "ifn4"),
+        yes = .build_ifn_file_path(
           province,
           type = "coord",
           version,
           folder,
           .call = .call
-        )
+        ),
+        no = NA_character_
       )
-    
-  
-  }
-  
+  )
+
+  # if (version %in% c("ifn3", "ifn4")){
+  #
+  #   filter_list<- filter_list|>
+  #     dplyr::mutate(
+  #       coord_table = .build_ifn_file_path(
+  #         province,
+  #         type = "coord",
+  #         version,
+  #         folder,
+  #         .call = .call
+  #       )
+  #     )
+  #
+  #
+  # }
+
   return(filter_list)
 }
 
@@ -115,8 +126,8 @@
         PROVINCIA = stringr::str_pad(PROVINCIA, width = 2, side = "left", pad = "0"),
         ESTADILLO = as.character(ESTADILLO)
     ),
-    "accdb" = .read_accdb_data(input, table_name) |> 
-      dplyr::select(colnames) |> 
+    "accdb" = .read_accdb_data(input, table_name) |>
+      dplyr::select(colnames) |>
       dplyr::mutate(
       Estadillo = as.character(Estadillo)
       )
@@ -154,9 +165,17 @@
 }
 
 .ifn4_prov_code_translator <- function(province) {
-  ifn_provinces_dictionary |>
+  res <- ifn_provinces_dictionary |>
     dplyr::filter(province_code %in% province) |>
     dplyr::pull(ifn4_files_labels)
+
+  # In case province provided is not in the dictionary (because error, tururu tests)
+  # then res is going to be character(0), so we convert to empty string
+  if (length(res) < 1) {
+    res <- ""
+  }
+
+  return(res)
 }
 
 .build_ifn_file_path <- function(province, type, version, folder = ".", .call = rlang::caller_env()) {

@@ -6,9 +6,9 @@ skip_if(
 # build path and input ------------------------------------------------------------------------
 
 test_that(".build_ifn_input_with and .build_ifn_file_path work as intended for ifn2 ", {
- 
+
    test_plots <- list(
-    
+
     "06" = c(2064,1138,325),
     "07" = c(679,114,499),
     "10" = c(3374,261),
@@ -18,13 +18,13 @@ test_that(".build_ifn_input_with and .build_ifn_file_path work as intended for i
     "33" = c(283),
     "40" = c(412,1216,1728),
     "49" = c(105,99,532),
-      "tururu" = c(5)
+    "tururu" = c(5)
   )
-  
+
   test_provinces <- names(test_plots)
   test_version <- "ifn2"
   test_folder <- Sys.getenv("ifn_path")
-  
+
   expected_names <- c(
     "province",
     "plots",
@@ -35,22 +35,29 @@ test_that(".build_ifn_input_with and .build_ifn_file_path work as intended for i
     "regen_table",
     "coord_table"
   )
-  
+
 
   # warnings and messages
   expect_warning(
     .build_ifn_input_with( test_version, test_provinces, test_plots, ".", .verbose = TRUE),
     "file doesn't exist"
   )
-  expect_message(
+  expect_warning(
     .build_ifn_input_with( test_version, test_provinces, test_plots, test_folder, .verbose = TRUE),
+    "file doesn't exist"
+  )
+  expect_message(
+    suppressWarnings(
+      .build_ifn_input_with( test_version, test_provinces, test_plots, test_folder, .verbose = TRUE)
+    ),
     "Getting ready to retrieve"
   )
   expect_no_message(
-    test_res <-
+    test_res <- suppressWarnings(
       .build_ifn_input_with( test_version,test_provinces, test_plots, test_folder, .verbose = FALSE)
+    )
   )
-  
+
   ## result tests
   # we expect a tibble
   expect_s3_class(test_res, "tbl")
@@ -72,14 +79,14 @@ test_that(".build_ifn_input_with and .build_ifn_file_path work as intended for i
       unlist() |>
       as.character() |>
       sort()
-    
+
   )
 
   # we can test here also if .build_ifn_file_path works
   # .build_ifn_file_path
   # a correct custom one
-  
-  
+
+
   expect_identical(
     as.character(test_res[["plot_table"]][1]),
     glue::glue("{test_folder}DATEST06.DBF")
@@ -103,9 +110,9 @@ test_that(".build_ifn_input_with and .build_ifn_file_path work as intended for i
   #  # expect_length(test_res_filter_list$province |> unique(), length(test_provinces) - 1)
 })
 test_that(".build_ifn_input_with and .build_ifn_file_path work as intended for ifn3 ", {
-  
+
   test_plots <- list(
-    
+
     "06" = c(2064,1138,325),
     "07" = c(679,114,499),
     "10" = c(3374,261),
@@ -117,11 +124,11 @@ test_that(".build_ifn_input_with and .build_ifn_file_path work as intended for i
     "49" = c(105,99,532),
     "tururu" = c(5)
   )
-  
+
   test_provinces <- names(test_plots)
   test_version <- "ifn3"
   test_folder <- Sys.getenv("ifn_path")
-  
+
   expected_names <- c(
     "province",
     "plots",
@@ -132,22 +139,30 @@ test_that(".build_ifn_input_with and .build_ifn_file_path work as intended for i
     "regen_table",
     "coord_table"
   )
-  
-  
+
+
   # warnings and messages
   expect_warning(
     .build_ifn_input_with( test_version, test_provinces, test_plots, ".", .verbose = TRUE),
     "file doesn't exist"
   )
-  expect_message(
+  expect_warning(
     .build_ifn_input_with( test_version, test_provinces, test_plots, test_folder, .verbose = TRUE),
+    "file doesn't exist"
+  )
+  expect_message(
+    suppressWarnings(
+      .build_ifn_input_with( test_version, test_provinces, test_plots, test_folder, .verbose = TRUE)
+    ),
     "Getting ready to retrieve"
   )
   expect_no_message(
     test_res <-
-      .build_ifn_input_with( test_version,test_provinces, test_plots, test_folder, .verbose = FALSE)
+      suppressWarnings(
+        .build_ifn_input_with( test_version,test_provinces, test_plots, test_folder, .verbose = FALSE)
+      )
   )
-  
+
   ## result tests
   # we expect a tibble
   expect_s3_class(test_res, "tbl")
@@ -169,14 +184,14 @@ test_that(".build_ifn_input_with and .build_ifn_file_path work as intended for i
       unlist() |>
       as.character() |>
       sort()
-    
+
   )
-  
+
   # we can test here also if .build_ifn_file_path works
   # .build_ifn_file_path
   # a correct custom one
-  
-  
+
+
   expect_identical(
     as.character(test_res[["plot_table"]][1]),
     glue::glue("{test_folder}Ifn3p06.accdb|PCParcelas")
@@ -190,7 +205,7 @@ test_that(".build_ifn_input_with and .build_ifn_file_path work as intended for i
   #   test_res[["plot_table"]][33],
   #   glue::glue('{test_folder}PLACETTE.csv')
   # )
-  
+
   # ## Test filter_list = NULL - this needs to be implemenetd
   # expect_s3_class(
   #   test_res_filter_list <- suppressWarnings(
@@ -204,9 +219,9 @@ test_that(".build_ifn_input_with and .build_ifn_file_path work as intended for i
 })
 
 test_that(".build_ifn_input_with and .build_ifn_file_path work as intended for ifn4 ", {
-  
+
   test_plots <- list(
-    
+
     "06" = c(2064,1138,325),
     "07" = c(679,114,499),
     "10" = c(3374,261),
@@ -218,11 +233,11 @@ test_that(".build_ifn_input_with and .build_ifn_file_path work as intended for i
     "49" = c(105,99,532),
      "tururu" = c(5)
   )
-  
+
   test_provinces <- names(test_plots)
   test_version <- "ifn4"
   test_folder <- Sys.getenv("ifn_path")
-  
+
   expected_names <- c(
     "province",
     "plots",
@@ -233,8 +248,8 @@ test_that(".build_ifn_input_with and .build_ifn_file_path work as intended for i
     "regen_table",
     "coord_table"
   )
-  
-  
+
+
   # # warnings and messages
   # expect_warning(
   #   .build_ifn_input_with( test_version, test_provinces, test_plots, ".", .verbose = TRUE),
@@ -246,7 +261,7 @@ test_that(".build_ifn_input_with and .build_ifn_file_path work as intended for i
   # )
   expect_no_message(
     test_res <-
-      .build_ifn_input_with( test_version,test_provinces, test_plots, test_folder, .verbose = FALSE)
+      .build_ifn_input_with(test_version,test_provinces, test_plots, test_folder, .verbose = FALSE)
   )
 
   ## result tests
@@ -270,14 +285,14 @@ test_that(".build_ifn_input_with and .build_ifn_file_path work as intended for i
       unlist() |>
       as.character() |>
       sort()
-    
+
   )
-  
+
   # we can test here also if .build_ifn_file_path works
   # .build_ifn_file_path
   # a correct custom one
-  
-  
+
+
   expect_identical(
     as.character(test_res[["plot_table"]][1]),
     glue::glue("{test_folder}Ifn4_Extremadura.accdb|PCParcelas")
@@ -291,7 +306,7 @@ test_that(".build_ifn_input_with and .build_ifn_file_path work as intended for i
   #   test_res[["plot_table"]][33],
   #   glue::glue('{test_folder}PLACETTE.csv')
   # )
-  
+
   # ## Test filter_list = NULL - this needs to be implemenetd
   # expect_s3_class(
   #   test_res_filter_list <- suppressWarnings(

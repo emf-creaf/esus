@@ -77,7 +77,7 @@ ifn_to_tibble <- function(
   # check all provinces are valid
 
 
-  
+
   # years
   assertthat::assert_that(
     is.character(version), length(version) > 0,
@@ -147,7 +147,7 @@ ifn_to_tibble <- function(
   ) |>
     purrr::list_rbind()
 }
- 
+
 
 #' Inner function to process all tables for one year
 #'
@@ -173,12 +173,12 @@ ifn_to_tibble <- function(
     input_df <- .build_ifn_input_with(version, provinces, filter_list, folder, .verbose)
 
     temp_res <- furrr::future_pmap(
-      # temp_res <- purrr::pmap(
+    # temp_res <- purrr::pmap(
       .progress = .verbose,
       .l = input_df,
       .f = \(province, plots, version, tree_table, plot_table, shrub_table, regen_table, coord_table) {
 
-       # browser()
+      # browser()
       #
       plot_info <- ifn_plot_table_process(plot_table, coord_table, version, plots, province, ifn_provinces_dictionary)
 
@@ -217,7 +217,7 @@ ifn_to_tibble <- function(
           tree = list(tree),
           understory = list(understory),
           regen = list(regen),
-          
+
 
         ) |>
 
@@ -316,7 +316,7 @@ ifn_tree_table_process <- function(tree_data, version, plot, province, ESPECIES)
    # browser()
 
   if (version == "ifn2"){
-    
+
   tree_filtered_data <-  .read_inventory_data(
     tree_data,
     colnames = dplyr::any_of(c(
@@ -408,28 +408,28 @@ ifn_tree_table_process <- function(tree_data, version, plot, province, ESPECIES)
   # Return tree
   return(tree)
   }
-  
+
   if (version %in% c("ifn3", "ifn4")){
-    
+
     # browser()
-    
+
     tree_filtered_data <-  .read_inventory_data(
       tree_data,
       colnames = dplyr::any_of(c(
-          "Estadillo", 
-          "Cla", 
+          "Estadillo",
+          "Cla",
           "Subclase",
           "Especie",
           "nArbol",
           "OrdenIf3",
           "OrdenIf2",
           "OrdenIf4",
-          "Dn1", 
+          "Dn1",
           "Dn2",
           "Ht",
-          "Calidad", 
+          "Calidad",
           "Forma"
-        
+
       )),
       .ifn = TRUE
     ) |>
@@ -437,9 +437,9 @@ ifn_tree_table_process <- function(tree_data, version, plot, province, ESPECIES)
         Estadillo == plot
       ) |>
       tibble::as_tibble()
-    
-    
-    
+
+
+
     # ## We check before continuing, because if the filter is too restrictive maybe we dont have rows
     if (nrow(tree_filtered_data) < 1) {
       # warn the user
@@ -450,27 +450,27 @@ ifn_tree_table_process <- function(tree_data, version, plot, province, ESPECIES)
       return(dplyr::tibble())
     }
     # browser()
-    
-    
-    
-    
+
+
+
+
     tree <- tree_filtered_data |>
       dplyr::rename(
         PLOT = Estadillo,
         HT = Ht,
         Clase = Cla,
-      ) |> 
+      ) |>
       # units transformations
       dplyr::mutate(
         province_code =  province,
         # unique inner code
         ID_UNIQUE_PLOT = paste("ES",province_code, PLOT, sep="_"),
         DIA = (Dn1 + Dn2)/2,
-        
+
         # MM TO CM
         DIA = DIA * 0.1,
         SP_CODE = as.numeric(Especie),
-        
+
         # density represented by each tree considering  plot design (variable radious)
         DENSITY = dplyr::case_when(
           DIA < 12.5 ~ 127.3239546,
@@ -478,26 +478,26 @@ ifn_tree_table_process <- function(tree_data, version, plot, province, ESPECIES)
           DIA >= 22.5 & DIA < 42.5 ~ 14.14710607,
           DIA >= 42.5 ~ 5.092958185
         )) |>
-      
-      
-      #different for ifn3 and 4 ??? 
-      
+
+
+      #different for ifn3 and 4 ???
+
       # add species info
-      
+
       dplyr::left_join(
         y =  ESPECIES |>
           dplyr::select(
             SP_CODE ,
             SP_NAME ),
         by = "SP_CODE"
-      ) |> 
-      
-      
+      ) |>
+
+
       dplyr::arrange(SP_CODE) |>
-      
+
       dplyr::select(
         any_of(c(
-          "ID_UNIQUE_PLOT", 
+          "ID_UNIQUE_PLOT",
           "province_code",
           "Clase",
           "Subclase",
@@ -516,14 +516,14 @@ ifn_tree_table_process <- function(tree_data, version, plot, province, ESPECIES)
           #diameter in cm
           "DIA",
           #height in m
-          "HT", 
+          "HT",
           "DENSITY"
         ))
       )
-    
+
     # Return tree
     return(tree)
-    
+
   }
 }
 
@@ -555,9 +555,9 @@ ifn_shrub_table_process <- function(shrub_data, version, plot, province, ESPECIE
 
     return(dplyr::tibble())
   }
-  
+
   if (version =="ifn2"){
-    
+
 
 
 
@@ -637,18 +637,18 @@ ifn_shrub_table_process <- function(shrub_data, version, plot, province, ESPECIE
   # Return shrub
   return(shrub)
   }
-  
+
   if (version %in% c("ifn3", "ifn4")){
-    
-    
+
+
     shrub_filtered_data <- .read_inventory_data(
       shrub_data,
       colnames = dplyr::any_of(c(
-        "Estadillo", 
-        "Cla", 
+        "Estadillo",
+        "Cla",
         "Subclase",
         "Especie",
-        "Fcc", 
+        "Fcc",
         "Hm"
       )),
       .ifn = TRUE
@@ -657,7 +657,7 @@ ifn_shrub_table_process <- function(shrub_data, version, plot, province, ESPECIE
         Estadillo == plot
       ) |>
       tibble::as_tibble()
-    
+
     # ## We check before continuing, because if the filter is too restrictive maybe we dont have rows
     if (nrow(shrub_filtered_data) < 1) {
       # warn the user
@@ -669,7 +669,7 @@ ifn_shrub_table_process <- function(shrub_data, version, plot, province, ESPECIE
     }
 
     shrub<- shrub_filtered_data |>
-      
+
       dplyr::rename(
         PLOT = Estadillo,
         HT = Hm,
@@ -682,26 +682,26 @@ ifn_shrub_table_process <- function(shrub_data, version, plot, province, ESPECIE
         HT = HT * 0.1 ,
         SP_CODE = as.numeric(Especie),
         ID_UNIQUE_PLOT = paste("ES",province_code, PLOT, sep="_")
-        
+
       ) |>
-      
-      
+
+
       # 3. ref_plant_dictionary
       #we join data from plant ref dictionary
       # some symbols apply for multiple species
-      
+
       dplyr::left_join(
         y =  ESPECIES |>
           dplyr::select(
             SP_CODE ,
             SP_NAME ),
         by = "SP_CODE"
-      ) |> 
-      
+      ) |>
+
       dplyr::select(
         ID_UNIQUE_PLOT,
         province_code,
-        Clase, 
+        Clase,
         Subclase,
         PLOT,
         SP_NAME,
@@ -710,7 +710,7 @@ ifn_shrub_table_process <- function(shrub_data, version, plot, province, ESPECIE
         COVER
       )
     return(shrub)
-        
+
   }
 }
 
@@ -736,7 +736,7 @@ ifn_regen_table_process <- function(regen_data, version, plot, province, ESPECIE
   }
 
   if (version =="ifn2"){
-    
+
   regen_filtered_data <- .read_inventory_data(
     regen_data,
     colnames = dplyr::any_of(c(
@@ -809,20 +809,20 @@ ifn_regen_table_process <- function(regen_data, version, plot, province, ESPECIE
   return(regeneration)
 
   }
-  
-  
+
+
   if (version %in% c("ifn3", "ifn4")){
-  
+
   regen_filtered_data <- .read_inventory_data(
   regen_data,
   colnames = dplyr::all_of(c(
-    "Estadillo", 
-    "Cla", 
+    "Estadillo",
+    "Cla",
     "Subclase",
     "Especie",
-    "CatDes", 
-    "Tipo", 
-    "Densidad", 
+    "CatDes",
+    "Tipo",
+    "Densidad",
     "NumPies",
     "Hm"
   )),
@@ -832,8 +832,8 @@ ifn_regen_table_process <- function(regen_data, version, plot, province, ESPECIE
       Estadillo == plot
     ) |>
     tibble::as_tibble()
-    
-  
+
+
   # ## We check before continuing, because if the filter is too restrictive maybe we dont have rows
   if (nrow(regen_filtered_data) < 1) {
     # warn the user
@@ -843,34 +843,34 @@ ifn_regen_table_process <- function(regen_data, version, plot, province, ESPECIE
     ))
     return(dplyr::tibble())
   }
-  
-  
-  #we add the id code   
+
+
+  #we add the id code
   regeneration<- regen_filtered_data|>
-    
+
     dplyr::rename(
       PLOT = Estadillo,
       Clase = Cla
     ) |>
-    
+
     dplyr::mutate(
       province_code = province,
       #DM TO M
       Hm = Hm * 0.1,
       SP_CODE = as.numeric(Especie),
       ID_UNIQUE_PLOT = paste("ES",province, PLOT, sep = "_")) |>
-    
+
     dplyr::left_join(
       y =  ESPECIES |>
         dplyr::select(
           SP_CODE ,
           SP_NAME ),
       by = "SP_CODE"
-    ) |> 
-    
-    
-    #selection of final variables 
-    
+    ) |>
+
+
+    #selection of final variables
+
     dplyr::select(
       ID_UNIQUE_PLOT,
       province_code,
@@ -882,18 +882,18 @@ ifn_regen_table_process <- function(regen_data, version, plot, province, ESPECIE
       #nombre en latin
       SP_NAME,
       #categoria de desarollo
-      CatDes, 
+      CatDes,
       #origen de los pies
-      Tipo, 
+      Tipo,
       NumPies,
       Hm
     )
-  
+
   # Return regen
   return(regeneration)
-  
-  
-  
+
+
+
   }
 }
 
@@ -923,7 +923,7 @@ ifn_plot_table_process <- function(plot_data, coord_data, version, plot, provinc
   # 2. col names
   # browser()
   if (version =="ifn2"){
-    
+
 
   plot_filtered_data <- .read_inventory_data(
       plot_data,
@@ -1112,27 +1112,27 @@ ifn_plot_table_process <- function(plot_data, coord_data, version, plot, provinc
   }
 
   if (version %in% c("ifn3", "ifn4")){
-    
-    
+
+
     plot_filtered_data <- .read_inventory_data(
       plot_data,
       colnames = dplyr::any_of(c(
 
-        "Estadillo", 
-        "Cla", 
+        "Estadillo",
+        "Cla",
         "Subclase",
         "Tipo",
         "Ano",
         "Rocosid",
-        "MatOrg", 
+        "MatOrg",
         "TipSuelo1",
         "TipSuelo2",
-        "TipSuelo3", 
+        "TipSuelo3",
         "Orienta1",
         "Orienta2",
         "MaxPend1",
         "MaxPend2"
-        
+
       )),
       .ifn = TRUE
     ) |>
@@ -1140,9 +1140,9 @@ ifn_plot_table_process <- function(plot_data, coord_data, version, plot, provinc
         Estadillo == plot
       ) |>
       tibble::as_tibble()
-    
-    
-    
+
+
+
     # ## We check before continuing, because if the filter is too restrictive maybe we dont have rows
     if (nrow(plot_filtered_data) < 1) {
       # warn the user
@@ -1152,22 +1152,22 @@ ifn_plot_table_process <- function(plot_data, coord_data, version, plot, provinc
       ))
       return(dplyr::tibble())
     }
-    
-    plot_filtered_data <- plot_filtered_data |> 
+
+    plot_filtered_data <- plot_filtered_data |>
       dplyr::rename(
         YEAR = Ano,
         PLOT = Estadillo,
         Clase = Cla
-      ) |> 
+      ) |>
       dplyr::mutate(
         YEAR = as.character(YEAR),
         version = version,
         province_code = province,
         province_code = as.character(province_code),
         ID_UNIQUE_PLOT = paste("ES",province_code, PLOT, sep = "_"))
-    
+
     soil <- plot_filtered_data |>
-      
+
       dplyr::mutate(
         # province_code = province,
         # province_code = as.numeric(province_code),
@@ -1181,22 +1181,22 @@ ifn_plot_table_process <- function(plot_data, coord_data, version, plot, provinc
             #   province_code = province,
             #   province_code = as.numeric(province_code),
             #   ID_UNIQUE_PLOT = paste("ES",province_code, PLOT, sep="_"))|>
-              dplyr::select( 
+              dplyr::select(
                 ID_UNIQUE_PLOT,
                  province_code,
                  Clase,
                  Subclase,
-                 PLOT, 
+                 PLOT,
                  YEAR,
                  Rocosid,
-                 MatOrg, 
+                 MatOrg,
                  TipSuelo1,
                  TipSuelo2,
                  TipSuelo3
                 ))) |>
 
-      #selection of final variables 
-      
+      #selection of final variables
+
       dplyr::select(
         ID_UNIQUE_PLOT,
         province_code,
@@ -1207,8 +1207,8 @@ ifn_plot_table_process <- function(plot_data, coord_data, version, plot, provinc
         YEAR,
         soil_field
       )
-    
-    #we add the id code   
+
+    #we add the id code
     info_plot <- plot_filtered_data |>
       dplyr::rename(
         ASPECT = Orienta1,
@@ -1240,18 +1240,18 @@ ifn_plot_table_process <- function(plot_data, coord_data, version, plot, provinc
           ),
         by = "province_code"
         ) |>
-      
-      #selection of final variables 
-      
+
+      #selection of final variables
+
       dplyr::select(
-        
+
         ID_UNIQUE_PLOT,
         COUNTRY,
         ca_name_original,
         province_code,
         province_name_original ,
         PLOT,
-        Clase, 
+        Clase,
         Subclase,
         COORD_SYS,
         YEAR,
@@ -1260,17 +1260,17 @@ ifn_plot_table_process <- function(plot_data, coord_data, version, plot, provinc
         ASPECT,
         SLOPE,
         soils
-        
-      ) 
-   
-    
-  
+
+      )
+
+
+
 
   files_validation <- assertthat::validate_that(
     !any(is.na(c(coord_data)))
     # !any(c(coord_data) == NA_character_)
     )
-  
+
    coords_filtered_data <- .read_inventory_data(
     coord_data,
     colnames = dplyr::any_of(c(
@@ -1288,10 +1288,10 @@ ifn_plot_table_process <- function(plot_data, coord_data, version, plot, provinc
        Estadillo == plot
      ) |>
      tibble::as_tibble()
-   
-   
-   
-   
+
+
+
+
    # ## We check before continuing, because if the filter is too restrictive maybe we dont have rows
    if (nrow(coords_filtered_data) < 1) {
      # warn the user
@@ -1301,19 +1301,19 @@ ifn_plot_table_process <- function(plot_data, coord_data, version, plot, provinc
      ))
      return(dplyr::tibble())
    }
-   
-  
-   
-   coords_data <- coords_filtered_data |> 
-     
-     
+
+
+
+   coords_data <- coords_filtered_data |>
+
+
       dplyr::rename(
         PLOT = Estadillo,
         COORDEX = CoorX,
         COORDEY = CoorY,
         HOJA = Hoja50
         ) |>
-   
+
       dplyr::mutate(
         HOJA = as.character(HOJA),
         province_code = province,
@@ -1322,13 +1322,13 @@ ifn_plot_table_process <- function(plot_data, coord_data, version, plot, provinc
         ID_UNIQUE_PLOT = paste("ES",province_code, PLOT, sep = "_"),
         Huso = ifelse("Huso" %in% names(coords_filtered_data), coords_filtered_data$Huso, NA)
         )
-        
-      
+
+
 
 
 
        info_plot <- info_plot|>
-         
+
      dplyr::left_join(
            y = coords_data|>
              dplyr::select(any_of(c(
@@ -1354,8 +1354,8 @@ ifn_plot_table_process <- function(plot_data, coord_data, version, plot, provinc
          Huso == 28 & COORD_SYS == "ED50" ~ 23028,
          Huso == 28 & COORD_SYS == "WGS84" ~ 32628,
          TRUE ~ NA_integer_)
-         ) |> 
-         
+         ) |>
+
      dplyr::select(
        any_of(c(
          "ID_UNIQUE_PLOT",
@@ -1365,7 +1365,7 @@ ifn_plot_table_process <- function(plot_data, coord_data, version, plot, provinc
          "province_code",
          "province_name_original",
          "PLOT",
-         "Clase", 
+         "Clase",
          "Subclase",
          "version",
          "Tipo",
@@ -1380,12 +1380,12 @@ ifn_plot_table_process <- function(plot_data, coord_data, version, plot, provinc
          "soils"
        ))
      )
-    
+
        return(info_plot)
-    
+
   }
-  
-# 
+
+#
 #   # Return plot with soil
   return(info_plot)
 }

@@ -33,7 +33,7 @@ test_plots <- list(
 test_provinces <- names(test_plots)
 test_folder <- Sys.getenv("ifn_path")
     # test_version = "ifn2"
-#  
+#
 #  test_input <- .build_ifn_input_with (
 #   test_version,
 #   test_provinces,
@@ -1794,7 +1794,7 @@ test_that("ifn_to_tibble  ifn 2-3-4 works as intended", {
   "40" = c(412,1216,1728),
   "49" = c(105,99,532)
   )
-  
+
   test_plots_ifn2 <- list(
     "01" = c(19,80,1120),
     "02"= c(11,444,1839),
@@ -1820,11 +1820,11 @@ test_that("ifn_to_tibble  ifn 2-3-4 works as intended", {
     # "91" = c(1406115, 0),
     # "tururu" = 3555)
   )
-  
-  
+
+
   test_provinces <- names(test_plots)
     test_version_ifn2 = "ifn2"
-    
+
   test_input_ifn2 <- .build_ifn_input_with (
    "ifn2",
     test_provinces,
@@ -1845,9 +1845,9 @@ test_that("ifn_to_tibble  ifn 2-3-4 works as intended", {
     "40" = c(412,1216,1728),
     "49" = c(105,99,532)
   )
-  
 
-  
+
+
   test_input_ifn3 <- .build_ifn_input_with (
     "ifn3",
     test_provinces,
@@ -1855,7 +1855,7 @@ test_that("ifn_to_tibble  ifn 2-3-4 works as intended", {
     test_folder,
     .verbose = TRUE
   )
-  
+
   test_input_ifn4 <- .build_ifn_input_with (
     "ifn4",
     test_provinces,
@@ -1863,13 +1863,13 @@ test_that("ifn_to_tibble  ifn 2-3-4 works as intended", {
     test_folder,
     .verbose = TRUE
   )
-  
+
   test_input <- rbind(test_input_ifn2,test_input_ifn3,test_input_ifn4)
 
-  
+
   test_version <- c("ifn2", "ifn3", "ifn4")
 
-  
+
   # tests config
   test_parallel_conf <- furrr::furrr_options(scheduling = 2L, stdout = TRUE)
   future::plan(future::multisession, workers = 3)
@@ -1902,7 +1902,7 @@ test_that("ifn_to_tibble  ifn 2-3-4 works as intended", {
     "Clase",
     "Subclase",
     "Tipo")
-  
+
 
   # object
   expect_s3_class(
