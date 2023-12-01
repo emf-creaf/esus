@@ -250,18 +250,22 @@ test_that(".build_ifn_input_with and .build_ifn_file_path work as intended for i
   )
 
 
-  # # warnings and messages
-  # expect_warning(
-  #   .build_ifn_input_with( test_version, test_provinces, test_plots, ".", .verbose = TRUE),
-  #   "file doesn't exist"
-  # )
-  # expect_message(
-  #   .build_ifn_input_with( test_version, test_provinces, test_plots, test_folder, .verbose = TRUE),
-  #   "Getting ready to retrieve"
-  # )
+# warnings and messages
+expect_warning(
+  .build_ifn_input_with( test_version, test_provinces, test_plots, ".", .verbose = TRUE),
+  "file doesn't exist"
+)
+expect_message(
+  suppressWarnings(
+  .build_ifn_input_with( test_version, test_provinces, test_plots, test_folder, .verbose = TRUE),
+  "Getting ready to retrieve"
+  )
+)
   expect_no_message(
+    suppressWarnings(
     test_res <-
       .build_ifn_input_with(test_version,test_provinces, test_plots, test_folder, .verbose = FALSE)
+    )
   )
 
   ## result tests

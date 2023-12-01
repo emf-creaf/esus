@@ -166,14 +166,14 @@ ifn_to_tibble <- function(
   ) {
 
     # debug
-      # browser()
+       # browser()
 
     # Create input df for year
 
     input_df <- .build_ifn_input_with(version, provinces, filter_list, folder, .verbose)
 
-    temp_res <- furrr::future_pmap(
-    # temp_res <- purrr::pmap(
+    # temp_res <- furrr::future_pmap(
+     temp_res <- purrr::pmap(
       .progress = .verbose,
       .l = input_df,
       .f = \(province, plots, version, tree_table, plot_table, shrub_table, regen_table, coord_table) {
