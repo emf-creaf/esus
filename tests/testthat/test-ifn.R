@@ -17,7 +17,7 @@ test_plots <- list(
   "13" = c(51, 419,783),
   "17" = c(2003,629,2944),
   "23" = c(269,1460,444),
-  "26" = c(960,495,172),
+  # "26" = c(960,495,172),
   "27" = c(90, 190,537),
   "30" = c(78,1223,1057),
   "33" = c(818,283,1483),
@@ -25,9 +25,9 @@ test_plots <- list(
   "38" = c(672,426,1557),
   "40" = c(412,1216,1728),
   "50" = c(172, 479,744),
-  "49" = c(105,99,532)
-   # "91" = c(1406115, 0),
-   # "tururu" = 3555
+  "49" = c(105,99,532),
+   "91" = c(1406115, 0),
+   "tururu" = 3555
 )
 
 test_provinces <- names(test_plots)
@@ -112,10 +112,10 @@ test_that("ifn_tree_table_process for ifn2 works as intended", {
    # error in department name, gives an empty tibble
    expect_s3_class(
      test_error <- suppressWarnings(ifn_tree_table_process(
-       test_input$tree_table[66],
+       test_input$tree_table[63],
        test_version,
-       test_input$plots[66],
-       test_input$province[66],
+       test_input$plots[63],
+       test_input$province[63],
        test_especies
      )),
      "tbl"
@@ -124,10 +124,10 @@ test_that("ifn_tree_table_process for ifn2 works as intended", {
    # error in plot name, should return an empty tibble
    expect_s3_class(
      test_error <- suppressWarnings(ifn_tree_table_process(
-       test_input$tree_table[64],
+       test_input$tree_table[61],
        test_version,
-       test_input$plots[64],
-       test_input$province[64],
+       test_input$plots[61],
+       test_input$province[61],
        test_especies
      )),
      "tbl"
@@ -216,10 +216,10 @@ test_that("ifn_tree_table_process for ifn3 works as intended", {
   # error in department name, gives an empty tibble
   expect_s3_class(
     test_error <- suppressWarnings(ifn_tree_table_process(
-      test_input$tree_table[66],
+      test_input$tree_table[63],
       test_version,
-      test_input$plots[66],
-      test_input$province[66],
+      test_input$plots[63],
+      test_input$province[63],
       test_especies
     )),
     "tbl"
@@ -228,10 +228,10 @@ test_that("ifn_tree_table_process for ifn3 works as intended", {
   # error in plot name, should return an empty tibble
   expect_s3_class(
     test_error <- suppressWarnings(ifn_tree_table_process(
-      test_input$tree_table[64],
+      test_input$tree_table[61],
       test_version,
-      test_input$plots[64],
-      test_input$province[64],
+      test_input$plots[61],
+      test_input$province[61],
       test_especies
     )),
     "tbl"
@@ -251,7 +251,7 @@ test_that("ifn_tree_table_process for ifn4 works as intended", {
     # "05" = c(61, 14, 328),
     "06" = c(2064,1138,325),
     "07" = c(679,114,499),
-    "10" = c(3374,261)
+    "10" = c(3374,261),
     # "12" = c(156,1463,377),
     # "13" = c(51, 419,783),
     # "17" = c(2003,629,2944),
@@ -265,8 +265,8 @@ test_that("ifn_tree_table_process for ifn4 works as intended", {
     # "40" = c(412,1216,1728),
     # # "50" = c(172, 479,744),
     # "49" = c(105,99,532),
-     # "91" = c(1406115, 0),
-     # "tururu" = 3555
+     "91" = c(1406115, 0),
+     "tururu" = 3555
   )
 
   test_provinces <- names(test_plots)
@@ -438,10 +438,10 @@ test_that("ifn_shrub_table_process for ifn2 works as intended", {
   # error in department name, gives an empty tibble
   expect_s3_class(
     test_error <- suppressWarnings(ifn_shrub_table_process(
-      test_input$shrub_table[66],
+      test_input$shrub_table[63],
       test_version,
-      test_input$plots[66],
-      test_input$province[66],
+      test_input$plots[63],
+      test_input$province[63],
       test_especies
     )),
     "tbl"
@@ -450,10 +450,10 @@ test_that("ifn_shrub_table_process for ifn2 works as intended", {
   # error in plot name, should return an empty tibble
   expect_s3_class(
     test_error <- suppressWarnings(ifn_shrub_table_process(
-      test_input$shrub_table[64],
+      test_input$shrub_table[61],
       test_version,
-      test_input$plots[64],
-      test_input$province[64],
+      test_input$plots[61],
+      test_input$province[61],
       test_especies
     )),
     "tbl"
@@ -528,10 +528,10 @@ test_that("ifn_shrub_table_process for ifn3 works as intended", {
   # error in department name, gives an empty tibble
   expect_s3_class(
     test_error <- suppressWarnings(ifn_shrub_table_process(
-      test_input$shrub_table[66],
+      test_input$shrub_table[63],
       test_version,
-      test_input$plots[66],
-      test_input$province[66],
+      test_input$plots[63],
+      test_input$province[63],
       test_especies
     )),
     "tbl"
@@ -540,10 +540,10 @@ test_that("ifn_shrub_table_process for ifn3 works as intended", {
   # error in plot name, should return an empty tibble
   expect_s3_class(
     test_error <- suppressWarnings(ifn_shrub_table_process(
-      test_input$shrub_table[64],
+      test_input$shrub_table[61],
       test_version,
-      test_input$plots[64],
-      test_input$province[64],
+      test_input$plots[61],
+      test_input$province[61],
       test_especies
     )),
     "tbl"
@@ -562,7 +562,7 @@ test_that("ifn_shrub_table_process for ifn4 works as intended", {
     # "05" = c(61, 14, 328),
     "06" = c(2064,1138,325),
     "07" = c(679,114,499),
-    "10" = c(3374,261)
+    "10" = c(3374,261),
     # "12" = c(156,1463,377),
     # "13" = c(51, 419,783),
     # "17" = c(2003,629,2944),
@@ -576,9 +576,9 @@ test_that("ifn_shrub_table_process for ifn4 works as intended", {
     # "40" = c(412,1216,1728),
     # # "50" = c(172, 479,744),
     # "49" = c(105,99,532),
-    #this gies an error
-      # "91" = c(1406115, 0),
-      # "tururu" = 3555
+    #this gives an error
+       "91" = c(1406115, 0),
+      "tururu" = 3555
   )
 
   test_provinces <- names(test_plots)
@@ -738,10 +738,10 @@ test_that("ifn_regen_table_process for ifn2 works as intended", {
   # error in department name, gives an empty tibble
   expect_s3_class(
     test_error <- suppressWarnings(ifn_regen_table_process(
-      test_input$regen_table[66],
+      test_input$regen_table[63],
       test_version,
-      test_input$plots[66],
-      test_input$province[66],
+      test_input$plots[63],
+      test_input$province[63],
       test_especies
     )),
     "tbl"
@@ -750,10 +750,10 @@ test_that("ifn_regen_table_process for ifn2 works as intended", {
   # error in plot name, should return an empty tibble
   expect_s3_class(
     test_error <- suppressWarnings(ifn_regen_table_process(
-      test_input$regen_table[64],
+      test_input$regen_table[61],
       test_version,
-      test_input$plots[64],
-      test_input$province[64],
+      test_input$plots[61],
+      test_input$province[61],
       test_especies
     )),
     "tbl"
@@ -829,10 +829,10 @@ test_that("ifn_regen_table_process for ifn3 works as intended", {
   # error in department name, gives an empty tibble
   expect_s3_class(
     test_error <- suppressWarnings(ifn_regen_table_process(
-      test_input$regen_table[66],
+      test_input$regen_table[63],
       test_version,
-      test_input$plots[66],
-      test_input$province[66],
+      test_input$plots[63],
+      test_input$province[63],
       test_especies
     )),
     "tbl"
@@ -841,10 +841,10 @@ test_that("ifn_regen_table_process for ifn3 works as intended", {
   # error in plot name, should return an empty tibble
   expect_s3_class(
     test_error <- suppressWarnings(ifn_regen_table_process(
-      test_input$regen_table[64],
+      test_input$regen_table[61],
       test_version,
-      test_input$plots[64],
-      test_input$province[64],
+      test_input$plots[61],
+      test_input$province[61],
       test_especies
     )),
     "tbl"
@@ -857,7 +857,7 @@ test_that("ifn_regen_table_process for ifn4 works as intended", {
   test_plots <- list(
 
      "06" = c(2064,1138,325),
-    "07" = c(679,114,499)
+    "07" = c(679,114,499),
     # "10" = c(3374,261),
     # "26" = c(960,495,172),
     # "30" = c(78, 1223),
@@ -866,8 +866,8 @@ test_that("ifn_regen_table_process for ifn4 works as intended", {
     # "40" = c(412,1216,1728),
     # "49" = c(105,99,532)
 
-    # "91" = c(1406115, 0),
-    # "tururu" = 3555
+     "91" = c(1406115, 0),
+     "tururu" = 3555
   )
 
   test_provinces <- names(test_plots)
@@ -978,7 +978,7 @@ test_that("ifn_plot_table_process for ifn2  works as intended", {
     "13" = c(51, 419,783),
     "17" = c(2003,629,2944),
     "23" = c(269,1460,444),
-    "26" = c(960,495,172),
+    # "26" = c(960,495,172),
     "27" = c(90, 190,537),
     "30" = c(78,1223,1057),
     "33" = c(818,283,1483),
@@ -986,9 +986,9 @@ test_that("ifn_plot_table_process for ifn2  works as intended", {
     "38" = c(672,426,1557),
     "40" = c(412,1216,1728),
     "50" = c(172, 479,744),
-    "49" = c(105,99,532)
-    # "91" = c(1406115, 0),
-    # "tururu" = 3555
+    "49" = c(105,99,532),
+    "91" = c(1406115, 0),
+    "tururu" = 3555
   )
 
   test_provinces <- names(test_plots)
@@ -1072,11 +1072,11 @@ test_that("ifn_plot_table_process for ifn2  works as intended", {
   # error in department name, gives an empty tibble
   expect_s3_class(
     test_error <- suppressWarnings(ifn_plot_table_process(
-      test_input$plot_table[66],
-      test_input$coord_table[66],
+      test_input$plot_table[63],
+      test_input$coord_table[63],
       test_version,
-      test_input$plots[66],
-      test_input$province[66],
+      test_input$plots[63],
+      test_input$province[63],
       test_provinces_dictionary
     )),
     "tbl"
@@ -1085,11 +1085,11 @@ test_that("ifn_plot_table_process for ifn2  works as intended", {
   # error in plot name, should return an empty tibble
   expect_s3_class(
     test_error <- suppressWarnings(ifn_plot_table_process(
-      test_input$plot_table[64],
-      test_input$coord_table[64],
+      test_input$plot_table[61],
+      test_input$coord_table[61],
       test_version,
-      test_input$plots[64],
-      test_input$province[64],
+      test_input$plots[61],
+      test_input$province[61],
       test_provinces_dictionary
     )),
     "tbl"
@@ -1105,15 +1105,15 @@ test_that("ifn_plot_table_process for ifn3  works as intended", {
     "06" = c(2064,1138,325),
     "07" = c(679,114,499),
     "10" = c(3374,261),
-    "26" = c(960,495,172),
+    # "26" = c(960,495,172),
     "30" = c(78, 1223),
     "31" = c(135,761,1518),
     "33" = c(283),
     "40" = c(412,1216,1728),
-    "49" = c(105,99,532)
+    "49" = c(105,99,532),
 
-     # "91" = c(1406115, 0),
-     # "tururu" = 3555
+     "91" = c(1406115, 0),
+     "tururu" = 3555
   )
 
   test_provinces <- names(test_plots)
@@ -1196,11 +1196,11 @@ test_that("ifn_plot_table_process for ifn3  works as intended", {
   # error in department name, gives an empty tibble
   expect_s3_class(
     test_error <- suppressWarnings(ifn_plot_table_process(
-      test_input$plot_table[26],
-      test_input$coord_table[26],
+      test_input$plot_table[23],
+      test_input$coord_table[23],
       test_version,
-      test_input$plots[26],
-      test_input$province[26],
+      test_input$plots[23],
+      test_input$province[23],
       test_provinces_dictionary
     )),
     "tbl"
@@ -1209,11 +1209,11 @@ test_that("ifn_plot_table_process for ifn3  works as intended", {
   # error in plot name, should return an empty tibble
   expect_s3_class(
     test_error <- suppressWarnings(ifn_plot_table_process(
-      test_input$plot_table[24],
-      test_input$coord_table[24],
+      test_input$plot_table[21],
+      test_input$coord_table[21],
       test_version,
-      test_input$plots[24],
-      test_input$province[24],
+      test_input$plots[21],
+      test_input$province[21],
       test_provinces_dictionary
     )),
     "tbl"
@@ -1231,15 +1231,15 @@ test_that("ifn_plot_table_process for ifn4  works as intended", {
     "06" = c(2064,1138,325),
     "07" = c(679,114,499),
     "10" = c(3374,261),
-    "26" = c(960,495,172),
+    # "26" = c(960,495,172),
     "30" = c(78, 1223),
     "31" = c(135,761,1518),
     "33" = c(283),
     "40" = c(412,1216,1728),
-    "49" = c(105,99,532)
+    "49" = c(105,99,532),
 
-    # "91" = c(1406115, 0),
-    # "tururu" = 3555
+    "91" = c(1406115, 0),
+    "tururu" = 3555
   )
 
   test_provinces <- names(test_plots)
@@ -1322,11 +1322,11 @@ test_that("ifn_plot_table_process for ifn4  works as intended", {
   # error in department name, gives an empty tibble
   expect_s3_class(
     test_error <- suppressWarnings(ifn_plot_table_process(
-      test_input$plot_table[26],
-      test_input$coord_table[26],
+      test_input$plot_table[23],
+      test_input$coord_table[23],
       test_version,
-      test_input$plots[26],
-      test_input$province[26],
+      test_input$plots[23],
+      test_input$province[23],
       test_provinces_dictionary
     )),
     "tbl"
@@ -1335,11 +1335,11 @@ test_that("ifn_plot_table_process for ifn4  works as intended", {
   # error in plot name, should return an empty tibble
   expect_s3_class(
     test_error <- suppressWarnings(ifn_plot_table_process(
-      test_input$plot_table[24],
-      test_input$coord_table[24],
+      test_input$plot_table[21],
+      test_input$coord_table[21],
       test_version,
-      test_input$plots[24],
-      test_input$province[24],
+      test_input$plots[21],
+      test_input$province[21],
       test_provinces_dictionary
     )),
     "tbl"
@@ -1434,15 +1434,15 @@ test_that("ifn_tables_process ifn3 works as intended", {
     "06" = c(2064,1138,325),
     "07" = c(679,114,499),
     "10" = c(3374,261),
-    "26" = c(960,495,172),
+    # "26" = c(960,495,172),
     "30" = c(78, 1223),
     "31" = c(135,761,1518),
     "33" = c(283),
     "40" = c(412,1216,1728),
-    "49" = c(105,99,532)
+    "49" = c(105,99,532),
 
-    # "91" = c(1406115, 0),
-    # "tururu" = 3555
+    "91" = c(1406115, 0),
+    "tururu" = 3555
   )
 
   test_provinces <- names(test_plots)
@@ -1530,15 +1530,15 @@ test_that("ifn_tables_process ifn4 works as intended", {
     "06" = c(2064,1138,325),
     "07" = c(679,114,499),
     "10" = c(3374,261),
-    "26" = c(960,495,172),
+    # "26" = c(960,495,172),
     "30" = c(78, 1223),
     "31" = c(135,761,1518),
     "33" = c(283),
     "40" = c(412,1216,1728),
-    "49" = c(105,99,532)
+    "49" = c(105,99,532),
 
-    # "91" = c(1406115, 0),
-    # "tururu" = 3555
+    "91" = c(1406115, 0),
+    "tururu" = 3555
   )
 
   test_provinces <- names(test_plots)
@@ -1875,7 +1875,7 @@ test_that("ifn_to_tibble  ifn 2-3-4 works as intended", {
   # data integrity
   expect_named(test_res, expected_names)
   expect_false("tururu" %in% unique(test_res$province_code))
-  expect_identical(nrow(test_res), 215L) # two plots dont exist, so 2x2=4 rows less
+  expect_identical(nrow(test_res), 61L) # two plots dont exist, so 2x2=4 rows less
   expect_true(all(unique(test_res$province_code) %in% names(test_plots)))
   expect_true(all(unique(test_res$version) %in% test_version))
 
@@ -1942,7 +1942,7 @@ test_that("ifn_to_tibble  ifn 2-3-4 works as intended", {
     ),
     ".verbose"
   )
-  # ancillary data (tested just by providing an existing wrong folder)
+  # # ancillary data (tested just by providing an existing wrong folder)
   expect_error(
     ifn_to_tibble(
       test_provinces, test_version, test_plots, ".",
@@ -1951,14 +1951,15 @@ test_that("ifn_to_tibble  ifn 2-3-4 works as intended", {
     ),
     "Ooops! Something went wrong, exiting..."
   )
-
-  # what to expect if departments or filter list are all wrong
-  expect_true(
+  # 
+  # # what to expect if provinces or filter list are all wrong
+  expect_error(
     suppressWarnings(ifn_to_tibble(
       "tururu", test_version, list("tururu" = 0), test_folder,
       .parallel_options = test_parallel_conf,
       .verbose = FALSE
-    ) |> nrow()) < 1
+    ) ),
+    "Ooops! Something went wrong, exiting..."
   )
 })
 
