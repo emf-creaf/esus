@@ -922,7 +922,7 @@ ifn_plot_table_process <- function(plot_data, coord_data, version, plot, provinc
 
   # 2. col names
   # browser()
-  if (version =="ifn2"){
+  if (version == "ifn2"){
 
 
   plot_filtered_data <- .read_inventory_data(

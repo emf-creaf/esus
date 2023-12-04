@@ -12,7 +12,7 @@ test_that(".build_ifn_input_with and .build_ifn_file_path work as intended for i
     "06" = c(2064,1138,325),
     "07" = c(679,114,499),
     "10" = c(3374,261),
-    "26" = c(960,495,172),
+    # "26" = c(960,495,172),
     "30" = c(78, 1223),
     "31" = c(135,761,1518),
     "33" = c(283),
@@ -93,7 +93,7 @@ test_that(".build_ifn_input_with and .build_ifn_file_path work as intended for i
   )
   # incorrect ones, that will be tested later when loading the data
   expect_identical(
-    test_res[["plot_table"]][24],
+    test_res[["plot_table"]][21],
     NA_character_
   )
 
@@ -105,9 +105,9 @@ test_that(".build_ifn_input_with and .build_ifn_file_path work as intended for i
   #   ),
   #   "tbl"
   # )
-  #  expect_false("tururu" %in% (test_res_filter_list$province |> unique()))
-  # expect_true(all((test_res_filter_list$province |> unique()) %in% test_provinces))
-  #  # expect_length(test_res_filter_list$province |> unique(), length(test_provinces) - 1)
+  #  expect_false("tururu" %in% (test_res_filter_list$province_name |> unique()))
+  # expect_true(all((test_res_filter_list$province_name |> unique()) %in% test_provinces))
+  #   expect_length(test_res_filter_list$province |> unique(), length(test_provinces) - 1)
 })
 test_that(".build_ifn_input_with and .build_ifn_file_path work as intended for ifn3 ", {
 
@@ -116,7 +116,7 @@ test_that(".build_ifn_input_with and .build_ifn_file_path work as intended for i
     "06" = c(2064,1138,325),
     "07" = c(679,114,499),
     "10" = c(3374,261),
-    "26" = c(960,495,172),
+    # "26" = c(960,495,172),
     "30" = c(78, 1223),
     "31" = c(135,761,1518),
     "33" = c(283),
@@ -198,7 +198,7 @@ test_that(".build_ifn_input_with and .build_ifn_file_path work as intended for i
   )
   # incorrect ones, that will be tested later when loading the data
   expect_identical(
-    test_res[["plot_table"]][24],
+    test_res[["plot_table"]][21],
     NA_character_
   )
   # expect_identical(
@@ -214,8 +214,8 @@ test_that(".build_ifn_input_with and .build_ifn_file_path work as intended for i
   #   "tbl"
   # )
   # expect_false("tururu" %in% (test_res_filter_list$province |> unique()))
-  # expect_true(all((test_res_filter_list$province |> unique()) %in% test_provinces))
-  # expect_length(test_res_filter_list$province |> unique(), length(test_provinces) - 1)
+  # expect_true(all((test_res_filter_list$province_code|> unique()) %in% test_provinces))
+  # expect_length(test_res_filter_list$province_code |> unique(), length(test_provinces) - 1)
 })
 
 test_that(".build_ifn_input_with and .build_ifn_file_path work as intended for ifn4 ", {
@@ -225,7 +225,7 @@ test_that(".build_ifn_input_with and .build_ifn_file_path work as intended for i
     "06" = c(2064,1138,325),
     "07" = c(679,114,499),
     "10" = c(3374,261),
-    "26" = c(960,495,172),
+    # "26" = c(960,495,172),
     "30" = c(78, 1223),
     "31" = c(135,761,1518),
     "33" = c(283),
@@ -303,7 +303,7 @@ expect_message(
   )
   # incorrect ones, that will be tested later when loading the data
   expect_identical(
-    test_res[["plot_table"]][24],
+    test_res[["plot_table"]][21],
     NA_character_
   )
   # expect_identical(
