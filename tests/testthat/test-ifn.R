@@ -49,12 +49,14 @@ test_folder <- Sys.getenv("ifn_path")
 test_that("ifn_tree_table_process for ifn2 works as intended", {
 
   test_version = "ifn2"
-  test_input <- .build_ifn_input_with (
+  test_input <- suppressWarnings(
+  .build_ifn_input_with (
     test_version,
     test_provinces,
     test_plots,
     test_folder,
-    .verbose = TRUE,
+    .verbose = TRUE
+  )
   )
 
   expected_names <- c(
@@ -139,12 +141,14 @@ test_that("ifn_tree_table_process for ifn2 works as intended", {
 test_that("ifn_tree_table_process for ifn3 works as intended", {
 
   test_version<- "ifn3"
-  test_input <- .build_ifn_input_with (
+  test_input <- suppressWarnings(
+    .build_ifn_input_with (
     test_version,
     test_provinces,
     test_plots,
     test_folder,
-    .verbose = TRUE,
+    .verbose = TRUE
+    )
   )
 
   expected_names <- c(
@@ -271,12 +275,14 @@ test_that("ifn_tree_table_process for ifn4 works as intended", {
 
   test_provinces <- names(test_plots)
   test_version<- "ifn4"
-  test_input <- .build_ifn_input_with (
+  test_input <- suppressWarnings(
+    .build_ifn_input_with (
     test_version,
     test_provinces,
     test_plots,
     test_folder,
-    .verbose = TRUE,
+    .verbose = TRUE
+    )
   )
 
   expected_names <- c(
@@ -376,12 +382,14 @@ test_that("ifn_shrub_table_process for ifn2 works as intended", {
 
 
   test_version = "ifn2"
-  test_input <- .build_ifn_input_with (
+  test_input <- suppressWarnings(
+    .build_ifn_input_with (
     test_version,
     test_provinces,
     test_plots,
     test_folder,
-    .verbose = TRUE,
+    .verbose = TRUE
+    )
   )
 
   expected_names <- c(
@@ -464,12 +472,14 @@ test_that("ifn_shrub_table_process for ifn3 works as intended", {
 
 
   test_version = "ifn3"
-  test_input <- .build_ifn_input_with (
+  test_input <- suppressWarnings(
+  .build_ifn_input_with (
     test_version,
     test_provinces,
     test_plots,
     test_folder,
-    .verbose = TRUE,
+    .verbose = TRUE
+  )
   )
 
   expected_names <- c(
@@ -583,12 +593,14 @@ test_that("ifn_shrub_table_process for ifn4 works as intended", {
 
   test_provinces <- names(test_plots)
   test_version<- "ifn4"
-  test_input <- .build_ifn_input_with (
+  test_input <- suppressWarnings(
+    .build_ifn_input_with (
     test_version,
     test_provinces,
     test_plots,
     test_folder,
-    .verbose = TRUE,
+    .verbose = TRUE
+    )
   )
 
   expected_names <- c(
@@ -676,12 +688,14 @@ test_that("ifn_regen_table_process for ifn2 works as intended", {
 
 
   test_version = "ifn2"
-  test_input <- .build_ifn_input_with (
+  test_input <- suppressWarnings(
+  .build_ifn_input_with (
     test_version,
     test_provinces,
     test_plots,
     test_folder,
-    .verbose = TRUE,
+    .verbose = TRUE
+  )
   )
   expected_names <- c(
     "ID_UNIQUE_PLOT",
@@ -749,7 +763,8 @@ test_that("ifn_regen_table_process for ifn2 works as intended", {
   expect_true(nrow(test_error) < 1)
   # error in plot name, should return an empty tibble
   expect_s3_class(
-    test_error <- suppressWarnings(ifn_regen_table_process(
+    test_error <- suppressWarnings(
+      ifn_regen_table_process(
       test_input$regen_table[61],
       test_version,
       test_input$plots[61],
@@ -763,12 +778,14 @@ test_that("ifn_regen_table_process for ifn2 works as intended", {
 test_that("ifn_regen_table_process for ifn3 works as intended", {
 
   test_version = "ifn3"
-  test_input <- .build_ifn_input_with (
+  test_input <- suppressWarnings(
+    .build_ifn_input_with (
     test_version,
     test_provinces,
     test_plots,
     test_folder,
-    .verbose = TRUE,
+    .verbose = TRUE
+    )
   )
 
   expected_names <- c(
@@ -872,12 +889,14 @@ test_that("ifn_regen_table_process for ifn4 works as intended", {
 
   test_provinces <- names(test_plots)
   test_version <- "ifn4"
-  test_input <- .build_ifn_input_with (
+  test_input <- suppressWarnings(
+  .build_ifn_input_with (
     test_version,
     test_provinces,
     test_plots,
     test_folder,
-    .verbose = TRUE,
+    .verbose = TRUE
+  )
   )
 
   expected_names <- c(
@@ -994,12 +1013,14 @@ test_that("ifn_plot_table_process for ifn2  works as intended", {
   test_provinces <- names(test_plots)
   test_version = "ifn2"
   #
-  test_input <- .build_ifn_input_with (
+  test_input <- suppressWarnings(
+    .build_ifn_input_with (
     test_version,
     test_provinces,
     test_plots,
     test_folder,
-    .verbose = TRUE,
+    .verbose = TRUE
+    )
   )
 
 
@@ -1118,12 +1139,14 @@ test_that("ifn_plot_table_process for ifn3  works as intended", {
 
   test_provinces <- names(test_plots)
   test_version <- "ifn3"
-  test_input <- .build_ifn_input_with (
+  test_input <- suppressWarnings(
+    .build_ifn_input_with (
     test_version,
     test_provinces,
     test_plots,
     test_folder,
-    .verbose = TRUE,
+    .verbose = TRUE
+    )
   )
 
   expected_names <- c(
@@ -1244,12 +1267,14 @@ test_that("ifn_plot_table_process for ifn3  works as intended", {
 
   test_provinces <- names(test_plots)
   test_version <- "ifn4"
-  test_input <- .build_ifn_input_with (
+  test_input <- suppressWarnings(
+    .build_ifn_input_with (
     test_version,
     test_provinces,
     test_plots,
     test_folder,
-    .verbose = TRUE,
+    .verbose = TRUE
+    )
   )
 
   expected_names <- c(
@@ -1352,12 +1377,14 @@ test_that("ifn_tables_process ifn2 works as intended", {
 
 
   test_version = "ifn2"
-  test_input <- .build_ifn_input_with (
+  test_input <- suppressWarnings(
+  .build_ifn_input_with (
     test_version,
     test_provinces,
     test_plots,
     test_folder,
-    .verbose = TRUE,
+    .verbose = TRUE
+  )
   )
 
   ### TODO
@@ -1416,7 +1443,7 @@ test_that("ifn_tables_process ifn2 works as intended", {
   # # tururu state shouldn't appear
   # # inexistent plots (91-0) shouldn't
   # # be present, so 12 of 14 elements in filter list
-  expect_false("tururu" %in% unique(test_res$province))
+  expect_false("tururu" %in% unique(test_res$province_code))
   expect_identical(nrow(test_res), 59L)
 
   # ### missing random files
@@ -1447,12 +1474,14 @@ test_that("ifn_tables_process ifn3 works as intended", {
 
   test_provinces <- names(test_plots)
   test_version <- "ifn3"
-  test_input <- .build_ifn_input_with (
+  test_input <- suppressWarnings(
+    .build_ifn_input_with (
     test_version,
     test_provinces,
     test_plots,
     test_folder,
-    .verbose = TRUE,
+    .verbose = TRUE
+    )
   )
 
   ### TODO
@@ -1543,7 +1572,7 @@ test_that("ifn_tables_process ifn4 works as intended", {
 
   test_provinces <- names(test_plots)
   test_version <- "ifn4"
-  test_input <-suppressWarnings( .build_ifn_input_with (
+  test_input <- suppressWarnings( .build_ifn_input_with (
     test_version,
     test_provinces,
     test_plots,
@@ -1619,145 +1648,10 @@ test_that("ifn_tables_process ifn4 works as intended", {
 
 
 })
-# # ifn_to_tibble -------------------------------------------------------------------------------
-# 
-# 
-# test_that("ifn_to_tibble works as intended", {
-# 
-#   # tests config
-#   test_parallel_conf <- furrr::furrr_options(scheduling = 2L, stdout = TRUE)
-#   future::plan(future::multisession, workers = 3)
-#   withr::defer(future::plan(future::sequential))
-# 
-#   # tests data
-#   expected_names <- c(
-#     "ID_UNIQUE_PLOT",
-#     "COUNTRY",
-#     "YEAR",
-#     "ca_name_original",
-#     "province_name_original",
-#     "province_code",
-#     "PLOT",
-#     "version",
-#     "HOJA",
-#     "COORD_SYS",
-#     "COORD1",
-#     "COORD2",
-#     "crs",
-#     "PENDIEN2",
-#     "SLOPE",
-#     "ELEV",
-#     "ASPECT",
-#     "tree",
-#     "understory",
-#     "regen",
-#     "soils")
-#   test_version <- c("ifn2")
-# 
-# 
-#   # object
-#   expect_s3_class(
-#     test_res <- suppressWarnings(ifn_to_tibble(
-#       test_provinces, test_version, test_plots, test_folder,
-#       .parallel_options = test_parallel_conf,
-#       .verbose = FALSE
-#     )),
-#     "tbl"
-#   )
-# 
-#   # data integrity
-#   expect_named(test_res, expected_names)
-#   expect_false("tururu" %in% unique(test_res$province_code))
-#   expect_identical(nrow(test_res), 62L) # two plots dont exist, so 2x2=4 rows less
-#   expect_true(all(unique(test_res$province_code) %in% names(test_plots)))
-#   expect_true(all(unique(test_res$version) %in% test_version))
-# 
-#   ### test all assertions done in ifn_to_tibble
-#   # provinces
-#   expect_error(
-#     ifn_to_tibble(
-#       1:7, test_version, test_plots, test_folder,
-#       .parallel_options = test_parallel_conf,
-#       .verbose = FALSE
-#     ),
-#     "provinces must be a character vector with at least one"
-#   )
-#   expect_error(
-#     ifn_to_tibble(
-#       character(), test_version, test_plots, test_folder,
-#       .parallel_options = test_parallel_conf,
-#       .verbose = FALSE
-#     ),
-#     "departments must be a character vector with at least one"
-#   )
-#   # years
-#   expect_error(
-#     ifn_to_tibble(
-#       test_departments, as.character(test_years), test_plots, test_folder,
-#       .parallel_options = test_parallel_conf,
-#       .verbose = FALSE
-#     ),
-#     "years must be a numeric vector with at least one"
-#   )
-#   expect_error(
-#     ifn_to_tibble(
-#       test_provinces, charater(), test_plots, test_folder,
-#       .parallel_options = test_parallel_conf,
-#       .verbose = FALSE
-#     ),
-#     "years must be a character vector with at least one"
-#   )
-#   # folder
-#   expect_error(
-#     ifn_to_tibble(
-#       test_provinces, test_version, test_plots, "nonexistantfolder",
-#       .parallel_options = test_parallel_conf,
-#       .verbose = FALSE
-#     ),
-#     "Folder especified"
-#   )
-#   # filter list (TODO as testng interactive commands is tricky)
-#   # parallel options
-#   expect_error(
-#     ifn_to_tibble(
-#       test_provinces, test_version, test_plots, test_folder,
-#       .parallel_options = list(scheduling = 2L, stdout = TRUE),
-#       .verbose = FALSE
-#     ),
-#     ".parallel_options"
-#   )
-#   # verbose
-#   expect_error(
-#     ifn_to_tibble(
-#       test_provinces, test_version, test_plots, test_folder,
-#       .parallel_options = test_parallel_conf,
-#       .verbose = "FALSE"
-#     ),
-#     ".verbose"
-#   )
-#   # ancillary data (tested just by providing an existing wrong folder)
-#   expect_error(
-#     ifn_to_tibble(
-#       test_provinces, test_version, test_plots, ".",
-#       .parallel_options = test_parallel_conf,
-#       .verbose = FALSE
-#     ),
-#     "must be present"
-#   )
-# 
-#   # what to expect if departments or filter list are all wrong
-#   expect_true(
-#     suppressWarnings(ifn_to_tibble(
-#       "tururu", test_version, list("tururu" = 0), test_folder,
-#       .parallel_options = test_parallel_conf,
-#       .verbose = FALSE
-#     ) |> nrow()) < 1
-#   )
-# })
 
 # # ifn_to_tibble -------------------------------------------------------------------------------
 #
-#
+
 test_that("ifn_to_tibble  ifn 2-3-4 works as intended", {
 
   test_plots <- list(
@@ -1800,29 +1694,35 @@ test_that("ifn_to_tibble  ifn 2-3-4 works as intended", {
   test_provinces <- names(test_plots)
 
 
-  test_input_ifn2 <- .build_ifn_input_with (
+  test_input_ifn2 <- suppressWarnings(
+    .build_ifn_input_with (
    "ifn2",
     test_provinces,
     test_plots,
     test_folder,
     .verbose = TRUE
+    )
   )
 
 
-  test_input_ifn3 <- .build_ifn_input_with (
+  test_input_ifn3 <- suppressWarnings(
+    .build_ifn_input_with (
     "ifn3",
     test_provinces,
     test_plots,
     test_folder,
     .verbose = TRUE
+    )
   )
 
-  test_input_ifn4 <- .build_ifn_input_with (
+  test_input_ifn4 <- suppressWarnings(
+  .build_ifn_input_with (
     "ifn4",
     test_provinces,
     test_plots,
     test_folder,
     .verbose = TRUE
+  )
   )
 
   test_input <- rbind(test_input_ifn2,test_input_ifn3,test_input_ifn4)

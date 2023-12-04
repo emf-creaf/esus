@@ -70,21 +70,7 @@
   )
   
 
-  # if (version %in% c("ifn3", "ifn4")){
-  #
-  #   filter_list<- filter_list|>
-  #     dplyr::mutate(
-  #       coord_table = .build_ifn_file_path(
-  #         province,
-  #         type = "coord",
-  #         version,
-  #         folder,
-  #         .call = .call
-  #       )
-  #     )
-  #
-  #
-  # }
+  
 
   return(filter_list)
 }
