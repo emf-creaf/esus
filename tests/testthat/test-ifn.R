@@ -1223,129 +1223,129 @@ test_that("ifn_plot_table_process for ifn3  works as intended", {
 
 # 
 # 
-# test_that("ifn_plot_table_process for ifn4  works as intended", {
-# 
-# 
-#   test_plots <- list(
-# 
-#     "06" = c(2064,1138,325),
-#     "07" = c(679,114,499),
-#     "10" = c(3374,261),
-#     # "26" = c(960,495,172),
-#     "30" = c(78, 1223),
-#     "31" = c(135,761,1518),
-#     "33" = c(283),
-#     "40" = c(412,1216,1728),
-#     "49" = c(105,99,532),
-# 
-#     "91" = c(1406115, 0),
-#     "tururu" = 3555
-#   )
-# 
-#   test_provinces <- names(test_plots)
-#   test_version <- "ifn4"
-#   test_input <- .build_ifn_input_with (
-#     test_version,
-#     test_provinces,
-#     test_plots,
-#     test_folder,
-#     .verbose = TRUE,
-#   )
-# 
-#   expected_names <- c(
-#     "ID_UNIQUE_PLOT",
-#     "COUNTRY",
-#     "YEAR",
-#     "ca_name_original",
-#     "province_code",
-#     "province_name_original",
-#     "PLOT",
-#     "Clase",
-#     "Subclase",
-#     "version",
-#     "Tipo",
-#     "ASPECT",
-#     "SLOPE",
-#     "crs",
-#     "COORD_SYS",
-#     "COORDEX",
-#     "COORDEY",
-#     "HOJA",
-#     "Huso",
-#     "soils"
-#   )
-# 
-#   # object
-# 
-# 
-#   expect_s3_class(
-#     test_res <- ifn_plot_table_process(
-#       test_input$plot_table[1],
-#       test_input$coord_table[1],
-#       test_version,
-#       test_input$plots[1],
-#       test_input$province[1],
-#       test_provinces_dictionary
-# 
-#     ),
-#     "tbl"
-#   )
-# 
-#   # data integrity
-#   expect_named(test_res, expected_names, ignore.order = TRUE)
-#   expect_true(nrow(test_res) > 0)
-# 
-# 
-#   expect_length(unique(test_res$PLOT), 1)
-#   expect_length(unique(test_res$province_code), 1)
-# 
-# 
-#   expect_identical(unique(test_res$PLOT)|> as.character(), test_input$plots[1] |> as.character())
-#   #CHECK THIS AGAIN, BOTH SHOULD BE CHARACTER
-#   expect_identical(unique(test_res$province_code) |> as.numeric(), test_input$province[1]|> as.numeric())
-# 
-#   # errors
-#   expect_warning(
-#     test_error <- ifn_plot_table_process(
-#       NA_character_,
-#       test_input$coord_table[6],
-#       test_version,
-#       test_input$plots[6],
-#       test_input$province[6],
-#       test_provinces_dictionary
-#     ),
-#     "Some files"
-#   )
-#   expect_s3_class(test_error, "tbl")
-#   expect_true(nrow(test_error) < 1)
-# 
-#   # error in department name, gives an empty tibble
-#   expect_s3_class(
-#     test_error <- suppressWarnings(ifn_plot_table_process(
-#       test_input$plot_table[23],
-#       test_input$coord_table[23],
-#       test_version,
-#       test_input$plots[23],
-#       test_input$province[23],
-#       test_provinces_dictionary
-#     )),
-#     "tbl"
-#   )
-#   expect_true(nrow(test_error) < 1)
-#   # error in plot name, should return an empty tibble
-#   expect_s3_class(
-#     test_error <- suppressWarnings(ifn_plot_table_process(
-#       test_input$plot_table[21],
-#       test_input$coord_table[21],
-#       test_version,
-#       test_input$plots[21],
-#       test_input$province[21],
-#       test_provinces_dictionary
-#     )),
-#     "tbl"
-#   )
-#   expect_true(nrow(test_error) < 1)
-# })
+ test_that("ifn_plot_table_process for ifn4  works as intended", {
+
+
+  test_plots <- list(
+
+    "06" = c(2064,1138,325),
+    "07" = c(679,114,499),
+    "10" = c(3374,261),
+    # "26" = c(960,495,172),
+    "30" = c(78, 1223),
+    "31" = c(135,761,1518),
+    "33" = c(283),
+    "40" = c(412,1216,1728),
+    "49" = c(105,99,532),
+
+    "91" = c(1406115, 0),
+    "tururu" = 3555
+  )
+
+  test_provinces <- names(test_plots)
+  test_version <- "ifn4"
+  test_input <- .build_ifn_input_with (
+    test_version,
+    test_provinces,
+    test_plots,
+    test_folder,
+    .verbose = TRUE,
+  )
+
+  expected_names <- c(
+    "ID_UNIQUE_PLOT",
+    "COUNTRY",
+    "YEAR",
+    "ca_name_original",
+    "province_code",
+    "province_name_original",
+    "PLOT",
+    "Clase",
+    "Subclase",
+    "version",
+    "Tipo",
+    "ASPECT",
+    "SLOPE",
+    "crs",
+    "COORD_SYS",
+    "COORDEX",
+    "COORDEY",
+    "HOJA",
+    "Huso",
+    "soils"
+  )
+
+  # object
+
+
+  expect_s3_class(
+    test_res <- ifn_plot_table_process(
+      test_input$plot_table[1],
+      test_input$coord_table[1],
+      test_version,
+      test_input$plots[1],
+      test_input$province[1],
+      test_provinces_dictionary
+
+    ),
+    "tbl"
+  )
+
+  # data integrity
+  expect_named(test_res, expected_names, ignore.order = TRUE)
+  expect_true(nrow(test_res) > 0)
+
+
+  expect_length(unique(test_res$PLOT), 1)
+  expect_length(unique(test_res$province_code), 1)
+
+
+  expect_identical(unique(test_res$PLOT)|> as.character(), test_input$plots[1] |> as.character())
+  #CHECK THIS AGAIN, BOTH SHOULD BE CHARACTER
+  expect_identical(unique(test_res$province_code) |> as.numeric(), test_input$province[1]|> as.numeric())
+
+  # errors
+  expect_warning(
+    test_error <- ifn_plot_table_process(
+      NA_character_,
+      test_input$coord_table[6],
+      test_version,
+      test_input$plots[6],
+      test_input$province[6],
+      test_provinces_dictionary
+    ),
+    "Some files"
+  )
+  expect_s3_class(test_error, "tbl")
+  expect_true(nrow(test_error) < 1)
+
+  # error in department name, gives an empty tibble
+  expect_s3_class(
+    test_error <- suppressWarnings(ifn_plot_table_process(
+      test_input$plot_table[23],
+      test_input$coord_table[23],
+      test_version,
+      test_input$plots[23],
+      test_input$province[23],
+      test_provinces_dictionary
+    )),
+    "tbl"
+  )
+  expect_true(nrow(test_error) < 1)
+  # error in plot name, should return an empty tibble
+  expect_s3_class(
+    test_error <- suppressWarnings(ifn_plot_table_process(
+      test_input$plot_table[21],
+      test_input$coord_table[21],
+      test_version,
+      test_input$plots[21],
+      test_input$province[21],
+      test_provinces_dictionary
+    )),
+    "tbl"
+  )
+  expect_true(nrow(test_error) < 1)
+})
 # tables process -----------------------------------------------------------------------------------
 
 test_that("ifn_tables_process ifn2 works as intended", {
@@ -1416,8 +1416,8 @@ test_that("ifn_tables_process ifn2 works as intended", {
   # # tururu state shouldn't appear
   # # inexistent plots (91-0) shouldn't
   # # be present, so 12 of 14 elements in filter list
-  # expect_false("tururu" %in% unique(test_res$province))
-  # expect_identical(nrow(test_res), 12L)
+  expect_false("tururu" %in% unique(test_res$province))
+  expect_identical(nrow(test_res), 59L)
 
   # ### missing random files
   # # we test here what happens when some files are missing (ARBRE, ECOLOGIE...)
@@ -1512,8 +1512,8 @@ test_that("ifn_tables_process ifn3 works as intended", {
   # # tururu state shouldn't appear
   # # inexistent plots (91-0) shouldn't
   # # be present, so 12 of 14 elements in filter list
-  # expect_false("tururu" %in% unique(test_res$province))
-  # expect_identical(nrow(test_res), 12L)
+  expect_false("tururu" %in% unique(test_res$province_code))
+  expect_identical(nrow(test_res), 17L)
 
   # ### missing random files
   # # we test here what happens when some files are missing (ARBRE, ECOLOGIE...)
@@ -1890,7 +1890,7 @@ test_that("ifn_to_tibble  ifn 2-3-4 works as intended", {
       .parallel_options = test_parallel_conf,
       .verbose = FALSE
     ),
-    "provinces must be a character vector with at least one"
+    "provinces must be a character vector with at least one province code"
   )
   expect_error(
     ifn_to_tibble(
@@ -1898,7 +1898,7 @@ test_that("ifn_to_tibble  ifn 2-3-4 works as intended", {
       .parallel_options = test_parallel_conf,
       .verbose = FALSE
     ),
-    "provinces must be a character vector with at least one"
+    "provinces must be a character vector with at least one province code"
   )
   # VERSION
   expect_error(
