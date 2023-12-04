@@ -61,7 +61,7 @@ ifn_to_tibble <- function(
     .verbose = TRUE
 ) {
 
-  # browser()
+   # browser()
   ## Assertions and checks ##
   # grep
   assertthat::assert_that(
@@ -78,7 +78,7 @@ ifn_to_tibble <- function(
 
 
 
-  # years
+  # version
   assertthat::assert_that(
     is.character(version), length(version) > 0,
     msg = cli::cli_abort("version must be a character vector with at least one")
@@ -109,7 +109,7 @@ ifn_to_tibble <- function(
   #   }
   # }
   ## TODO
-  # Check counties and plots??
+  # Check provinces and plots??
 
   ## TODO
   # Check ancillary data is present!!
