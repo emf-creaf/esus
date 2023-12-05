@@ -109,14 +109,14 @@
   res <- switch(
     file_ext,
     "DBF" = foreign::read.dbf(input, as.is = FALSE) |>
-      dplyr::select(colnames) |>
+      dplyr::select(dplyr::any_of(colnames)) |>
       dplyr::mutate(
         PROVINCIA = as.character(PROVINCIA),
         PROVINCIA = stringr::str_pad(PROVINCIA, width = 2, side = "left", pad = "0"),
         ESTADILLO = as.character(ESTADILLO)
     ),
     "accdb" = .read_accdb_data(input, table_name) |>
-      dplyr::select(colnames) |>
+      dplyr::select(dplyr::any_of(colnames)) |>
       dplyr::mutate(
       Estadillo = as.character(Estadillo)
       )

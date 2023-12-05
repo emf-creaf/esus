@@ -106,7 +106,7 @@ show_plots_from <- function(inventory = c("FIA", "FFI", "IFN"), folder = ".", ..
 
   # check if we are reading IFN data
   if (isTRUE(.ifn)) {
-    res <- .read_ifn_data(input, ...) |>
+    res <- .read_ifn_data(input,...) |>
       dtplyr::lazy_dt(immutable = TRUE)
 
     return(res)

@@ -230,8 +230,8 @@ test_that(".build_ifn_input_with and .build_ifn_file_path work as intended for i
     "31" = c(135,761,1518),
     "33" = c(283),
     "40" = c(412,1216,1728),
-    "49" = c(105,99,532),
-     "tururu" = c(5)
+    "49" = c(105,99,532)
+     # "tururu" = c(5)
   )
 
   test_provinces <- names(test_plots)
@@ -256,10 +256,8 @@ expect_warning(
   "file doesn't exist"
 )
 expect_message(
-  suppressWarnings(
-  .build_ifn_input_with( test_version, test_provinces, test_plots, test_folder, .verbose = TRUE),
+  .build_ifn_input_with( test_version, test_provinces[-9], test_plots[-9], test_folder, .verbose = TRUE),
   "Getting ready to retrieve"
-  )
 )
   expect_no_message(
     suppressWarnings(

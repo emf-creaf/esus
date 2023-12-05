@@ -319,7 +319,7 @@ ifn_tree_table_process <- function(tree_data, version, plot, province, ESPECIES)
 
   tree_filtered_data <-  .read_inventory_data(
     tree_data,
-    colnames = dplyr::any_of(c(
+    colnames = c(
       "PROVINCIA",
       "ESTADILLO",
       "ESPECIE",
@@ -328,7 +328,7 @@ ifn_tree_table_process <- function(tree_data, version, plot, province, ESPECIES)
       "DIAMETRO1",
       "DIAMETRO2",
       "ALTURA"
-    )),
+    ),
     .ifn = TRUE
   ) |>
     dplyr::filter(
@@ -415,7 +415,7 @@ ifn_tree_table_process <- function(tree_data, version, plot, province, ESPECIES)
 
     tree_filtered_data <-  .read_inventory_data(
       tree_data,
-      colnames = dplyr::any_of(c(
+      colnames = c(
           "Estadillo",
           "Cla",
           "Subclase",
@@ -429,8 +429,7 @@ ifn_tree_table_process <- function(tree_data, version, plot, province, ESPECIES)
           "Ht",
           "Calidad",
           "Forma"
-
-      )),
+      ),
       .ifn = TRUE
     ) |>
       dplyr::filter(
@@ -556,7 +555,7 @@ ifn_shrub_table_process <- function(shrub_data, version, plot, province, ESPECIE
     return(dplyr::tibble())
   }
 
-  if (version =="ifn2"){
+  if (version == "ifn2"){
 
 
 
@@ -566,13 +565,13 @@ ifn_shrub_table_process <- function(shrub_data, version, plot, province, ESPECIE
 
   shrub_filtered_data <- .read_inventory_data(
       shrub_data,
-      colnames = dplyr::any_of(c(
+      colnames = c(
         "PROVINCIA",
         "ESTADILLO",
         "ESPECIE",
         "FRACCAB",
         "ALTUMED"
-      )),
+      ),
       .ifn = TRUE
     ) |>
     dplyr::filter(
@@ -643,14 +642,14 @@ ifn_shrub_table_process <- function(shrub_data, version, plot, province, ESPECIE
 
     shrub_filtered_data <- .read_inventory_data(
       shrub_data,
-      colnames = dplyr::any_of(c(
+      colnames =c(
         "Estadillo",
         "Cla",
         "Subclase",
         "Especie",
         "Fcc",
         "Hm"
-      )),
+      ),
       .ifn = TRUE
     ) |>
       dplyr::filter(
@@ -668,7 +667,7 @@ ifn_shrub_table_process <- function(shrub_data, version, plot, province, ESPECIE
       return(dplyr::tibble())
     }
 
-    shrub<- shrub_filtered_data |>
+    shrub <- shrub_filtered_data |>
 
       dplyr::rename(
         PLOT = Estadillo,
@@ -735,18 +734,18 @@ ifn_regen_table_process <- function(regen_data, version, plot, province, ESPECIE
     return(dplyr::tibble())
   }
 
-  if (version =="ifn2"){
+  if (version == "ifn2"){
 
   regen_filtered_data <- .read_inventory_data(
     regen_data,
-    colnames = dplyr::any_of(c(
+    colnames = c(
       "PROVINCIA",
       "ESTADILLO",
       "ESPECIE",
       "NUMERO",
       "ALTUMED",
       "REGENA"
-    )),
+    ),
     .ifn = TRUE
   ) |>
     dplyr::filter(
@@ -815,7 +814,7 @@ ifn_regen_table_process <- function(regen_data, version, plot, province, ESPECIE
 
   regen_filtered_data <- .read_inventory_data(
   regen_data,
-  colnames = dplyr::all_of(c(
+  colnames =c(
     "Estadillo",
     "Cla",
     "Subclase",
@@ -825,7 +824,7 @@ ifn_regen_table_process <- function(regen_data, version, plot, province, ESPECIE
     "Densidad",
     "NumPies",
     "Hm"
-  )),
+  ),
   .ifn = TRUE
   ) |>
     dplyr::filter(
@@ -846,7 +845,7 @@ ifn_regen_table_process <- function(regen_data, version, plot, province, ESPECIE
 
 
   #we add the id code
-  regeneration<- regen_filtered_data|>
+  regeneration<- regen_filtered_data |>
 
     dplyr::rename(
       PLOT = Estadillo,
@@ -927,7 +926,7 @@ ifn_plot_table_process <- function(plot_data, coord_data, version, plot, provinc
 
   plot_filtered_data <- .read_inventory_data(
       plot_data,
-      colnames = dplyr::any_of(c(
+      colnames = c(
         "PROVINCIA",
         "ESTADILLO",
         "HOJA",
@@ -948,7 +947,7 @@ ifn_plot_table_process <- function(plot_data, coord_data, version, plot, provinc
         "ORIENTA2",
         "MAXPEND1",
         "MAXPEND2"
-      )),
+      ),
       .ifn = TRUE
     ) |>
     dplyr::filter(
@@ -1116,7 +1115,7 @@ ifn_plot_table_process <- function(plot_data, coord_data, version, plot, provinc
 
     plot_filtered_data <- .read_inventory_data(
       plot_data,
-      colnames = dplyr::any_of(c(
+      colnames = c(
 
         "Estadillo",
         "Cla",
@@ -1133,7 +1132,7 @@ ifn_plot_table_process <- function(plot_data, coord_data, version, plot, provinc
         "MaxPend1",
         "MaxPend2"
 
-      )),
+      ),
       .ifn = TRUE
     ) |>
       dplyr::filter(
@@ -1273,7 +1272,7 @@ ifn_plot_table_process <- function(plot_data, coord_data, version, plot, provinc
 
    coords_filtered_data <- .read_inventory_data(
     coord_data,
-    colnames = dplyr::any_of(c(
+    colnames = c(
           "Estadillo",
           "Clase",
           "Subclase",
@@ -1281,7 +1280,7 @@ ifn_plot_table_process <- function(plot_data, coord_data, version, plot, provinc
           "CoorX",
           "CoorY",
           "Huso"
-    )),
+    ),
   .ifn = TRUE
    ) |>
      dplyr::filter(
