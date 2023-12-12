@@ -398,7 +398,7 @@ test_that("ifn_shrub_table_process for ifn2 works as intended", {
     "PLOT",
     "SP_CODE",
     "SP_NAME",
-    "Hm",
+    "HT",
     "COVER"
   )
 

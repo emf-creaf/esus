@@ -600,7 +600,7 @@ ifn_shrub_table_process <- function(shrub_data, version, plot, province, ESPECIE
     ) |> 
 
     dplyr::mutate(
-      PLOT = as.character(ESTADILLO),
+      PLOT = as.character(PLOT),
       province_code = as.character(PROVINCIA),
       HT = as.numeric(HT),
       COVER =as.numeric(COVER),
