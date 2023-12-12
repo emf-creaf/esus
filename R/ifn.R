@@ -592,16 +592,20 @@ ifn_shrub_table_process <- function(shrub_data, version, plot, province, ESPECIE
 
   #we add the id code
   shrub <- shrub_filtered_data |>
+    
+    dplyr::rename(
+      PLOT = ESTADILLO,
+      COVER = FRACCAB,
+      HT = ALTUMED
+    ) |> 
 
     dplyr::mutate(
       PLOT = as.character(ESTADILLO),
       province_code = as.character(PROVINCIA),
-      PLOT = ESTADILLO,
-      COVER = FRACCAB,
-      Hm = as.numeric(ALTUMED),
+      HT = as.numeric(HT),
       COVER =as.numeric(COVER),
       #DM TO cm
-      Hm = Hm * 10 ,
+      HT = HT * 10 ,
       SP_CODE = as.numeric(ESPECIE),
       ID_UNIQUE_PLOT = paste("ES",province_code,PLOT,sep = "_")
 
@@ -628,7 +632,7 @@ ifn_shrub_table_process <- function(shrub_data, version, plot, province, ESPECIE
       PLOT,
       SP_NAME,
       SP_CODE,
-      Hm,
+      HT,
       COVER
     )
 
