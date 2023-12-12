@@ -599,6 +599,7 @@ ifn_shrub_table_process <- function(shrub_data, version, plot, province, ESPECIE
       PLOT = ESTADILLO,
       COVER = FRACCAB,
       Hm = as.numeric(ALTUMED),
+      COVER =as.numeric(COVER),
       #DM TO cm
       Hm = Hm * 10 ,
       SP_CODE = as.numeric(ESPECIE),
@@ -679,6 +680,7 @@ ifn_shrub_table_process <- function(shrub_data, version, plot, province, ESPECIE
         COVER = Fcc,
         #DM TO CM
         HT = HT * 10 ,
+        COVER = as.numeric(COVER),
         SP_CODE = as.numeric(Especie),
         ID_UNIQUE_PLOT = paste("ES",province_code, PLOT, sep="_")
 
