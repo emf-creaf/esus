@@ -369,8 +369,8 @@ ifn_tree_table_process <- function(tree_data, version, plot, province, ESPECIES)
       ID_UNIQUE_PLOT = paste("ES",province_code,PLOT,sep="_"),
       # From mm to cm
       DIA = ((Dn1 + Dn2)/2)*0.1,
-      # From m to cm
-      HT = HT * 100,
+      # in meters
+      HT = HT ,
       DENSITY = dplyr::case_when(
         DIA < 12.5 ~ 127.3239546,
         DIA >= 12.5 & DIA < 22.5 ~ 31.83098865,
@@ -396,7 +396,7 @@ ifn_tree_table_process <- function(tree_data, version, plot, province, ESPECIES)
         SP_NAME,
         #diameter in cm
         DIA,
-        #height in cm
+        #height in m
         HT,
         DENSITY
 
