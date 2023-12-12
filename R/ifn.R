@@ -370,7 +370,7 @@ ifn_tree_table_process <- function(tree_data, version, plot, province, ESPECIES)
       # From mm to cm
       DIA = ((Dn1 + Dn2)/2)*0.1,
       # From m to cm
-      HT = HT*100,
+      HT = HT * 100,
       DENSITY = dplyr::case_when(
         DIA < 12.5 ~ 127.3239546,
         DIA >= 12.5 & DIA < 22.5 ~ 31.83098865,
@@ -396,7 +396,7 @@ ifn_tree_table_process <- function(tree_data, version, plot, province, ESPECIES)
         SP_NAME,
         #diameter in cm
         DIA,
-        #height in m
+        #height in cm
         HT,
         DENSITY
 
@@ -514,7 +514,7 @@ ifn_tree_table_process <- function(tree_data, version, plot, province, ESPECIES)
           "OrdenIf4",
           #diameter in cm
           "DIA",
-          #height in m
+          #height in cm
           "HT",
           "DENSITY"
         ))
@@ -599,8 +599,8 @@ ifn_shrub_table_process <- function(shrub_data, version, plot, province, ESPECIE
       PLOT = ESTADILLO,
       COVER = FRACCAB,
       Hm = as.numeric(ALTUMED),
-      #DM TO M
-      Hm = Hm * 0.1 ,
+      #DM TO cm
+      Hm = Hm * 10 ,
       SP_CODE = as.numeric(ESPECIE),
       ID_UNIQUE_PLOT = paste("ES",province_code,PLOT,sep = "_")
 
@@ -677,8 +677,8 @@ ifn_shrub_table_process <- function(shrub_data, version, plot, province, ESPECIE
       dplyr::mutate(
         province_code = province,
         COVER = Fcc,
-        #DM TO M
-        HT = HT * 0.1 ,
+        #DM TO CM
+        HT = HT * 10 ,
         SP_CODE = as.numeric(Especie),
         ID_UNIQUE_PLOT = paste("ES",province_code, PLOT, sep="_")
 
@@ -773,8 +773,8 @@ ifn_regen_table_process <- function(regen_data, version, plot, province, ESPECIE
       PLOT = as.character(ESTADILLO),
       province_code = as.character(PROVINCIA),
 
-      #DM TO M ?
-      Hm = as.numeric(ALTUMED) * 0.1,
+      #DM TO CM 
+      Hm = as.numeric(ALTUMED) * 10,
       SP_CODE = as.numeric(ESPECIE),
       ID_UNIQUE_PLOT = paste("ES",province_code,PLOT,sep = "_")) |>
 
@@ -854,8 +854,8 @@ ifn_regen_table_process <- function(regen_data, version, plot, province, ESPECIE
 
     dplyr::mutate(
       province_code = province,
-      #DM TO M
-      Hm = Hm * 0.1,
+      #DM TO CM
+      Hm = Hm * 10,
       SP_CODE = as.numeric(Especie),
       ID_UNIQUE_PLOT = paste("ES",province, PLOT, sep = "_")) |>
 
