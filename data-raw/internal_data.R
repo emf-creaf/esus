@@ -45,7 +45,8 @@ ifn_provinces_dictionary <- readxl::read_xls(
 # Usaremos GIFT con su paquete de R para acceder a los datos de growth form
 cd_ref_edit <- readr::read_delim(
   file = fs::path(Sys.getenv("ffi_path"), "metadonnees.csv"),
-  skip = 412
+  skip = 331
+  # skip = 412
 ) |>
   dplyr::as_tibble() |>
   dplyr::rename(

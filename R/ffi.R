@@ -214,8 +214,8 @@ ffi_tables_process <- function(
   #   #   UNITE = "// Unité"
   #   # )
   metadonnees <- suppressWarnings(readr::read_delim(
-    # file = fs::path(folder, "metadonnees.csv"), skip = 331,
-    file = fs::path(folder, "metadonnees.csv"), skip = 412,
+     file = fs::path(folder, "metadonnees.csv"), skip = 331,
+    # file = fs::path(folder, "metadonnees.csv"), skip = 412,
     show_col_types = FALSE
   )) |>
     dplyr::rename(UNITE = "// Unité") |>

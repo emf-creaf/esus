@@ -49,7 +49,7 @@ test_metadonnees <- suppressWarnings(
   #// Définition des modalités pour chaque unité :
   #// Unité	Code	Libellé	Définition
 
-    readr::read_delim(file = fs::path(test_folder, "metadonnees.csv"), skip = 412) |>
+    readr::read_delim(file = fs::path(test_folder, "metadonnees.csv"), skip = 331) |>
     dplyr::rename(UNITE = "// Unité") |>
     dplyr::as_tibble()
 )
@@ -665,6 +665,13 @@ test_that("ffi_to_tibble works as intended", {
   expect_true(all(unique(test_res$DEP) %in% names(test_plots)))
   expect_true(all(unique(test_res$YEAR) %in% test_years))
 
+  # for plot revisited after 5 year check that species name appear
+  
+  
+  # expect_true(!is.na(test_res[["tree"]][[60]]$SP_NAME))
+  expect_identical(!is.na(test_res[["tree"]][[60]]$SP_NAME), rep(TRUE, 21))
+  
+  
   ### test all assertions done in fia_to_tibble
   # departments
   expect_error(
