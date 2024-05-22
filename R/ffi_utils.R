@@ -382,7 +382,7 @@ create_filter_list_ffi <- function(plots_info) {
 #' @importFrom rlang `:=`
 #' @noRd
 .extract_ffi_metadata <- function(
-  data_processed, vars,  plot, year,
+  data_processed, vars, plot, year,
   .soil_mode = TRUE, .year_fun = max
 ) {
 
@@ -393,10 +393,10 @@ create_filter_list_ffi <- function(plots_info) {
   data_processed <- dtplyr::lazy_dt(data_processed, immutable = TRUE)
 
   # we need the filtering vars in case they are missing (some tables dont have them)
-  if (!("PLOT" %in% data_processed$vars)) {
+  if (!("plot" %in% data_processed$vars)) {
     data_processed <- data_processed |>
       dplyr::mutate(
-        PLOT = plot
+        plot = plot
       )
   }
 
@@ -415,17 +415,17 @@ create_filter_list_ffi <- function(plots_info) {
       # value at most recent year
       var_value <- data_processed |>
         dplyr::filter(
-          .data$PLOT == plot,
+          .data$plot == plot,
           {{ filter_nas }}
         ) |>
-        dplyr::filter(.data$YEAR == .year_fun(.data$YEAR, na.rm = TRUE)) |>
+        dplyr::filter(.data$year == .year_fun(.data$year, na.rm = TRUE)) |>
         dplyr::pull({{ var }})
 
       # value at queried year
       var_orig_value <- data_processed |>
         dplyr::filter(
-          .data$PLOT == plot,
-          .data$YEAR == year
+          .data$plot == plot,
+          .data$year == year
         ) |>
         dplyr::pull({{ var }})
 

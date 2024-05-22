@@ -102,9 +102,9 @@ test_growth_form_lignified_france <- growth_form_lignified_france
 test_that("ffi_plot_table_process works as intended", {
 
   expected_names <- c(
-    "ID_UNIQUE_PLOT", "COUNTRY", "DEP", "DEP_NAME", "PLOT",
-    "YEAR", "VISITE", "COORD_SYS", "XL", "YL",
-    "EXPO", "PENT2", "LIGN1", "LIGN2", "HERB"
+    "id_unique_code", "country", "dep", "dep_name", "plot",
+    "year", "visite", "coord_sys", "coordx", "coordy",
+    "aspect", "slope", "lign2_pct", "lign1_pct", "herb_pct"
   )
 
   # object
@@ -123,13 +123,13 @@ test_that("ffi_plot_table_process works as intended", {
   expect_named(test_res, expected_names, ignore.order = TRUE)
   expect_true(nrow(test_res) > 0)
 
-  expect_length(unique(test_res$YEAR), 1)
-  expect_length(unique(test_res$PLOT), 1)
-  expect_length(unique(test_res$DEP), 1)
+  expect_length(unique(test_res$year), 1)
+  expect_length(unique(test_res$plot), 1)
+  expect_length(unique(test_res$dep), 1)
 
-  expect_identical(unique(test_res$YEAR), test_year)
-  expect_identical(unique(test_res$PLOT), test_input$plots[1])
-  expect_identical(unique(test_res$DEP) |> as.character(), test_input$department[1])
+  expect_identical(unique(test_res$year), test_year)
+  expect_identical(unique(test_res$plot), test_input$plots[1])
+  expect_identical(unique(test_res$dep) |> as.character(), test_input$department[1])
 
   # errors
   expect_warning(
@@ -187,9 +187,9 @@ test_that("ffi_plot_table_process works as intended", {
 test_that("ffi_tree_table_process works as intended", {
 
   expected_names <- c(
-    "ID_UNIQUE_PLOT", "PLOT", "DEP", "YEAR", "TREE", "ESPAR",
-    "SP_CODE", "SP_NAME", "STATUS", "STATUS5", "DIA", "Height",
-    "Height_last_recorded", "DENSITY"
+    "id_unique_code", "plot", "dep", "year", "tree", "espar",
+    "sp_code", "sp_name", "status", "status5", "dia", "height",
+    "height_last_recorded", "density_factor"
   )
 
   # object
@@ -208,13 +208,13 @@ test_that("ffi_tree_table_process works as intended", {
   expect_named(test_res, expected_names, ignore.order = TRUE)
   expect_true(nrow(test_res) > 0)
 
-  expect_length(unique(test_res$YEAR), 1)
-  expect_length(unique(test_res$PLOT), 1)
-  expect_length(unique(test_res$DEP), 1)
+  expect_length(unique(test_res$year), 1)
+  expect_length(unique(test_res$plot), 1)
+  expect_length(unique(test_res$dep), 1)
 
-  expect_identical(unique(test_res$YEAR), test_year)
-  expect_identical(unique(test_res$PLOT), test_input$plots[1] |> as.character())
-  expect_identical(unique(test_res$DEP) |> as.character(), test_input$department[1])
+  expect_identical(unique(test_res$year), test_year)
+  expect_identical(unique(test_res$plot), test_input$plots[1] |> as.character())
+  expect_identical(unique(test_res$dep) |> as.character(), test_input$department[1])
 
   # errors
   expect_warning(
@@ -258,8 +258,8 @@ test_that("ffi_tree_table_process works as intended", {
 test_that("ffi_shrub_table_process works as intended", {
 
   expected_names <- c(
-    "ID_UNIQUE_PLOT", "PLOT", "DEP", "YEAR", "SP_CODE",
-    "SP_NAME", "COVER", "Height", "GrowthForm"
+    "id_unique_code", "plot", "dep", "year", "sp_code",
+    "sp_name", "cover", "height", "growth_form"
   )
 
   # object
@@ -279,13 +279,13 @@ test_that("ffi_shrub_table_process works as intended", {
   expect_named(test_res, expected_names, ignore.order = TRUE)
   expect_true(nrow(test_res) > 0)
 
-  expect_length(unique(test_res$YEAR), 1)
-  expect_length(unique(test_res$PLOT), 1)
-  expect_length(unique(test_res$DEP), 1)
+  expect_length(unique(test_res$year), 1)
+  expect_length(unique(test_res$plot), 1)
+  expect_length(unique(test_res$dep), 1)
 
-  expect_identical(unique(test_res$YEAR), test_year |> as.integer())
-  expect_identical(unique(test_res$PLOT), test_input$plots[1] |> as.character())
-  expect_identical(unique(test_res$DEP) |> as.character(), test_input$department[1])
+  expect_identical(unique(test_res$year), test_year |> as.integer())
+  expect_identical(unique(test_res$plot), test_input$plots[1] |> as.character())
+  expect_identical(unique(test_res$dep) |> as.character(), test_input$department[1])
 
   # errors
   expect_warning(
@@ -343,8 +343,8 @@ test_that("ffi_regen_table_process works as intended", {
     .verbose = FALSE
   )
   expected_names <- c(
-    "ID_UNIQUE_PLOT", "PLOT", "DEP", "YEAR", "SP_CODE",
-    "SP_NAME", "COVER", "DBH", "Height", "GrowthForm"
+    "id_unique_code", "plot", "dep", "year", "sp_code",
+    "sp_name", "cover", "dbh", "height", "growth_form"
   )
 
   # object
@@ -363,13 +363,13 @@ test_that("ffi_regen_table_process works as intended", {
   expect_named(test_res, expected_names, ignore.order = TRUE)
   expect_true(nrow(test_res) > 0)
 
-  expect_length(unique(test_res$YEAR), 1)
-  expect_length(unique(test_res$PLOT), 1)
-  expect_length(unique(test_res$DEP), 1)
+  expect_length(unique(test_res$year), 1)
+  expect_length(unique(test_res$plot), 1)
+  expect_length(unique(test_res$dep), 1)
 
-  expect_identical(unique(test_res$YEAR), test_year |> as.integer())
-  expect_identical(unique(test_res$PLOT), test_input$plots[1] |> as.character())
-  expect_identical(unique(test_res$DEP) |> as.character(), test_input$department[1])
+  expect_identical(unique(test_res$year), test_year |> as.integer())
+  expect_identical(unique(test_res$plot), test_input$plots[1] |> as.character())
+  expect_identical(unique(test_res$dep) |> as.character(), test_input$department[1])
 
   # errors
   expect_warning(
@@ -429,9 +429,9 @@ test_that("ffi_tables_process works as intended", {
 
   # tests data
   expected_names <- c(
-    "ID_UNIQUE_PLOT", "PLOT", "DEP", "DEP_NAME", "COUNTRY",
-    "VISITE", "YEAR", "COORD1", "COORD2", "crs", "ASPECT",
-    "SLOPE", "COORD_SYS", "tree", "understory", "regen"
+    "id_unique_code", "plot", "dep", "dep_name", "country",
+    "visite", "year", "coordx", "coordy", "crs", "aspect",
+    "slope", "coord_sys", "tree", "understory", "regen"
     # "soils"
   )
 
@@ -447,13 +447,13 @@ test_that("ffi_tables_process works as intended", {
 
   # data integrity
   expect_named(test_res, expected_names, ignore.order = TRUE)
-  expect_true(all(unique(test_res$DEP) %in% names(test_plots)))
+  expect_true(all(unique(test_res$dep) %in% names(test_plots)))
 
   ### missing tables/plots
   # tururu state shouldn't appear
   # inexistent plots (91-0) shouldn't
   # be present, so 31 of 33 elements in filter list
-  expect_false("tururu" %in% unique(test_res$DEP))
+  expect_false("tururu" %in% unique(test_res$dep))
   expect_identical(nrow(test_res), 31L)
 
   ### missing random files
@@ -553,9 +553,9 @@ test_that("ffi_to_tibble works as intended", {
 
   # tests data
   expected_names <- c(
-    "ID_UNIQUE_PLOT", "PLOT", "DEP", "DEP_NAME", "COUNTRY",
-    "VISITE", "YEAR", "COORD1", "COORD2", "crs", "ASPECT",
-    "SLOPE", "COORD_SYS", "tree", "understory", "regen"
+    "id_unique_code", "plot", "dep", "dep_name", "country",
+    "visite", "year", "coordx", "coordy", "crs", "aspect",
+    "slope", "coord_sys", "tree", "understory", "regen"
     # "soils"
   )
   test_years <- c(2015, 2019)
@@ -572,18 +572,18 @@ test_that("ffi_to_tibble works as intended", {
 
   # data integrity
   expect_named(test_res, expected_names, ignore.order = TRUE)
-  expect_false("tururu" %in% unique(test_res$DEP))
+  expect_false("tururu" %in% unique(test_res$dep))
   expect_identical(nrow(test_res), 62L) # two plots dont exist, so 2x2=4 rows less
-  expect_true(all(unique(test_res$DEP) %in% names(test_plots)))
-  expect_true(all(unique(test_res$YEAR) %in% test_years))
+  expect_true(all(unique(test_res$dep) %in% names(test_plots)))
+  expect_true(all(unique(test_res$year) %in% test_years))
 
   # for plot revisited after 5 year check that species name appear
-  expect_identical(!is.na(test_res[["tree"]][[60]]$SP_NAME), rep(TRUE, 24))
+  expect_identical(!is.na(test_res[["tree"]][[60]]$sp_name), rep(TRUE, 24))
 
   # tests for clean_empty and as_sf arguments
   sf_expected_names <- c(
-    "ID_UNIQUE_PLOT", "PLOT", "DEP", "DEP_NAME", "COUNTRY",
-    "VISITE", "YEAR", "crs", "ASPECT", "SLOPE", "COORD_SYS",
+    "id_uniquie_code", "plot", "dep", "dep_name", "country",
+    "visite", "year", "crs", "aspect", "slope", "coord_sys",
     "tree", "understory", "regen", "geometry", "crs_orig"
     # "soils"
   )
