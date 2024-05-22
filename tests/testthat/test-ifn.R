@@ -135,16 +135,17 @@ test_ifn234_versions <- c("ifn2", "ifn3", "ifn4")
 test_that("ifn_tree_table_process for ifn2 works as intended", {
 
   expected_names <- c(
-    "ID_UNIQUE_PLOT",
+    "id_unique_code",
     "province_code",
-    "PLOT",
-    "SP_CODE",
-    "SP_NAME",
-    "DIA",
-    "Height",
-    "DENSITY",
-    "FORMA",
-    "CALIDAD"
+    "plot",
+    "sp_code",
+    "sp_name",
+    "tree",
+    "dia",
+    "height",
+    "density_factor",
+    "cubing_form",
+    "quality_wood"
   )
 
   expect_s3_class(
@@ -163,12 +164,12 @@ test_that("ifn_tree_table_process for ifn2 works as intended", {
   expect_true(nrow(test_ifn2_res) > 0)
 
 
-  expect_length(unique(test_ifn2_res$ID_UNIQUE_PLOT), 1)
+  expect_length(unique(test_ifn2_res$id_unique_code), 1)
   expect_length(unique(test_ifn2_res$province_code), 1)
 
 
   expect_identical(
-    unique(test_ifn2_res$ID_UNIQUE_PLOT) |> as.character(),
+    unique(test_ifn2_res$id_unique_code) |> as.character(),
     test_ifn2_input$plots[3] |> as.character()
   )
   #CHECK THIS AGAIN, BOTH SHOULD BE CHARACTER
@@ -221,26 +222,25 @@ test_that("ifn_tree_table_process for ifn2 works as intended", {
 test_that("ifn_tree_table_process for ifn3 works as intended", {
 
   expected_names <- c(
-    "ID_UNIQUE_PLOT",
+    "id_unique_code",
     "province_code",
-    "Clase",
-    "Subclase",
-    "PLOT",
-    "SP_CODE",
-    "SP_NAME",
+    "clase",
+    "subclass",
+    "plot",
+    "sp_code",
+    "sp_name",
     #tree number id in ifn4
-    "nArbol",
+    "tree",
     #CUALIDAD 6 = dead but providing functions
-    "Calidad",
-    "Forma",
+    "quality_wood",
+    "cubing_form",
     #check codes to understand origin and trace of individuals
-    "OrdenIf2",
-    "OrdenIf3",
+    "tree_ifn2",
     #diameter in cm
-    "DIA",
+    "dia",
     #height in m
-    "Height",
-    "DENSITY"
+    "height",
+    "density_factor"
   )
 
 
@@ -261,12 +261,12 @@ test_that("ifn_tree_table_process for ifn3 works as intended", {
   expect_true(nrow(test_ifn3_res) > 0)
 
 
-  expect_length(unique(test_ifn3_res$ID_UNIQUE_PLOT), 1)
+  expect_length(unique(test_ifn3_res$id_unique_code), 1)
   expect_length(unique(test_ifn3_res$province_code), 1)
 
 
   expect_identical(
-    unique(test_ifn3_res$ID_UNIQUE_PLOT) |> as.character(),
+    unique(test_ifn3_res$id_unique_code) |> as.character(),
     test_ifn3_input$plots[3] |> as.character()
   )
   #CHECK THIS AGAIN, BOTH SHOULD BE CHARACTER
@@ -320,26 +320,26 @@ test_that("ifn_tree_table_process for ifn3 works as intended", {
 test_that("ifn_tree_table_process for ifn4 works as intended", {
 
   expected_names <- c(
-    "ID_UNIQUE_PLOT",
+    "id_unique_code",
     "province_code",
-    "Clase",
-    "Subclase",
-    "PLOT",
-    "SP_CODE",
-    "SP_NAME",
+    "class",
+    "subclass",
+    "plot",
+    "sp_code",
+    "sp_name",
     # #tree number id in ifn4
-    "nArbol",
+    "tree",
     #CUALIDAD 6 = dead but providing functions
-    "Calidad",
-    "Forma",
+    "quality_wood",
+    "cubing_form",
     #check codes to understand origin and trace of individuals
-    "OrdenIf3",
-    "OrdenIf4",
+    "tree_ifn3",
+    "tree_ifn4",
     #diameter in cm
-    "DIA",
+    "dia",
     #height in m
-    "Height",
-    "DENSITY"
+    "height",
+    "density_factor"
   )
 
 
@@ -360,12 +360,12 @@ test_that("ifn_tree_table_process for ifn4 works as intended", {
   expect_true(nrow(test_ifn4_res) > 0)
 
 
-  expect_length(unique(test_ifn4_res$ID_UNIQUE_PLOT), 1)
+  expect_length(unique(test_ifn4_res$id_unique_code), 1)
   expect_length(unique(test_ifn4_res$province_code), 1)
 
 
   expect_identical(
-    unique(test_ifn4_res$ID_UNIQUE_PLOT) |> as.character(),
+    unique(test_ifn4_res$id_unique_code) |> as.character(),
     test_ifn4_input$plots[1] |> as.character()
   )
   #CHECK THIS AGAIN, BOTH SHOULD BE CHARACTER
@@ -419,13 +419,13 @@ test_that("ifn_tree_table_process for ifn4 works as intended", {
 test_that("ifn_shrub_table_process for ifn2 works as intended", {
 
   expected_names <- c(
-    "ID_UNIQUE_PLOT",
+    "id_unique_code",
     "province_code",
-    "PLOT",
-    "SP_CODE",
-    "SP_NAME",
-    "Height",
-    "COVER"
+    "plot",
+    "sp_code",
+    "sp_name",
+    "height",
+    "cover"
   )
 
   # object
@@ -445,12 +445,12 @@ test_that("ifn_shrub_table_process for ifn2 works as intended", {
   expect_true(nrow(test_ifn2_res) > 0)
 
 
-  expect_length(unique(test_ifn2_res$PLOT), 1)
+  expect_length(unique(test_ifn2_res$plot), 1)
   expect_length(unique(test_ifn2_res$province_code), 1)
 
 
   expect_identical(
-    unique(test_ifn2_res$ID_UNIQUE_PLOT) |> as.character(),
+    unique(test_ifn2_res$id_unique_code) |> as.character(),
     test_ifn2_input$plots[1]
   )
   #CHECK THIS AGAIN, BOTH SHOULD BE CHARACTER
@@ -501,15 +501,15 @@ test_that("ifn_shrub_table_process for ifn2 works as intended", {
 test_that("ifn_shrub_table_process for ifn3 works as intended", {
 
   expected_names <- c(
-    "ID_UNIQUE_PLOT",
+    "id_unique_code",
     "province_code",
-    "Clase",
-    "Subclase",
-    "PLOT",
-    "SP_NAME",
-    "SP_CODE",
-    "Height",
-    "COVER"
+    "clase",
+    "subclass",
+    "plot",
+    "sp_name",
+    "sp_code",
+    "height",
+    "cover"
   )
 
   # object
@@ -529,12 +529,12 @@ test_that("ifn_shrub_table_process for ifn3 works as intended", {
   expect_true(nrow(test_ifn3_res) > 0)
 
 
-  expect_length(unique(test_ifn3_res$PLOT), 1)
+  expect_length(unique(test_ifn3_res$plot), 1)
   expect_length(unique(test_ifn3_res$province_code), 1)
 
 
   expect_identical(
-    unique(test_ifn3_res$ID_UNIQUE_PLOT) |> as.character(),
+    unique(test_ifn3_res$id_unique_code) |> as.character(),
     test_ifn3_input$plots[1]
   )
   #CHECK THIS AGAIN, BOTH SHOULD BE CHARACTER
@@ -585,15 +585,15 @@ test_that("ifn_shrub_table_process for ifn3 works as intended", {
 test_that("ifn_shrub_table_process for ifn4 works as intended", {
 
   expected_names <- c(
-    "ID_UNIQUE_PLOT",
+    "id_unique_code",
     "province_code",
-    "Clase",
-    "Subclase",
-    "PLOT",
-    "SP_NAME",
-    "SP_CODE",
-    "Height",
-    "COVER"
+    "clase",
+    "subclass",
+    "plot",
+    "sp_name",
+    "sp_code",
+    "height",
+    "cover"
   )
 
   # object
@@ -613,12 +613,12 @@ test_that("ifn_shrub_table_process for ifn4 works as intended", {
   expect_true(nrow(test_ifn4_res) > 0)
 
 
-  expect_length(unique(test_ifn4_res$PLOT), 1)
+  expect_length(unique(test_ifn4_res$plot), 1)
   expect_length(unique(test_ifn4_res$province_code), 1)
 
 
   expect_identical(
-    unique(test_ifn4_res$ID_UNIQUE_PLOT) |> as.character(),
+    unique(test_ifn4_res$id_unique_code) |> as.character(),
     test_ifn4_input$plots[1] |> as.character()
   )
   #CHECK THIS AGAIN, BOTH SHOULD BE CHARACTER
@@ -672,15 +672,15 @@ test_that("ifn_shrub_table_process for ifn4 works as intended", {
 test_that("ifn_regen_table_process for ifn2 works as intended", {
 
   expected_names <- c(
-    "ID_UNIQUE_PLOT",
+    "id_unique_code",
     "province_code",
-    "PLOT",
-    "SP_CODE",
-    "SP_NAME",
-    "DBH",
-    "Height",
-    "N",
-    "DENSITY"
+    "plot",
+    "sp_code",
+    "sp_name",
+    "dbh",
+    "height",
+    "n",
+    "density_factor"
   )
 
   # object
@@ -700,12 +700,12 @@ test_that("ifn_regen_table_process for ifn2 works as intended", {
   expect_true(nrow(test_ifn2_res) > 0)
 
 
-  expect_length(unique(test_ifn2_res$PLOT), 1)
+  expect_length(unique(test_ifn2_res$plot), 1)
   expect_length(unique(test_ifn2_res$province_code), 1)
 
 
   expect_identical(
-    unique(test_ifn2_res$ID_UNIQUE_PLOT) |> as.character(),
+    unique(test_ifn2_res$id_unique_code) |> as.character(),
     test_ifn2_input$plots[3] |> as.character()
   )
   #CHECK THIS AGAIN, BOTH SHOULD BE CHARACTER
@@ -758,17 +758,17 @@ test_that("ifn_regen_table_process for ifn2 works as intended", {
 test_that("ifn_regen_table_process for ifn3 works as intended", {
 
   expected_names <- c(
-    "ID_UNIQUE_PLOT",
+    "id_unique_code",
     "province_code",
-    "PLOT",
-    "Clase",
-    "Subclase",
-    "SP_CODE",
-    "SP_NAME",
-    "DBH",
-    "Height",
-    "N",
-    "DENSITY"
+    "plot",
+    "clase",
+    "subclass",
+    "sp_code",
+    "sp_name",
+    "dbh",
+    "height",
+    "n",
+    "density_factor"
   )
 
   # object
@@ -788,12 +788,12 @@ test_that("ifn_regen_table_process for ifn3 works as intended", {
   expect_true(nrow(test_ifn3_res) > 0)
 
 
-  expect_length(unique(test_ifn3_res$PLOT), 1)
+  expect_length(unique(test_ifn3_res$plot), 1)
   expect_length(unique(test_ifn3_res$province_code), 1)
 
 
   expect_identical(
-    unique(test_ifn3_res$ID_UNIQUE_PLOT) |> as.character(),
+    unique(test_ifn3_res$id_unique_code) |> as.character(),
     test_ifn3_input$plots[1] |> as.character()
   )
   #CHECK THIS AGAIN, BOTH SHOULD BE CHARACTER
@@ -844,17 +844,17 @@ test_that("ifn_regen_table_process for ifn3 works as intended", {
 test_that("ifn_regen_table_process for ifn4 works as intended", {
 
   expected_names <- c(
-    "ID_UNIQUE_PLOT",
+    "id_unique_code",
     "province_code",
-    "PLOT",
-    "Clase",
-    "Subclase",
-    "SP_CODE",
-    "SP_NAME",
-    "DBH",
-    "Height",
-    "N",
-    "DENSITY"
+    "plot",
+    "clase",
+    "subclass",
+    "sp_code",
+    "sp_name",
+    "dbh",
+    "height",
+    "n",
+    "density_factor"
   )
 
   # object
@@ -874,12 +874,12 @@ test_that("ifn_regen_table_process for ifn4 works as intended", {
   expect_true(nrow(test_ifn4_res) > 0)
 
 
-  expect_length(unique(test_ifn4_res$PLOT), 1)
+  expect_length(unique(test_ifn4_res$plot), 1)
   expect_length(unique(test_ifn4_res$province_code), 1)
 
 
   expect_identical(
-    unique(test_ifn4_res$ID_UNIQUE_PLOT) |> as.character(),
+    unique(test_ifn4_res$id_unique_code) |> as.character(),
     test_ifn4_input$plots[3]
   )
   #CHECK THIS AGAIN, BOTH SHOULD BE CHARACTER
@@ -932,24 +932,24 @@ test_that("ifn_regen_table_process for ifn4 works as intended", {
 test_that("ifn_plot_table_process for ifn2  works as intended", {
 
   expected_names <- c(
-    "ID_UNIQUE_PLOT",
-    "COUNTRY",
+    "id_unique_code",
+    "country",
     "province_code",
     "province_name_original",
     "ca_name_original",
-    "PLOT",
-    "YEAR",
+    "plot",
+    "year",
     "version",
-    "HOJA",
-    "Huso",
+    "sheet_ntm",
+    "huso",
     "COORDEX",
     "COORDEY",
-    "COORD_SYS",
+    "coord_sys",
     "crs",
-    "PENDIEN2",
-    "SLOPE",
-    "ELEV",
-    "ASPECT"
+    "slope_mean",
+    "slope",
+    "elev",
+    "aspect"
     # "soils"
   )
 
@@ -970,11 +970,11 @@ test_that("ifn_plot_table_process for ifn2  works as intended", {
   expect_named(test_ifn2_res, expected_names, ignore.order = TRUE)
   expect_true(nrow(test_ifn2_res) > 0)
 
-  expect_length(unique(test_ifn2_res$PLOT), 1)
+  expect_length(unique(test_ifn2_res$plot), 1)
   expect_length(unique(test_ifn2_res$province_code), 1)
 
   expect_identical(
-    unique(test_ifn2_res$ID_UNIQUE_PLOT) |> as.character(),
+    unique(test_ifn2_res$id_unique_code) |> as.character(),
     test_ifn2_input$plots[3] |> as.character()
   )
   #CHECK THIS AGAIN, BOTH SHOULD BE CHARACTER
@@ -1029,25 +1029,25 @@ test_that("ifn_plot_table_process for ifn2  works as intended", {
 test_that("ifn_plot_table_process for ifn3  works as intended", {
 
   expected_names <- c(
-    "ID_UNIQUE_PLOT",
-    "COUNTRY",
-    "YEAR",
+    "id_unique_code",
+    "country",
+    "year",
     "ca_name_original",
     "province_code",
     "province_name_original",
-    "PLOT",
-    "Cla",
-    "Subclase",
+    "plot",
+    "class",
+    "subclass",
     "version",
-    "Tipo",
-    "ASPECT",
-    "SLOPE",
+    "type",
+    "aspect",
+    "slope",
     "crs",
-    "COORD_SYS",
+    "coord_sys",
     "COORDEX",
     "COORDEY",
-    "HOJA",
-    "Huso"
+    "sheet_ntm",
+    "huso"
     # "soils"
   )
 
@@ -1068,11 +1068,11 @@ test_that("ifn_plot_table_process for ifn3  works as intended", {
   expect_named(test_ifn3_res, expected_names, ignore.order = TRUE)
   expect_true(nrow(test_ifn3_res) > 0)
 
-  expect_length(unique(test_ifn3_res$PLOT), 1)
+  expect_length(unique(test_ifn3_res$plot), 1)
   expect_length(unique(test_ifn3_res$province_code), 1)
 
   expect_identical(
-    unique(test_ifn3_res$ID_UNIQUE_PLOT) |> as.character(),
+    unique(test_ifn3_res$id_unique_code) |> as.character(),
     test_ifn3_input$plots[6]
   )
   #CHECK THIS AGAIN, BOTH SHOULD BE CHARACTER
@@ -1126,25 +1126,25 @@ test_that("ifn_plot_table_process for ifn3  works as intended", {
 
 test_that("ifn_plot_table_process for ifn4  works as intended", {
   expected_names <- c(
-    "ID_UNIQUE_PLOT",
-    "COUNTRY",
-    "YEAR",
+    "id_unique_code",
+    "country",
+    "year",
     "ca_name_original",
     "province_code",
     "province_name_original",
-    "PLOT",
+    "plot",
     "Cla",
-    "Subclase",
+    "subclass",
     "version",
-    "Tipo",
-    "ASPECT",
-    "SLOPE",
+    "type",
+    "aspect",
+    "slope",
     "crs",
-    "COORD_SYS",
+    "coord_sys",
     "COORDEX",
     "COORDEY",
-    "HOJA",
-    "Huso"
+    "sheet_ntm",
+    "huso"
     # "soils"
   )
 
@@ -1165,11 +1165,11 @@ test_that("ifn_plot_table_process for ifn4  works as intended", {
   expect_named(test_ifn4_res, expected_names, ignore.order = TRUE)
   expect_true(nrow(test_ifn4_res) > 0)
 
-  expect_length(unique(test_ifn4_res$PLOT), 1)
+  expect_length(unique(test_ifn4_res$plot), 1)
   expect_length(unique(test_ifn4_res$province_code), 1)
 
   expect_identical(
-    unique(test_ifn4_res$ID_UNIQUE_PLOT) |> as.character(),
+    unique(test_ifn4_res$id_unique_code) |> as.character(),
     test_ifn4_input$plots[3]
   )
   #CHECK THIS AGAIN, BOTH SHOULD BE CHARACTER
@@ -1246,24 +1246,24 @@ test_that("ifn_tables_process ifn2 works as intended", {
 
   # tests data
   expected_names <- c(
-    "ID_UNIQUE_PLOT",
-    "COUNTRY",
-    "YEAR",
+    "id_unique_code",
+    "country",
+    "year",
     "ca_name_original",
     "province_name_original",
     "province_code",
-    "PLOT",
+    "plot",
     "version",
-    "HOJA",
-    "Huso",
-    "COORD_SYS",
-    "COORD1",
-    "COORD2",
+    "sheet_ntm",
+    "huso",
+    "coord_sys",
+    "coordx",
+    "coordy",
     "crs",
-    "PENDIEN2",
-    "SLOPE",
-    "ELEV",
-    "ASPECT",
+    "slope_mean",
+    "slope",
+    "elev",
+    "aspect",
     "tree",
     "understory",
     "regen"
@@ -1324,25 +1324,25 @@ test_that("ifn_tables_process ifn3 works as intended", {
 
   # tests data
   expected_names <- c(
-    "ID_UNIQUE_PLOT",
-    "COUNTRY",
-    "YEAR",
+    "id_unique_code",
+    "country",
+    "year",
     "ca_name_original",
     "province_name_original",
     "province_code",
-    "PLOT",
-    "Cla",
-    "Subclase",
+    "plot",
+    "class",
+    "subclass",
     "version",
-    "Tipo",
-    "HOJA",
-    "Huso",
-    "COORD_SYS",
-    "COORD1",
-    "COORD2",
+    "type",
+    "sheet_ntm",
+    "huso",
+    "coord_sys",
+    "coordx",
+    "coordy",
     "crs",
-    "SLOPE",
-    "ASPECT",
+    "slope",
+    "aspect",
     "tree",
     "understory",
     "regen"
@@ -1403,25 +1403,25 @@ test_that("ifn_tables_process ifn4 works as intended", {
 
   # tests data
   expected_names <- c(
-    "ID_UNIQUE_PLOT",
-    "COUNTRY",
-    "YEAR",
+    "id_unique_code",
+    "country",
+    "year",
     "ca_name_original",
     "province_name_original",
     "province_code",
-    "PLOT",
-    "Cla",
-    "Subclase",
+    "plot",
+    "class",
+    "subclass",
     "version",
-    "Tipo",
-    "HOJA",
-    "Huso",
-    "COORD_SYS",
-    "COORD1",
-    "COORD2",
+    "type",
+    "sheet_ntm",
+    "huso",
+    "coord_sys",
+    "coordx",
+    "coordy",
     "crs",
-    "SLOPE",
-    "ASPECT",
+    "slope",
+    "aspect",
     "tree",
     "understory",
     "regen"
@@ -1479,10 +1479,10 @@ test_that("ifn_to_tibble  ifn 2-3-4 works as intended", {
 
   # tests data
   expected_names <- c(
-    "ID_UNIQUE_PLOT", "COUNTRY", "YEAR", "ca_name_original", "province_name_original",
-    "province_code", "PLOT", "version", "HOJA", "Huso", "COORD_SYS", "COORD1", "COORD2",
-    "crs", "PENDIEN2", "SLOPE", "ELEV", "ASPECT", "tree", "understory", "regen",
-    "Cla", "Subclase", "Tipo"
+    "id_unique_code", "country", "year", "ca_name_original", "province_name_original",
+    "province_code", "plot", "version", "sheet_mtn", "huso", "coord_sys", "coordx", "coordy",
+    "crs", "slope_mean", "slope", "elev", "aspect", "tree", "understory", "regen",
+    "class", "subclass", "type"
   )
 
   # object
@@ -1507,9 +1507,10 @@ test_that("ifn_to_tibble  ifn 2-3-4 works as intended", {
 
   # tests for clean_empty and as_sf arguments
   sf_expected_names <- c(
-    "ID_UNIQUE_PLOT", "COUNTRY", "YEAR", "ca_name_original", "province_name_original", "province_code",
-    "PLOT", "version", "HOJA", "Huso", "COORD_SYS", "crs", "PENDIEN2", "SLOPE", "ELEV", "ASPECT", "tree",
-    "understory", "regen", "Cla", "Subclase", "Tipo", "geometry", "crs_orig"
+    "id_unique_code", "country", "YEAR", "ca_name_original", "province_name_original",
+    "province_code","plot", "version", "sheet_ntm", "huso", "coord_sys", "crs",
+    "slope_mean", "slope", "elev", "aspect", "tree", "understory",
+    "regen", "class", "subclass", "type", "geometry", "crs_orig"
     # "soils"
   )
   expect_s3_class(

@@ -23,7 +23,7 @@
       otherwise = tibble::tibble(
         "version" = vector(),
         "province_name_original" = vector(),
-        "ID_UNIQUE_PLOT" = vector(),
+        "id_unique_code" = vector(),
         "crs" = vector(),
         "COORDEX" = vector(),
         "COORDEY" = vector(),
@@ -140,7 +140,7 @@
     ), call = .call)
   }
 
-  plots_arg_value <- rlang::quo(.data$ID_UNIQUE_PLOT)
+  plots_arg_value <- rlang::quo(.data$id_unique_code)
   # If file exists, business as usual. We use the general function (ifn_plot_table_process), because
   # it takes care of the version logic for us, DRY!!!
   # The only thing we need to take care of is the dancing coord ref systems. But for that is the crs
@@ -149,10 +149,10 @@
   res <- ifn_plot_table_process(
     plot_path, coord_path, version, plots_arg_value, province, ifn_provinces_dictionary
   ) |>
-    dplyr::filter(!is.na(.data$ID_UNIQUE_PLOT)) |>
+    dplyr::filter(!is.na(.data$id_unique_code)) |>
     dplyr::select(
-      "ID_UNIQUE_PLOT", "version", "province_code",
-      "province_name_original", "PLOT", "crs", "COORDEX", "COORDEY"
+      "id_unique_code", "version", "province_code",
+      "province_name_original", "plot", "crs", "COORDEX", "COORDEY"
     ) |>
     dplyr::group_by(.data$crs) |>
     dplyr::group_modify(
@@ -189,10 +189,10 @@
   filter_list <- plot_summary |>
     dplyr::as_tibble() |>
     dplyr::filter(.data$version %in% versions, .data$province_code %in% provinces) |>
-    dplyr::select("province_code", "ID_UNIQUE_PLOT") |>
+    dplyr::select("province_code", "id_unique_code") |>
     dplyr::distinct() |>
     dplyr::group_by(.data$province_code) |>
-    dplyr::summarise(plots = list(.data$ID_UNIQUE_PLOT), .groups = "keep") |>
+    dplyr::summarise(plots = list(.data$id_unique_code), .groups = "keep") |>
     dplyr::group_map(.f = \(province_plots, province_code) {
       tibble::deframe(province_plots) |>
         # list() |>
@@ -515,7 +515,7 @@ show_plots_from_ifn <- function(folder, provinces, versions, .call = rlang::call
 #' @param .padding Logical indicating if the estadillo var (name differs in versions) must be
 #'   padded to 4 length. Default to TRUE as this is necessary for most cases.
 #'
-#' @return The same \code{data} object, with a new column, \code{ID_UNIQUE_PLOT}, in case
+#' @return The same \code{data} object, with a new column, \code{id_unique_code}, in case
 #'   \code{.dry} is \code{FALSE}. If \code{.dry = TRUE}, \code{data} as is.
 #'
 #' @noRd
@@ -545,7 +545,7 @@ show_plots_from_ifn <- function(folder, provinces, versions, .call = rlang::call
           ),
         by = c("PROVINCIA", "ESTADILLO")
       ) |>
-      dplyr::rename(ID_UNIQUE_PLOT = "id_code")
+      dplyr::rename(id_unique_code = "id_code")
   } else {
 
     data_temp <- data |>
@@ -573,7 +573,7 @@ show_plots_from_ifn <- function(folder, provinces, versions, .call = rlang::call
         data_temp,
         by = c("Estadillo", "class")
       ) |>
-      dplyr::rename(ID_UNIQUE_PLOT = "id_code")
+      dplyr::rename(id_unique_code = "id_code")
   }
 
   return(res)
@@ -606,12 +606,12 @@ create_filter_list_ifn <- function(plots_info) {
   # assert col names
   assertthat::assert_that(
     all(names(plots_info) %in% c(
-      "crs", "ID_UNIQUE_PLOT", "version", "province_code",
-      "province_name_original", "PLOT", "geometry"
+      "crs", "id_unique_code", "version", "province_code",
+      "province_name_original", "plot", "geometry"
     )),
     msg = cli::cli_abort(c(
       "{.arg plots_info} provided don't have the expected names",
-      "i" = "Expected names are {.value {c('crs', 'ID_UNIQUE_PLOT', 'version', 'province_code', 'province_name_original', 'PLOT', 'geometry')}}"
+      "i" = "Expected names are {.value {c('crs', 'id_unique_code', 'version', 'province_code', 'province_name_original', 'plot', 'geometry')}}"
     ))
   )
   # assert there is data

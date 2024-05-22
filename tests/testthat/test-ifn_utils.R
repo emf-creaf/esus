@@ -365,8 +365,8 @@ test_that(".get_plots_from_province works as intended for ifn2", {
   expect_named(
     test_res_ok,
     c(
-      "ID_UNIQUE_PLOT", "version", "province_code",
-      "province_name_original", "PLOT", "crs", "geometry"
+      "id_unique_code", "version", "province_code",
+      "province_name_original", "plot", "crs", "geometry"
     ),
     ignore.order = TRUE
   )
@@ -413,8 +413,8 @@ test_that("show_plots_from_ifn works as intended for ifn2", {
   expect_named(
     test_res_ok,
     c(
-      "ID_UNIQUE_PLOT", "version", "province_code",
-      "province_name_original", "PLOT", "crs", "geometry"
+      "id_unique_code", "version", "province_code",
+      "province_name_original", "plot", "crs", "geometry"
     ),
     ignore.order = TRUE
   )
@@ -481,8 +481,8 @@ test_that(".get_plots_from_province works as intended for ifn3", {
   expect_named(
     test_res_ok,
     c(
-      "ID_UNIQUE_PLOT", "version", "province_code",
-      "province_name_original", "PLOT", "crs", "geometry"
+      "id_unique_code", "version", "province_code",
+      "province_name_original", "plot", "crs", "geometry"
     ),
     ignore.order = TRUE
   )
@@ -529,8 +529,8 @@ test_that("show_plots_from_ifn works as intended for ifn3", {
   expect_named(
     test_res_ok,
     c(
-      "ID_UNIQUE_PLOT", "version", "province_code",
-      "province_name_original", "PLOT", "crs", "geometry"
+      "id_unique_code", "version", "province_code",
+      "province_name_original", "plot", "crs", "geometry"
     ),
     ignore.order = TRUE
   )
@@ -597,8 +597,8 @@ test_that(".get_plots_from_province works as intended for ifn4", {
   expect_named(
     test_res_ok,
     c(
-      "ID_UNIQUE_PLOT", "version", "province_code",
-      "province_name_original", "PLOT", "crs", "geometry"
+      "id_unique_code", "version", "province_code",
+      "province_name_original", "plot", "crs", "geometry"
     ),
     ignore.order = TRUE
   )
@@ -645,8 +645,8 @@ test_that("show_plots_from_ifn works as intended for ifn4", {
   expect_named(
     test_res_ok,
     c(
-      "ID_UNIQUE_PLOT", "version", "province_code",
-      "province_name_original", "PLOT", "crs", "geometry"
+      "id_unique_code", "version", "province_code",
+      "province_name_original", "plot", "crs", "geometry"
     ),
     ignore.order = TRUE
   )
