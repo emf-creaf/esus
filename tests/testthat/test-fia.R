@@ -66,11 +66,11 @@ test_input <-
 test_that("fia_plot_table_process works as intended", {
 
   expected_names <- c(
-    "YEAR", "ID_UNIQUE_PLOT", "COUNTRY", "STATECD",
-    "STATEAB", "STATENM", "COUNTYCD", "PLOT", "P3PANEL",
-    "P2VEG_SAMPLING_STATUS_CD", "P2VEG_SAMPLING_LEVEL_DETAIL_CD",
-    "RSCD", "DESIGNCD", "COORD1", "COORD2", "COORD_SYS",
-    "crs", "ELEV", "ASPECT", "SLOPE"
+    "year", "id_unique_code", "country", "state_code", "state_ab", "state_name",
+    "county_code", "plot", "p3panel", "p2veg_sampling_status_cd", "p2veg_samplig_level_detail_cd",
+    "rscd", "design_code", "coordx", "coordx_last_recorded", "coordy", "coordy_last_recorded",
+    "coord_sys", "elev", "elev_last_recorded", "aspect", "aspect_last_recorded", "slope",
+    "slope_last_recorded"
   )
 
   # object
@@ -90,13 +90,13 @@ test_that("fia_plot_table_process works as intended", {
   expect_named(test_res, expected_names, ignore.order = TRUE)
   expect_true(nrow(test_res) > 0)
 
-  expect_length(unique(test_res$YEAR), 1)
-  expect_length(unique(test_res$PLOT), 1)
-  expect_length(unique(test_res$COUNTYCD), 1)
+  expect_length(unique(test_res$year), 1)
+  expect_length(unique(test_res$plot), 1)
+  expect_length(unique(test_res$county_code), 1)
 
-  expect_identical(unique(test_res$YEAR), test_year)
-  expect_identical(unique(test_res$PLOT), test_input$plots[1])
-  expect_identical(unique(test_res$COUNTYCD) |> as.character(), test_input$county[1])
+  expect_identical(unique(test_res$year), test_year)
+  expect_identical(unique(test_res$plot), test_input$plots[1])
+  expect_identical(unique(test_res$county_code) |> as.character(), test_input$county[1])
 
   # errors
   # No tables
@@ -161,8 +161,8 @@ test_that("fia_plot_table_process works as intended", {
 test_that("fia_tree_table_process works as intended", {
 
   expected_names <- c(
-    "ID_UNIQUE_PLOT", "YEAR", "STATECD", "COUNTYCD", "PLOT", "TREE",
-    "STATUS", "DIA", "Height", "SP_NAME", "SP_CODE", "DENSITY"
+    "id_unique_code", "year", "state_code", "county_code", "plot", "tree",
+    "status", "dia", "height", "sp_name", "sp_code", "density_factor"
   )
 
   # object
@@ -181,13 +181,13 @@ test_that("fia_tree_table_process works as intended", {
   expect_named(test_res, expected_names, ignore.order = TRUE)
   expect_true(nrow(test_res) > 0)
 
-  expect_length(unique(test_res$YEAR), 1)
-  expect_length(unique(test_res$PLOT), 1)
-  expect_length(unique(test_res$COUNTYCD), 1)
+  expect_length(unique(test_res$year), 1)
+  expect_length(unique(test_res$plot), 1)
+  expect_length(unique(test_res$county_code), 1)
 
-  expect_identical(unique(test_res$YEAR), test_year)
-  expect_identical(unique(test_res$PLOT), test_input$plots[1] |> as.integer())
-  expect_identical(unique(test_res$COUNTYCD) |> as.character(), test_input$county[1])
+  expect_identical(unique(test_res$year), test_year)
+  expect_identical(unique(test_res$plot), test_input$plots[1] |> as.integer())
+  expect_identical(unique(test_res$county_code) |> as.character(), test_input$county[1])
 
   # errors
   expect_warning(
@@ -221,8 +221,8 @@ test_that("fia_tree_table_process works as intended", {
 test_that("fia_p3_understory_table_process works as intended", {
 
   expected_names <- c(
-    "ID_UNIQUE_PLOT", "YEAR", "STATECD", "COUNTYCD", "PLOT", "SUBP",
-    "SP_CODE", "SP_NAME", "Height", "COVER", "GROWTH_HABIT"
+    "id_unique_code", "year", "state_code", "county_code", "plot", "subplot",
+    "sp_code", "sp_name", "height", "cover", "growth_form"
   )
 
   # shrub object
@@ -242,13 +242,13 @@ test_that("fia_p3_understory_table_process works as intended", {
   expect_named(test_res, expected_names, ignore.order = TRUE)
   expect_true(nrow(test_res) > 0)
 
-  expect_length(unique(test_res$YEAR), 1)
-  expect_length(unique(test_res$PLOT), 1)
-  expect_length(unique(test_res$COUNTYCD), 1)
+  expect_length(unique(test_res$year), 1)
+  expect_length(unique(test_res$plot), 1)
+  expect_length(unique(test_res$county_code), 1)
 
-  expect_identical(unique(test_res$YEAR), test_year)
-  expect_identical(unique(test_res$PLOT), test_input$plots[1] |> as.integer())
-  expect_identical(unique(test_res$COUNTYCD) |> as.character(), test_input$county[1])
+  expect_identical(unique(test_res$year), test_year)
+  expect_identical(unique(test_res$plot), test_input$plots[1] |> as.integer())
+  expect_identical(unique(test_res$county_code) |> as.character(), test_input$county[1])
 
   # errors
   expect_warning(
@@ -282,13 +282,13 @@ test_that("fia_p3_understory_table_process works as intended", {
   expect_named(test_res, expected_names, ignore.order = TRUE)
   expect_true(nrow(test_res) > 0)
 
-  expect_length(unique(test_res$YEAR), 1)
-  expect_length(unique(test_res$PLOT), 1)
-  expect_length(unique(test_res$COUNTYCD), 1)
+  expect_length(unique(test_res$year), 1)
+  expect_length(unique(test_res$plot), 1)
+  expect_length(unique(test_res$county_code), 1)
 
-  expect_identical(unique(test_res$YEAR), test_year)
-  expect_identical(unique(test_res$PLOT), test_input$plots[1] |> as.integer())
-  expect_identical(unique(test_res$COUNTYCD) |> as.character(), test_input$county[1])
+  expect_identical(unique(test_res$year), test_year)
+  expect_identical(unique(test_res$plot), test_input$plots[1] |> as.integer())
+  expect_identical(unique(test_res$county_code) |> as.character(), test_input$county[1])
 
   # errors
   expect_warning(
@@ -370,8 +370,8 @@ test_that("fia_p2_understory_table_process works as intended", {
     .build_fia_input_with(test_year, test_states, test_plots, test_folder, .verbose = FALSE)
 
   expected_names <- c(
-    "ID_UNIQUE_PLOT", "YEAR", "STATECD", "COUNTYCD", "PLOT", "SUBP",
-    "SP_CODE", "SP_NAME", "GROWTH_HABIT_CD", "Height", "COVER", "GROWTH_HABIT"
+    "id_unique_code", "year", "state_code", "county_code", "plot", "subplot",
+    "sp_code", "sp_name", "growth_habit_code", "height", "cover", "growth_form"
   )
 
   # shrub object
@@ -391,13 +391,13 @@ test_that("fia_p2_understory_table_process works as intended", {
   expect_named(test_res, expected_names, ignore.order = TRUE)
   expect_true(nrow(test_res) > 0)
 
-  expect_length(unique(test_res$YEAR), 1)
-  expect_length(unique(test_res$PLOT), 1)
-  expect_length(unique(test_res$COUNTYCD), 1)
+  expect_length(unique(test_res$year), 1)
+  expect_length(unique(test_res$plot), 1)
+  expect_length(unique(test_res$county_code), 1)
 
-  expect_identical(unique(test_res$YEAR), test_year)
-  expect_identical(unique(test_res$PLOT), test_input$plots[7])
-  expect_identical(unique(test_res$COUNTYCD) |> as.character(), test_input$county[7])
+  expect_identical(unique(test_res$year), test_year)
+  expect_identical(unique(test_res$plot), test_input$plots[7])
+  expect_identical(unique(test_res$county_code) |> as.character(), test_input$county[7])
 
   # errors
   expect_warning(
@@ -431,13 +431,13 @@ test_that("fia_p2_understory_table_process works as intended", {
   expect_named(test_res, expected_names, ignore.order = TRUE)
   expect_true(nrow(test_res) > 0)
 
-  expect_length(unique(test_res$YEAR), 1)
-  expect_length(unique(test_res$PLOT), 1)
-  expect_length(unique(test_res$COUNTYCD), 1)
+  expect_length(unique(test_res$year), 1)
+  expect_length(unique(test_res$plot), 1)
+  expect_length(unique(test_res$county_code), 1)
 
-  expect_identical(unique(test_res$YEAR), test_year)
-  expect_identical(unique(test_res$PLOT), test_input$plots[7])
-  expect_identical(unique(test_res$COUNTYCD) |> as.character(), test_input$county[7])
+  expect_identical(unique(test_res$year), test_year)
+  expect_identical(unique(test_res$plot), test_input$plots[7])
+  expect_identical(unique(test_res$county_code) |> as.character(), test_input$county[7])
 
   # errors
   expect_warning(
@@ -516,12 +516,12 @@ test_that("fia_understory_table_process works as intended", {
   test_input <-
     .build_fia_input_with(test_year, test_states, test_plots, test_folder, .verbose = FALSE)
   expected_names_p2 <- c(
-    "ID_UNIQUE_PLOT", "YEAR", "STATECD", "COUNTYCD", "PLOT", "SUBP",
-    "SP_CODE", "SP_NAME", "GROWTH_HABIT_CD", "Height", "COVER", "GROWTH_HABIT"
+    "id_unique_code", "year", "state_code", "county_code", "plot", "subplot",
+    "sp_code", "sp_name", "growth_form_CD", "height", "cover", "growth_form"
   )
   expected_names_p3 <- c(
-    "ID_UNIQUE_PLOT", "YEAR", "STATECD", "COUNTYCD", "PLOT", "SUBP",
-    "SP_CODE", "SP_NAME", "Height", "COVER", "GROWTH_HABIT"
+    "id_unique_code", "year", "state_code", "county_code", "plot", "subplot",
+    "sp_code", "sp_name", "height", "cover", "growth_form"
   )
   # p2 shrubs
   expect_s3_class(
@@ -539,10 +539,10 @@ test_that("fia_understory_table_process works as intended", {
   # data integrity
   expect_true(nrow(test_res) > 1)
   expect_named(test_res, expected_names_p2)
-  expect_identical(test_res$YEAR |> unique(), test_year)
-  expect_identical(test_res$STATECD |> unique(), 2L)
-  expect_identical(test_res$COUNTYCD |> unique() |> as.character(), test_input$county[7])
-  expect_identical(test_res$GROWTH_HABIT_CD |> unique(), "SH")
+  expect_identical(test_res$year |> unique(), test_year)
+  expect_identical(test_res$state_code |> unique(), 2L)
+  expect_identical(test_res$county_code |> unique() |> as.character(), test_input$county[7])
+  expect_identical(test_res$growth_form_CD |> unique(), "SH")
   # We expect the same results in the general understory function than in the individual
   # ones
   expect_identical(
@@ -591,10 +591,10 @@ test_that("fia_understory_table_process works as intended", {
   # data integrity
   expect_true(nrow(test_res_p3) > 1)
   expect_named(test_res_p3, expected_names_p3)
-  expect_identical(test_res_p3$YEAR |> unique(), test_year)
-  expect_identical(test_res_p3$STATECD |> unique(), 27L)
-  expect_identical(test_res_p3$COUNTYCD |> unique() |> as.character(), test_input$county[16])
-  expect_true(stringr::str_detect(test_res_p3$GROWTH_HABIT |> unique(), "Shrub"))
+  expect_identical(test_res_p3$year |> unique(), test_year)
+  expect_identical(test_res_p3$state_code |> unique(), 27L)
+  expect_identical(test_res_p3$county_code |> unique() |> as.character(), test_input$county[16])
+  expect_true(stringr::str_detect(test_res_p3$growth_form |> unique(), "Shrub"))
   # We expect the same results in the general understory function than in the individual
   # ones
   expect_identical(
@@ -630,16 +630,16 @@ test_that("fia_understory_table_process works as intended", {
   # we expect the p2 names, as some of the data comes from p2
   expect_named(test_res_p3_p2, expected_names_p2)
 
-  expect_identical(test_res_p3_p2$YEAR |> unique(), test_year)
-  expect_identical(test_res_p3_p2$STATECD |> unique(), 41L)
-  expect_identical(test_res_p3_p2$COUNTYCD |> unique() |> as.character(), test_input$county[13])
+  expect_identical(test_res_p3_p2$year |> unique(), test_year)
+  expect_identical(test_res_p3_p2$state_code |> unique(), 41L)
+  expect_identical(test_res_p3_p2$county_code |> unique() |> as.character(), test_input$county[13])
 })
 
 test_that("fia_seedling_table_process works as intended", {
 
   expected_names <- c(
-    "ID_UNIQUE_PLOT", "YEAR", "STATECD", "COUNTYCD", "PLOT", "SUBP",
-    "SP_CODE", "SP_NAME", "N", "TREECOUNT_CALC", "DENSITY", "Height", "DBH"
+    "id_unique_code", "year", "state_code", "county_code", "plot", "subplot",
+    "sp_code", "sp_name", "n", "treecount_calc", "density_factor", "height", "dbh"
   )
 
   # object
@@ -658,13 +658,13 @@ test_that("fia_seedling_table_process works as intended", {
   expect_named(test_res, expected_names, ignore.order = TRUE)
   expect_true(nrow(test_res) > 0)
 
-  expect_length(unique(test_res$YEAR), 1)
-  expect_length(unique(test_res$PLOT), 1)
-  expect_length(unique(test_res$COUNTYCD), 1)
+  expect_length(unique(test_res$year), 1)
+  expect_length(unique(test_res$plot), 1)
+  expect_length(unique(test_res$county_code), 1)
 
-  expect_identical(unique(test_res$YEAR), test_year)
-  expect_identical(unique(test_res$PLOT), test_input$plots[1] |> as.integer())
-  expect_identical(unique(test_res$COUNTYCD) |> as.character(), test_input$county[1])
+  expect_identical(unique(test_res$year), test_year)
+  expect_identical(unique(test_res$plot), test_input$plots[1] |> as.integer())
+  expect_identical(unique(test_res$county_code) |> as.character(), test_input$county[1])
 
   # errors
   expect_warning(
@@ -698,8 +698,8 @@ test_that("fia_seedling_table_process works as intended", {
 test_that("fia_subplot_table_process works as intended", {
 
   expected_names <- c(
-    "ID_UNIQUE_PLOT", "YEAR", "STATECD", "COUNTYCD", "PLOT", "SUBP",
-    "SLOPE_SUBP", "ASPECT_SUBP", "MACRCOND", "SUBPCOND", "MICRCOND"
+    "id_unique_code", "year", "state_code", "county_code", "plot", "subplot",
+    "slope_subplot", "aspect_subplot", "macro_cond", "subplot_cond", "micro_cond"
   )
 
   # object
@@ -717,13 +717,13 @@ test_that("fia_subplot_table_process works as intended", {
   expect_named(test_res, expected_names, ignore.order = TRUE)
   expect_true(nrow(test_res) > 0)
 
-  expect_length(unique(test_res$YEAR), 1)
-  expect_length(unique(test_res$PLOT), 1)
-  expect_length(unique(test_res$COUNTYCD), 1)
+  expect_length(unique(test_res$year), 1)
+  expect_length(unique(test_res$plot), 1)
+  expect_length(unique(test_res$county_code), 1)
 
-  expect_identical(unique(test_res$YEAR), test_year)
-  expect_identical(unique(test_res$PLOT), test_input$plots[1] |> as.integer())
-  expect_identical(unique(test_res$COUNTYCD) |> as.character(), test_input$county[1])
+  expect_identical(unique(test_res$year), test_year)
+  expect_identical(unique(test_res$plot), test_input$plots[1] |> as.integer())
+  expect_identical(unique(test_res$county_code) |> as.character(), test_input$county[1])
 
   # errors
   expect_warning(
@@ -766,11 +766,11 @@ test_that("fia_table_process works as intended", {
 
   # tests data
   expected_names <- c(
-    "YEAR", "ID_UNIQUE_PLOT", "COUNTRY", "STATECD", "STATEAB",
-    "STATENM", "COUNTYCD", "PLOT", "P3PANEL",
-    "P2VEG_SAMPLING_STATUS_CD", "P2VEG_SAMPLING_LEVEL_DETAIL_CD",
-    "RSCD", "DESIGNCD", "COORD1", "COORD2", "COORD_SYS", "crs",
-    "ELEV", "ASPECT", "SLOPE", "tree", "understory", "regen", "subplot"
+    "year", "id_unique_code", "country", "state_code", "state_ab",
+    "state_name", "county_code", "plot", "p3panel",
+    "p2veg_sampling_status_cd", "psveg_sampling_level_detail_cd",
+    "rscd", "design_code", "coordx", "coordy", "coord_sys", "crs",
+    "elev", "aspect", "slope", "tree", "understory", "regen", "subplot"
     # "soils"
   )
 
@@ -786,10 +786,10 @@ test_that("fia_table_process works as intended", {
 
   # data integrity
   expect_named(test_res, expected_names)
-  expect_true(all(unique(test_res$STATEAB) %in% names(test_plots)))
+  expect_true(all(unique(test_res$state_ab) %in% names(test_plots)))
   # this test is wrong:
   # expect_true(all(
-  #   unique(test_res$COUNTYCD) %in%
+  #   unique(test_res$county_code) %in%
   #     (purrr::map_depth(test_plots, .depth = 1, names) |> purrr::flatten_chr() |> unique())
   # ))
 
@@ -797,17 +797,17 @@ test_that("fia_table_process works as intended", {
   # tururu state shouldn't appear
   # inexistent plots (MO-88-20012, OR-17-63905, OR-31-95724, OR-71-99371) shouldn't
   # be present, so 26 of 31 elements in filter list
-  expect_false("tururu" %in% unique(test_res$STATEAB))
+  expect_false("tururu" %in% unique(test_res$state_ab))
   expect_identical(nrow(test_res), 26L)
 
   ### missing random files
   # This is done with files in a folder for testing that lacks some files:
   # MN -> No TREE, we expect results, but all the tree tibbles for MN are empty tibbles
-  # CA -> No COND, we expect no plots from CA as all PLOT info is missing
+  # CA -> No COND, we expect no plots from CA as all plot info is missing
   # OR -> No SEEDLING, we expect results, but all the seedling tibbles for MN are empty tibbles
   # AL -> No SOIL (both), we expect results, but all the soil tibbles for AL are empty tibbles
-  # MO -> No VEG_SUBPLOT, we expect_results, but understory should be empty tibbles for MO
-  # OH -> No SUBPLOT, we expect_results, but subplot should be empty tibbles for OH
+  # MO -> No VEG_SUBplot, we expect_results, but understory should be empty tibbles for MO
+  # OH -> No SUBplot, we expect_results, but subplot should be empty tibbles for OH
   test_folder <- fs::path(Sys.getenv("fia_path"), "missing_files_test")
   expect_s3_class(
     test_res_missing_files <- suppressWarnings(fia_tables_process(
@@ -820,22 +820,22 @@ test_that("fia_table_process works as intended", {
 
   expect_true(
     (test_res_missing_files |>
-       dplyr::filter(STATEAB == "MN") |>
+       dplyr::filter(state_ab == "MN") |>
        dplyr::pull(tree) |>
        purrr::list_rbind() |>
        nrow()) < 1
   )
-  expect_false(all(c("tururu", "CA") %in% unique(test_res_missing_files$STATEAB)))
+  expect_false(all(c("tururu", "CA") %in% unique(test_res_missing_files$state_ab)))
   expect_true(
     (test_res_missing_files |>
-       dplyr::filter(STATEAB == "OR") |>
+       dplyr::filter(state_ab == "OR") |>
        dplyr::pull(regen) |>
        purrr::list_rbind() |>
        nrow()) < 1
   )
   # expect_true(
   #   (test_res_missing_files |>
-  #      dplyr::filter(STATEAB == "AL") |>
+  #      dplyr::filter(state_ab == "AL") |>
   #      dplyr::pull(soils) |>
   #      purrr::list_rbind() |>
   #      dplyr::pull(soils_lab) |>
@@ -845,7 +845,7 @@ test_that("fia_table_process works as intended", {
 
   # expect_true(
   #   (test_res_missing_files |>
-  #      dplyr::filter(STATEAB == "AL") |>
+  #      dplyr::filter(state_ab == "AL") |>
   #      dplyr::pull(soils) |>
   #      purrr::list_rbind() |>
   #      dplyr::pull(soils_loc) |>
@@ -854,7 +854,7 @@ test_that("fia_table_process works as intended", {
   # )
   expect_true(
     (test_res_missing_files |>
-       dplyr::filter(STATEAB == "MO") |>
+       dplyr::filter(state_ab == "MO") |>
        dplyr::pull(understory) |>
        purrr::list_rbind() |>
        dplyr::pull(shrub) |>
@@ -863,7 +863,7 @@ test_that("fia_table_process works as intended", {
   )
   expect_true(
     (test_res_missing_files |>
-       dplyr::filter(STATEAB == "MO") |>
+       dplyr::filter(state_ab == "MO") |>
        dplyr::pull(understory) |>
        purrr::list_rbind() |>
        dplyr::pull(herbs) |>
@@ -872,7 +872,7 @@ test_that("fia_table_process works as intended", {
   )
   expect_true(
     (test_res_missing_files |>
-       dplyr::filter(STATEAB == "OH") |>
+       dplyr::filter(state_ab == "OH") |>
        dplyr::pull(subplot) |>
        purrr::list_rbind() |>
        nrow()) < 1
@@ -891,11 +891,11 @@ test_that("fia_to_tibble works as intended", {
 
   # tests data
   expected_names <- c(
-    "YEAR", "ID_UNIQUE_PLOT", "COUNTRY", "STATECD", "STATEAB",
-    "STATENM", "COUNTYCD", "PLOT", "P3PANEL",
-    "P2VEG_SAMPLING_STATUS_CD", "P2VEG_SAMPLING_LEVEL_DETAIL_CD",
-    "RSCD", "DESIGNCD", "COORD1", "COORD2", "COORD_SYS", "crs",
-    "ELEV", "ASPECT", "SLOPE", "tree", "understory", "regen", "subplot"
+    "year", "id_unique_code", "country", "state_code", "state_ab",
+    "state_name", "county_code", "plot", "p3panel",
+    "p2veg_sampling_status_cd", "p2veg_sampling_level_detail_cd",
+    "rscd", "design_code", "coordx", "coordy", "coord_sys", "crs",
+    "elev", "aspect", "slope", "tree", "understory", "regen", "subplot"
     # "soils"
   )
   test_years <- c(2005, 2010)
@@ -912,22 +912,22 @@ test_that("fia_to_tibble works as intended", {
 
   # data integrity
   expect_named(test_res, expected_names)
-  expect_false("tururu" %in% unique(test_res$STATEAB))
+  expect_false("tururu" %in% unique(test_res$state_ab))
   expect_identical(nrow(test_res), 52L) # four plots dont exist, so 4x2=8 rows less
-  expect_true(all(unique(test_res$STATEAB) %in% names(test_plots)))
+  expect_true(all(unique(test_res$state_ab) %in% names(test_plots)))
   expect_true(all(
-    unique(test_res$COUNTYCD) %in%
+    unique(test_res$county_code) %in%
       (purrr::map_depth(test_plots, .depth = 1, names) |> purrr::flatten_chr() |> unique())
   ))
-  expect_true(all(unique(test_res$YEAR) %in% test_years))
+  expect_true(all(unique(test_res$year) %in% test_years))
 
   # tests for clean_empty and as_sf arguments
   sf_expected_names <- c(
-    "YEAR", "ID_UNIQUE_PLOT", "COUNTRY", "STATECD", "STATEAB",
-    "STATENM", "COUNTYCD", "PLOT", "P3PANEL",
-    "P2VEG_SAMPLING_STATUS_CD", "P2VEG_SAMPLING_LEVEL_DETAIL_CD",
-    "RSCD", "DESIGNCD", "COORD_SYS", "crs", "ELEV", "ASPECT",
-    "SLOPE", "tree", "understory", "regen", "subplot",
+    "year", "id_unique_code", "country", "state_code", "state_ab",
+    "state_name", "county_code", "plot", "p3panel",
+    "p2veg_sampling_status_cd", "p2veg_sampling_level_detail_cd",
+    "rscd", "design_cd", "coord_sys", "crs", "elev", "aspect",
+    "slope", "tree", "understory", "regen", "subplot",
     "geometry", "crs_orig"
     # "soils"
   )

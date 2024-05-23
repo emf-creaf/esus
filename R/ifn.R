@@ -228,8 +228,8 @@ ifn_tables_process <- function(
 
       redundant_vars <- c(
         "id_unique_code", "country", "year", "ca_name_original", 
-        "province_code","province_name_original", "plot", "class",
-        "subclass", "version", "type","aspect", "slope","crs", 
+        "province_code","province_name_original", "plot", "Clase",
+        "Subclase", "version", "type","aspect", "slope","crs", 
         "coord_sys", "COORDEX",  "COORDEY", "sheet_ntm", "huso"
       )
 
@@ -255,7 +255,8 @@ ifn_tables_process <- function(
       understory <- tibble::tibble(shrub = list(shrub))
 
       plot_info |>
-        dplyr::rename(coordx = "COORDEX", coordy = "COORDEY") |>
+        dplyr::rename(coordx = "COORDEX", coordy = "COORDEY", 
+                      class =  "Clase", subclass = "Subclase") |>
         dplyr::mutate(
           tree = list(tree),
           understory = list(understory),
@@ -264,7 +265,7 @@ ifn_tables_process <- function(
         dplyr::select(
           dplyr::any_of(c(
             "id_unique_code", "country", "year", "ca_name_original", "province_name_original",
-            "province_code", "plot", "class", "subclass", "version", "type", "sheet_ntp", "huso",
+            "province_code", "plot", "Clase", "Subclase", "version", "type", "sheet_ntp", "huso",
             "coord_sys", "coordx", "coordy", "crs", "slope_mean", "slope", "elev", "aspect", "tree",
             "understory", "regen"
           ))
@@ -442,12 +443,12 @@ ifn_tree_table_process <- function(
     }
 
     tree <- tree_filtered_data |>
-      dplyr::rename(plot = "Estadillo", height = "Ht", Class = "Cla") |>
+      dplyr::rename(plot = "Estadillo", height = "Ht", Clase = "Cla") |>
       # units transformations
       dplyr::mutate(
         province_code = province,
         # Subclass fixes
-        subclass = .ifn_subclass_fixer(.data$Subclase),
+        Subclase = .ifn_subclass_fixer(.data$Subclase),
         dia = (.data$Dn1 + .data$Dn2) / 2,
         # MM TO CM
         dia = .data$dia * 0.1,
@@ -477,7 +478,7 @@ ifn_tree_table_process <- function(
       ) |> 
       dplyr::select(
         dplyr::any_of(c(
-          "id_unique_code", "province_code", "class", "subclass", 
+          "id_unique_code", "province_code", "Clase", "Subclase", 
           "plot", "sp_code", "sp_name",
           #tree number id in ifn4
           "tree",
@@ -606,11 +607,11 @@ ifn_shrub_table_process <- function(
     }
 
     shrub <- shrub_filtered_data |>
-      dplyr::rename(plot = "Estadillo", height = "Hm", class = "Cla") |>
+      dplyr::rename(plot = "Estadillo", height = "Hm", Clase = "Cla") |>
       dplyr::mutate(
         province_code = province,
         # Subclass fixes
-        subclass = .ifn_subclass_fixer(.data$Subclase),
+        Subclase = .ifn_subclass_fixer(.data$Subclase),
         cover = .data$Fcc,
         # DM TO CM
         height = as.numeric(.data$height) * 10,
@@ -630,7 +631,7 @@ ifn_shrub_table_process <- function(
         sp_name = "SP_NAME"
       ) |> 
       dplyr::select(
-        "id_unique_code", "province_code", "class", "subclass",
+        "id_unique_code", "province_code", "Clase", "Subclase",
         "plot", "sp_name", "sp_code", "height", "cover"
       )
 
@@ -772,10 +773,10 @@ ifn_regen_table_process <- function(
 
     # we add the id code
     regeneration <- regen_filtered_data |>
-      dplyr::rename(plot = "Estadillo", class = "Cla") |>
+      dplyr::rename(plot = "Estadillo", Clase = "Cla") |>
       dplyr::mutate(
         province_code = province,
-        subclass = .ifn_subclass_fixer(.data$Subclase), # Subclass fixes
+        Subclase = .ifn_subclass_fixer(.data$Subclase), # Subclass fixes
         Hm = .data$Hm * 10, # DM TO CM
         SP_CODE = as.numeric(.data$Especie)
       ) |>
@@ -816,7 +817,7 @@ ifn_regen_table_process <- function(
         sp_name = "SP_NAME",
       ) |> 
       dplyr::select(
-        "id_unique_code", "province_code", "class", "subclass", "plot",
+        "id_unique_code", "province_code", "Clase", "Subclase", "plot",
         "sp_code", "sp_name", "dbh", "height", "n", "density_factor"
       )
 
@@ -1107,10 +1108,10 @@ ifn_plot_table_process <- function(
     }
 
     plot_filtered_data <- plot_filtered_data |>
-      dplyr::rename(year = "Ano", plot = "Estadillo", class = "Cla", type = "Tipo") |>
+      dplyr::rename(year = "Ano", plot = "Estadillo", Clase = "Cla", type = "Tipo") |>
       dplyr::mutate(
         year = as.character(.data$year),
-        subclass = .ifn_subclass_fixer(.data$Subclase), # Subclass fixes
+        Subclase = .ifn_subclass_fixer(.data$Subclase), # Subclass fixes
         version = version,
         province_code = as.character(province)
       )
@@ -1157,7 +1158,7 @@ ifn_plot_table_process <- function(
       # selection of final variables
       dplyr::select(
         "id_unique_code", "country", "ca_name_original", "province_code", "province_name_original",
-        "plot", "class", "subclass", "coord_sys", "year", "version", "type", "aspect", "slope"
+        "plot", "Clase", "Subclase", "coord_sys", "year", "version", "type", "aspect", "slope"
       )
 
     files_validation <- assertthat::validate_that(!any(is.na(c(coord_data))))
@@ -1204,12 +1205,12 @@ ifn_plot_table_process <- function(
     coords_data <- coords_fixed_data |>
       dplyr::rename(
         plot = "Estadillo", COORDEX = "CoorX", COORDEY = "CoorY",
-        sheet_ntm = "Hoja50", huso = "HUSO",
-        class = dplyr::any_of(c("Clase", "Cla"))
+        sheet_ntm = "Hoja50", 
+        Clase = dplyr::any_of(c("Clase", "Cla"))
       ) |>
       dplyr::mutate(
         sheet_ntm = as.character(.data$sheet_ntm),
-        subclass = .ifn_subclass_fixer(.data$Subclase), # Subclass fixes
+        Subclase = .ifn_subclass_fixer(.data$Subclase), # Subclass fixes
         province_code = province,
         province_code = as.character(.data$province_code),
         version = version
@@ -1218,9 +1219,9 @@ ifn_plot_table_process <- function(
     # Check for existing Huso var and create it if doesn't exists. We do this outside
     # the mutate because the code is wrong when there is more than 1 Huso when coords_data
     # has more than one plot (show_plots_from workflow)
-    if (!"huso" %in% names(coords_data)) {
+    if (!"HUSO" %in% names(coords_data)) {
       coords_data[["huso"]] <- NA
-    }
+    } else{coords_data[["huso"]] <- coords_data[["HUSO"]]}
 
     ## BUG_: coord data now doesn't have unique id, as it has no subclass in table. We need to
     ## join these two tables and we use plot and province code. There is only one
@@ -1290,8 +1291,8 @@ ifn_plot_table_process <- function(
       dplyr::select(
         dplyr::any_of(c(
           "id_unique_code", "country", "year", "ca_name_original", 
-          "province_code","province_name_original", "plot", "class",
-          "subclass", "version", "type","aspect", "slope","crs", 
+          "province_code","province_name_original", "plot", "Clase",
+          "Subclase", "version", "type","aspect", "slope","crs", 
           "coord_sys", "COORDEX",  "COORDEY", "sheet_ntm", "huso"
         ))
       )

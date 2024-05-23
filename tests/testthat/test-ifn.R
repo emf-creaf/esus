@@ -224,8 +224,8 @@ test_that("ifn_tree_table_process for ifn3 works as intended", {
   expected_names <- c(
     "id_unique_code",
     "province_code",
-    "clase",
-    "subclass",
+    "Clase",
+    "Subclase",
     "plot",
     "sp_code",
     "sp_name",
@@ -322,8 +322,8 @@ test_that("ifn_tree_table_process for ifn4 works as intended", {
   expected_names <- c(
     "id_unique_code",
     "province_code",
-    "class",
-    "subclass",
+    "Clase",
+    "Subclase",
     "plot",
     "sp_code",
     "sp_name",
@@ -503,8 +503,8 @@ test_that("ifn_shrub_table_process for ifn3 works as intended", {
   expected_names <- c(
     "id_unique_code",
     "province_code",
-    "clase",
-    "subclass",
+    "Clase",
+    "Subclase",
     "plot",
     "sp_name",
     "sp_code",
@@ -587,8 +587,8 @@ test_that("ifn_shrub_table_process for ifn4 works as intended", {
   expected_names <- c(
     "id_unique_code",
     "province_code",
-    "clase",
-    "subclass",
+    "Clase",
+    "Subclase",
     "plot",
     "sp_name",
     "sp_code",
@@ -761,8 +761,8 @@ test_that("ifn_regen_table_process for ifn3 works as intended", {
     "id_unique_code",
     "province_code",
     "plot",
-    "clase",
-    "subclass",
+    "Clase",
+    "Subclase",
     "sp_code",
     "sp_name",
     "dbh",
@@ -847,8 +847,8 @@ test_that("ifn_regen_table_process for ifn4 works as intended", {
     "id_unique_code",
     "province_code",
     "plot",
-    "clase",
-    "subclass",
+    "Clase",
+    "Subclase",
     "sp_code",
     "sp_name",
     "dbh",
@@ -1036,8 +1036,8 @@ test_that("ifn_plot_table_process for ifn3  works as intended", {
     "province_code",
     "province_name_original",
     "plot",
-    "class",
-    "subclass",
+    "Clase",
+    "Subclase",
     "version",
     "type",
     "aspect",
@@ -1134,7 +1134,7 @@ test_that("ifn_plot_table_process for ifn4  works as intended", {
     "province_name_original",
     "plot",
     "Cla",
-    "subclass",
+    "Subclase",
     "version",
     "type",
     "aspect",
@@ -1331,8 +1331,8 @@ test_that("ifn_tables_process ifn3 works as intended", {
     "province_name_original",
     "province_code",
     "plot",
-    "class",
-    "subclass",
+    "Clase",
+    "Subclase",
     "version",
     "type",
     "sheet_ntm",
@@ -1410,8 +1410,8 @@ test_that("ifn_tables_process ifn4 works as intended", {
     "province_name_original",
     "province_code",
     "plot",
-    "class",
-    "subclass",
+    "Clase",
+    "Subclase",
     "version",
     "type",
     "sheet_ntm",
@@ -1482,7 +1482,7 @@ test_that("ifn_to_tibble  ifn 2-3-4 works as intended", {
     "id_unique_code", "country", "year", "ca_name_original", "province_name_original",
     "province_code", "plot", "version", "sheet_mtn", "huso", "coord_sys", "coordx", "coordy",
     "crs", "slope_mean", "slope", "elev", "aspect", "tree", "understory", "regen",
-    "class", "subclass", "type"
+    "Clase", "Subclase", "type"
   )
 
   # object
@@ -1510,7 +1510,7 @@ test_that("ifn_to_tibble  ifn 2-3-4 works as intended", {
     "id_unique_code", "country", "YEAR", "ca_name_original", "province_name_original",
     "province_code","plot", "version", "sheet_ntm", "huso", "coord_sys", "crs",
     "slope_mean", "slope", "elev", "aspect", "tree", "understory",
-    "regen", "class", "subclass", "type", "geometry", "crs_orig"
+    "regen", "Clase", "Subclase", "type", "geometry", "crs_orig"
     # "soils"
   )
   expect_s3_class(

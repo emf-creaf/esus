@@ -253,10 +253,11 @@ fia_tables_process <- function(
       )
 
       redundant_vars <- c(
-        "YEAR", "ID_UNIQUE_PLOT", "COUNTRY", "STATECD", "STATEAB", "STATENM",
-        "COUNTYCD", "PLOT", "P3PANEL", "P2VEG_SAMPLING_STATUS_CD", "P2VEG_SAMPLING_LEVEL_DETAIL_CD",
-        "RSCD", "DESIGNCD", "COORD1", "COORD1_last_recorded", "COORD2", "COORD2_last_recorded",
-        "COORD_SYS", "ELEV", "ELEV_last_recorded", "ASPECT", "ASPECT_last_recorded", "SLOPE", "SLOPE_last_recorded"
+        "year", "id_unique_code", "country", "state_code", "state_ab", "state_name",
+        "county_code", "plot", "p3panel", "p2veg_sampling_status_cd", "p2veg_samplig_level_detail_cd",
+        "rscd", "design_code", "coordx", "coordx_last_recorded", "coordy", "coordy_last_recorded",
+        "coord_sys", "elev", "elev_last_recorded", "aspect", "aspect_last_recorded", "slope",
+        "slope_last_recorded"
       )
 
       # if there is no info for the plot (missing files) there is no need to continue,
@@ -266,7 +267,7 @@ fia_tables_process <- function(
         return(tibble::tibble())
       }
 
-      state <- plot_info[["STATECD"]]
+      state <- plot_info[["state_code"]]
 
       # tree data
       tree <- fia_tree_table_process(tree_table_file, plots, county, year, ref_species, .call) |>
@@ -330,7 +331,7 @@ fia_tables_process <- function(
   temp_res |>
     # filtering the missing plots. This is done based on the fact plot table functions returns NAs
     # for all vars, including coords, when the plot is not found
-    dplyr::filter(!(is.na(.data$COORD2) & is.na(.data$COORD1)))
+    dplyr::filter(!(is.na(.data$coordy) & is.na(.data$coordx)))
 }
 
 #' FIA data tables process
@@ -433,11 +434,11 @@ fia_plot_table_process <- function(
     dplyr::arrange(desc(.data$INVYR)) |>
     dplyr::mutate(
       ELEV = .data$ELEV * 0.3048, # elev in feet to meters
-      ID_UNIQUE_PLOT = paste("US", .data$STATECD, .data$COUNTYCD, .data$PLOT, sep = "_"),
+      id_unique_code = paste("US", .data$STATECD, .data$COUNTYCD, .data$PLOT, sep = "_"),
       COORD_SYS =  dplyr::if_else(.data$STATECD %in% c(60, 64, 66, 68, 69, 70), "WGS84", "NAD83")
     ) |>
     dplyr::select(
-      "ID_UNIQUE_PLOT", "PLOT", "INVYR", "STATECD", "COUNTYCD", "P3PANEL",
+      "id_unique_code", "PLOT", "INVYR", "STATECD", "COUNTYCD", "P3PANEL",
       "P2VEG_SAMPLING_STATUS_CD", "P2VEG_SAMPLING_LEVEL_DETAIL_CD", "ELEV",
       # LON & LAT, NAD 83 datum ;   EXCEPTIONS depending on  RSCD
       "LON", "LAT", "COORD_SYS",
@@ -517,10 +518,10 @@ fia_plot_table_process <- function(
       .data$CONDID == 1
     ) |>
     dplyr::mutate(
-      ID_UNIQUE_PLOT = paste("US", .data$STATECD, .data$COUNTYCD, .data$PLOT, sep = "_")
+      id_unique_code = paste("US", .data$STATECD, .data$COUNTYCD, .data$PLOT, sep = "_")
     ) |>
-    dplyr::group_by(.data$ID_UNIQUE_PLOT, .data$INVYR) |>
-    dplyr::select("ID_UNIQUE_PLOT", "PLOT", "COUNTYCD", "SLOPE", "ASPECT", "INVYR") |>
+    dplyr::group_by(.data$id_unique_code, .data$INVYR) |>
+    dplyr::select("id_unique_code", "PLOT", "COUNTYCD", "SLOPE", "ASPECT", "INVYR") |>
     dplyr::distinct() |>
     data.table::as.data.table() |>
     #this is done to obtain last year with information available and also the year of search
@@ -541,16 +542,30 @@ fia_plot_table_process <- function(
     dplyr::left_join(data_plot, by = c("PLOT", "INVYR", "COUNTYCD")) |>
     dplyr::left_join(data_cond, by = c("PLOT", "INVYR", "COUNTYCD")) |>
     dplyr::mutate(
-      ID_UNIQUE_PLOT = paste("US", .data$STATECD, .data$COUNTYCD, .data$PLOT, sep = "_"),
+      id_unique_code = paste("US", .data$STATECD, .data$COUNTYCD, .data$PLOT, sep = "_"),
       COUNTRY = "US"
     ) |>
     dplyr::select(
-      YEAR = "INVYR",
-      "ID_UNIQUE_PLOT", "COUNTRY", "STATECD", "STATEAB",
-      "STATENM", "COUNTYCD", "PLOT", "P3PANEL", "P2VEG_SAMPLING_STATUS_CD",
-      "P2VEG_SAMPLING_LEVEL_DETAIL_CD", "RSCD", "DESIGNCD",
-      COORD1 = "LON", COORD2 = "LAT",
-      "COORD_SYS", "crs", "ELEV", "ASPECT", "SLOPE"
+      year = "INVYR",
+      id_unique_code = "id_unique_code",
+      country = "COUNTRY",
+      state_code  = "STATECD", 
+      state_ab = "STATEAB",
+      state_name = "STATENM", 
+      county_code = "COUNTYCD",
+      plot = "PLOT", 
+      p3panel = "P3PANEL", 
+      p2veg_sampling_status_cd = "P2VEG_SAMPLING_STATUS_CD",
+      p2veg_sampling_level_detail_cd = "P2VEG_SAMPLING_LEVEL_DETAIL_CD",
+      rscd = "RSCD",
+      design_code = "DESIGNCD",
+      coordx = "LON",
+      coordy = "LAT",
+      coord_sys = "COORD_SYS", 
+      "crs", 
+      elev = "ELEV",
+      aspect = "ASPECT",
+      slppe = "SLOPE"
     ) |>
     # dplyr::rename(
     #   YEAR = "INVYR",
@@ -609,7 +624,7 @@ fia_tree_table_process <- function(
     # units transformations
     dplyr::mutate(
       # unique inner code
-      ID_UNIQUE_PLOT = paste("US", .data$STATECD, .data$COUNTYCD, .data$PLOT, sep = "_"),
+      id_unique_code = paste("US", .data$STATECD, .data$COUNTYCD, .data$PLOT, sep = "_"),
       DIA = .data$DIA * 2.54, # INCHES TO CM
       Height = .data$HT * 0.3048, # FEET TO M
       DENSITY = .data$TPA_UNADJ / 0.4046856422 # acre to ha
@@ -623,10 +638,13 @@ fia_tree_table_process <- function(
     dplyr::mutate(SP_NAME = (paste(.data$GENUS, .data$SPECIES, sep = " "))) |>
     dplyr::arrange(.data$SP_NAME) |>
     dplyr::select(
-      "ID_UNIQUE_PLOT", "INVYR", "STATECD", "COUNTYCD", "PLOT",
+      "id_unique_code", "INVYR", "STATECD", "COUNTYCD", "PLOT",
       "TREE", "STATUSCD", "DIA", "Height", "SP_NAME", "SPCD", "DENSITY"
     ) |>
-    dplyr::rename(YEAR = "INVYR", STATUS = "STATUSCD", SP_CODE = "SPCD") |>
+    dplyr::rename(plot = "PLOT", dia = "DIA", year = "INVYR", status = "STATUSCD", 
+                  sp_code = "SPCD", height = "Height", sp_name = "SP_NAME",
+                  state_code = "STATECD", county_code = "COUNTYCD", tree = "TREE",
+                  density_factor = "DENSITY", ) |>
     dplyr::as_tibble()
 
   # Return tree
@@ -747,7 +765,7 @@ fia_p3_understory_table_process <- function(
     # that layer in meters layer 1-2  = 0- 1,8288meters, layer 3 from 1,8288meters to 4,8768
     # and layer 4 more than  4,8768m
     dplyr::mutate(
-      ID_UNIQUE_PLOT = paste("US", .data$STATECD, .data$COUNTYCD, .data$PLOT, sep = "_"),
+      id_unique_code = paste("US", .data$STATECD, .data$COUNTYCD, .data$PLOT, sep = "_"),
       COVER_PCT = .data$SP_CANOPY_COVER_TOTAL,
       # Height in cm
       Height = dplyr::case_when(
@@ -807,10 +825,15 @@ fia_p3_understory_table_process <- function(
     #information at subplot level
     dplyr::arrange(.data$SPECIES_SYMBOL, .data$SUBP) |>
     dplyr::select(
-      "ID_UNIQUE_PLOT", "INVYR", "STATECD", "COUNTYCD", "PLOT", "SUBP",
+      "id_unique_code", "INVYR", "STATECD", "COUNTYCD", "PLOT", "SUBP",
       "SPECIES_SYMBOL", "SP_NAME", "Height", "COVER_PCT", "GROWTH_HABIT"
     ) |>
-    dplyr::rename(YEAR = "INVYR", SP_CODE = "SPECIES_SYMBOL", COVER = "COVER_PCT") |>
+    dplyr::rename(year = "INVYR", sp_code = "SPECIES_SYMBOL", cover = "COVER_PCT",
+                  state_code = "STATECD", county_code = "COUNTYCD", plot = "PLOT",
+                  subplot = "SUBP", growth_form = "GROWTH_HABIT", 
+                  sp_name = "SP_NAME", height = "Height", 
+                  species_symbol = "SPECIES_SYMBOL"
+                  ) |>
     dplyr::distinct() |>
     dplyr::as_tibble()
 
@@ -874,7 +897,7 @@ fia_p2_understory_table_process <- function(
     dplyr::filter(.data$GROWTH_HABIT_CD %in% growth_habit) |>
     # we  approximate height from layer info
     dplyr::mutate(
-      ID_UNIQUE_PLOT = paste("US", .data$STATECD, .data$COUNTYCD, .data$PLOT, sep = "_"),
+      id_unique_code = paste("US", .data$STATECD, .data$COUNTYCD, .data$PLOT, sep = "_"),
       # Height in cm
       Height = dplyr::case_when(
         .data$LAYER == 1 ~  30,
@@ -923,10 +946,15 @@ fia_p2_understory_table_process <- function(
     dplyr::arrange(.data$SPECIES_SYMBOL, .data$SUBP) |>
     # we select final variables
     dplyr::select(
-      "ID_UNIQUE_PLOT", "INVYR", "STATECD", "COUNTYCD", "PLOT", "SUBP",
+      "id_unique_code", "INVYR", "STATECD", "COUNTYCD", "PLOT", "SUBP",
       "SPECIES_SYMBOL", "SP_NAME", "GROWTH_HABIT_CD", "Height", "COVER_PCT", "GROWTH_HABIT"
     ) |>
-    dplyr::rename(YEAR = "INVYR", SP_CODE = "SPECIES_SYMBOL", COVER = "COVER_PCT") |>
+    dplyr::rename(year = "INVYR", sp_code = "SPECIES_SYMBOL", cover = "COVER_PCT",
+                  state_code = "STATECD", county_code = "COUNTYCD", plot = "PLOT",
+                  subplot = "SUBP", height = "Height", cover = "COVER_PCT", sp_name =
+                    "SP_NAME", species_symbol = "SPECIES_SYMBOL", growth_form = "GROWTH_HABIT",
+                  growth_form_code = "GROWTH_HABIT_CD"
+                  ) |>
     # We have repeated rows after the selection because we summarised shrubs species. We remove with
     # distinct
     dplyr::distinct() |>
@@ -982,7 +1010,7 @@ fia_seedling_table_process <- function(
   seedling <- filtered_data |>
     # we filter by species to calculate means (height, cover)
     dplyr::mutate(
-      ID_UNIQUE_PLOT = paste("US", .data$STATECD, .data$COUNTYCD, .data$PLOT, sep = "_"),
+      id_unique_code = paste("US", .data$STATECD, .data$COUNTYCD, .data$PLOT, sep = "_"),
       #conversion from acre to ha
       TPA_UNADJ = .data$TPA_UNADJ / 0.4046856422
     ) |>
@@ -1005,10 +1033,13 @@ fia_seedling_table_process <- function(
     dplyr::arrange(.data$SPCD, .data$SUBP) |>
     #selection of final variables
     dplyr::select(
-      "ID_UNIQUE_PLOT", "INVYR", "STATECD", "COUNTYCD", "PLOT", "SUBP", "SPCD",
+      "id_unique_code", "INVYR", "STATECD", "COUNTYCD", "PLOT", "SUBP", "SPCD",
       "SP_NAME", "TREECOUNT_CALC", "TPA_UNADJ", "N", "Height", "DBH"
     ) |>
-    dplyr::rename(YEAR = "INVYR", SP_CODE = "SPCD", DENSITY = "TPA_UNADJ") |>
+    dplyr::rename(year = "INVYR", sp_code = "SPCD", density_factor = "TPA_UNADJ",
+                  state_code= "STATECD", county_code = "COUNTYCD", plot = "PLOT",
+                  subplot = "SUBP", sp_name = "SP_NAME", treecount_calc = "TREECOUNT_CALC",
+                  n= "N", dbh = "DBH", height = "Height") |>
     # # We have repeated rows after the selection because we summarised shrubs species.
     # We remove with distinct
     dplyr::distinct() |>
@@ -1063,16 +1094,18 @@ fia_subplot_table_process <- function(
   subplot <- filtered_data |>
     # we add id code
     dplyr::mutate(
-      ID_UNIQUE_PLOT = paste("US", .data$STATECD, .data$COUNTYCD, .data$PLOT, sep = "_"),
+      id_unique_code = paste("US", .data$STATECD, .data$COUNTYCD, .data$PLOT, sep = "_"),
     ) |>
     dplyr::select(
-      "ID_UNIQUE_PLOT", "INVYR", "STATECD", "COUNTYCD",
+      "id_unique_code", "INVYR", "STATECD", "COUNTYCD",
       "PLOT", "SUBP", "SLOPE", "ASPECT", "MACRCOND",
       # Condition number for the condition at the center of the subplot.
       "SUBPCOND", "MICRCOND"
     ) |>
     dplyr::rename(
-      YEAR = "INVYR", SLOPE_SUBP = "SLOPE", ASPECT_SUBP = "ASPECT"
+      year = "INVYR", subplot = "SUBP", slope_subplot = "SLOPE", aspect_subplot = "ASPECT",
+      state_code = "STATECD", county_code = "COUNTYCD", plot =  "PLOT", 
+      subplot_cond = "SUBPCOND", micro_cond =  "MICRCOND", macro_cond = "MACRCOND"
     ) |>
     # We have repeated rows after the selection because we summarized
     # shrubs species. We remove with distinct
