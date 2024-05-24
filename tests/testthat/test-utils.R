@@ -196,8 +196,8 @@ test_that("show_plots_from works as intended", {
   expect_named(
     test_ifn,
     c(
-      "ID_UNIQUE_PLOT", "version", "province_code",
-      "province_name_original", "PLOT", "crs", "geometry"
+      "id_unique_code", "version", "province_code",
+      "province_name_original", "plot", "crs", "geometry"
     ),
     ignore.order = TRUE
   )

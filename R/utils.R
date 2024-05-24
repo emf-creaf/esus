@@ -358,8 +358,8 @@ inventory_as_sf <- function(inventory_data) {
   ## assertions
   # inventory_data has the necessary columns
   assertthat::assert_that(
-    assertthat::has_name(inventory_data, "COORD1"),
-    assertthat::has_name(inventory_data, "COORD2"),
+    assertthat::has_name(inventory_data, "coordx"),
+    assertthat::has_name(inventory_data, "coordy"),
     assertthat::has_name(inventory_data, "crs"),
     msg = cli::cli_abort(
       "{.arg inventory_data} must have columns for coordinates and crs"
@@ -370,7 +370,7 @@ inventory_as_sf <- function(inventory_data) {
     dplyr::group_by(.data$crs) |>
     dplyr::group_modify(
       .f = \(crs_subset, crs) {
-        sf::st_as_sf(crs_subset, coords = c("COORD1", "COORD2"), crs = unique(crs$crs)) |>
+        sf::st_as_sf(crs_subset, coords = c("coordx", "coordy"), crs = unique(crs$crs)) |>
           sf::st_transform(crs = 4326) |>
           dplyr::mutate(crs_orig = crs$crs)
       }

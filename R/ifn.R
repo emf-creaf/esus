@@ -255,8 +255,7 @@ ifn_tables_process <- function(
       understory <- tibble::tibble(shrub = list(shrub))
 
       plot_info |>
-        dplyr::rename(coordx = "COORDEX", coordy = "COORDEY", 
-                      class =  "Clase", subclass = "Subclase") |>
+        dplyr::rename(coordx = "COORDEX", coordy = "COORDEY") |>
         dplyr::mutate(
           tree = list(tree),
           understory = list(understory),
@@ -265,7 +264,9 @@ ifn_tables_process <- function(
         dplyr::select(
           dplyr::any_of(c(
             "id_unique_code", "country", "year", "ca_name_original", "province_name_original",
-            "province_code", "plot", "Clase", "Subclase", "version", "type", "sheet_ntp", "huso",
+            "province_code", "plot",
+            class = "Clase", subclass = "Subclase",
+            "version", "type", "sheet_ntm", "huso",
             "coord_sys", "coordx", "coordy", "crs", "slope_mean", "slope", "elev", "aspect", "tree",
             "understory", "regen"
           ))
@@ -483,8 +484,8 @@ ifn_tree_table_process <- function(
           #tree number id in ifn4
           "tree",
           "tree_ifn2",
-          "tree_if3",
-          "tree_if4",
+          "tree_ifn3",
+          "tree_ifn4",
           #CUALIDAD 6 = dead but providing functions
           "quality_wood", "cubing_form",
           #check codes to understand origin and trace of individuals
@@ -692,7 +693,7 @@ ifn_regen_table_process <- function(
       ) |>
       dplyr::left_join(
         y = species_ifn_internal |>
-          dplyr::select("SP_CODE", "SP_NAME"),
+          dplyr::select("SP_CODE", "sp_name" = "SP_NAME"),
         by = "SP_CODE"
       ) |>
       dplyr::arrange(.data$SP_CODE) |>
@@ -728,10 +729,10 @@ ifn_regen_table_process <- function(
         )
       ) |>
       dplyr::select(
-        "id_unique_code", "province_code", "plot", "SP_CODE",
+        "id_unique_code", "province_code", "plot", sp_code = "SP_CODE",
         "sp_name", "dbh", "height", "density_factor", "n"
       ) |>
-      dplyr::filter(stats::complete.cases(.data$dbh, .data$height, .data$N))
+      dplyr::filter(stats::complete.cases(.data$dbh, .data$height, .data$n))
 
     # Return regen
     return(regeneration)
@@ -1219,10 +1220,9 @@ ifn_plot_table_process <- function(
     # Check for existing Huso var and create it if doesn't exists. We do this outside
     # the mutate because the code is wrong when there is more than 1 Huso when coords_data
     # has more than one plot (show_plots_from workflow)
-    if (!"HUSO" %in% names(coords_data)) {
-      coords_data[["huso"]] <- NA
-    } else{coords_data[["huso"]] <- coords_data[["HUSO"]]}
-
+    if (!"Huso" %in% names(coords_data)) {
+      coords_data[["Huso"]] <- NA
+    }
     ## BUG_: coord data now doesn't have unique id, as it has no subclass in table. We need to
     ## join these two tables and we use plot and province code. There is only one
     ## set of coordinates by plot (estadillo), so any plots with the same plot but
@@ -1232,11 +1232,12 @@ ifn_plot_table_process <- function(
       dplyr::left_join(
         y = coords_data |>
           dplyr::select(
-            dplyr::any_of(c("plot", "province_code", "COORDEX", "COORDEY", "sheet_ntm", "huso"))
+            dplyr::any_of(c("plot", "province_code", "COORDEX", "COORDEY", "sheet_ntm", "Huso"))
           ) |>
           dplyr::distinct(),
         by = c("province_code", "plot")
       ) |>
+      dplyr::rename(huso = "Huso") |>
       # sometimes, plots present in data are not present in coords, so weç
       # remove them
       dplyr::filter(!is.na(.data$COORDEX)) |>

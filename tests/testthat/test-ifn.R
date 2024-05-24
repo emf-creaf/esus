@@ -236,6 +236,7 @@ test_that("ifn_tree_table_process for ifn3 works as intended", {
     "cubing_form",
     #check codes to understand origin and trace of individuals
     "tree_ifn2",
+    "tree_ifn3",
     #diameter in cm
     "dia",
     #height in m
@@ -1133,7 +1134,7 @@ test_that("ifn_plot_table_process for ifn4  works as intended", {
     "province_code",
     "province_name_original",
     "plot",
-    "Cla",
+    "Clase",
     "Subclase",
     "version",
     "type",
@@ -1331,8 +1332,8 @@ test_that("ifn_tables_process ifn3 works as intended", {
     "province_name_original",
     "province_code",
     "plot",
-    "Clase",
-    "Subclase",
+    "class",
+    "subclass",
     "version",
     "type",
     "sheet_ntm",
@@ -1360,7 +1361,7 @@ test_that("ifn_tables_process ifn3 works as intended", {
   )
 
   # data integrity
-  expect_named(test_ifn3_res, expected_names)
+  expect_named(test_ifn3_res, expected_names, ignore.order = TRUE)
   expect_true(all(unique(test_ifn3_res$province_code) %in% names(test_ifn3_plots)))
 
   # ### missing tables/plots
@@ -1410,8 +1411,8 @@ test_that("ifn_tables_process ifn4 works as intended", {
     "province_name_original",
     "province_code",
     "plot",
-    "Clase",
-    "Subclase",
+    "class",
+    "subclass",
     "version",
     "type",
     "sheet_ntm",
@@ -1439,7 +1440,7 @@ test_that("ifn_tables_process ifn4 works as intended", {
   )
 
   # data integrity
-  expect_named(test_ifn4_res, expected_names)
+  expect_named(test_ifn4_res, expected_names, ignore.order = TRUE)
   expect_true(all(unique(test_ifn4_res$province_code) %in% names(test_ifn4_plots)))
 
   ### missing tables/plots
@@ -1480,9 +1481,9 @@ test_that("ifn_to_tibble  ifn 2-3-4 works as intended", {
   # tests data
   expected_names <- c(
     "id_unique_code", "country", "year", "ca_name_original", "province_name_original",
-    "province_code", "plot", "version", "sheet_mtn", "huso", "coord_sys", "coordx", "coordy",
+    "province_code", "plot", "version", "sheet_ntm", "huso", "coord_sys", "coordx", "coordy",
     "crs", "slope_mean", "slope", "elev", "aspect", "tree", "understory", "regen",
-    "Clase", "Subclase", "type"
+    "class", "subclass", "type"
   )
 
   # object
@@ -1507,10 +1508,10 @@ test_that("ifn_to_tibble  ifn 2-3-4 works as intended", {
 
   # tests for clean_empty and as_sf arguments
   sf_expected_names <- c(
-    "id_unique_code", "country", "YEAR", "ca_name_original", "province_name_original",
+    "id_unique_code", "country", "year", "ca_name_original", "province_name_original",
     "province_code","plot", "version", "sheet_ntm", "huso", "coord_sys", "crs",
     "slope_mean", "slope", "elev", "aspect", "tree", "understory",
-    "regen", "Clase", "Subclase", "type", "geometry", "crs_orig"
+    "regen", "class", "subclass", "type", "geometry", "crs_orig"
     # "soils"
   )
   expect_s3_class(

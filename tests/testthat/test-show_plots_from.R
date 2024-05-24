@@ -88,7 +88,7 @@ test_that("show_plots_from works for IFN", {
   expect_s3_class(test_plots, "sf")
   expect_named(
     test_plots,
-    c("crs", "ID_UNIQUE_PLOT", "version", "province_code", "province_name_original", "PLOT", "geometry")
+    c("crs", "id_unique_code", "version", "province_code", "province_name_original", "plot", "geometry")
   )
   expect_true(all(unique(test_plots[["province_code"]]) %in% test_provinces))
 

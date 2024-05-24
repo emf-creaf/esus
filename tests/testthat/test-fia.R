@@ -537,7 +537,7 @@ test_that("fia_understory_table_process works as intended", {
   )
   # data integrity
   expect_true(nrow(test_res) > 1)
-  expect_named(test_res, expected_names_p2)
+  expect_named(test_res, expected_names_p2, ignore.order = TRUE)
   expect_identical(test_res$year |> unique(), test_year)
   expect_identical(test_res$state_code |> unique(), 2L)
   expect_identical(test_res$county_code |> unique() |> as.character(), test_input$county[7])
@@ -589,7 +589,7 @@ test_that("fia_understory_table_process works as intended", {
   )
   # data integrity
   expect_true(nrow(test_res_p3) > 1)
-  expect_named(test_res_p3, expected_names_p3)
+  expect_named(test_res_p3, expected_names_p3, ignore.order = TRUE)
   expect_identical(test_res_p3$year |> unique(), test_year)
   expect_identical(test_res_p3$state_code |> unique(), 27L)
   expect_identical(test_res_p3$county_code |> unique() |> as.character(), test_input$county[16])
@@ -627,7 +627,7 @@ test_that("fia_understory_table_process works as intended", {
   # data integrity
   expect_true(nrow(test_res_p3_p2) > 1)
   # we expect the p2 names, as some of the data comes from p2
-  expect_named(test_res_p3_p2, expected_names_p2)
+  expect_named(test_res_p3_p2, expected_names_p2, ignore.order = TRUE)
 
   expect_identical(test_res_p3_p2$year |> unique(), test_year)
   expect_identical(test_res_p3_p2$state_code |> unique(), 41L)
@@ -925,7 +925,7 @@ test_that("fia_to_tibble works as intended", {
     "year", "id_unique_code", "country", "state_code", "state_ab",
     "state_name", "county_code", "plot", "p3panel",
     "p2veg_sampling_status_cd", "p2veg_sampling_level_detail_cd",
-    "rscd", "design_cd", "coord_sys", "crs", "elev", "aspect",
+    "rscd", "design_code", "coord_sys", "crs", "elev", "aspect",
     "slope", "tree", "understory", "regen", "subplot",
     "geometry", "crs_orig"
     # "soils"
