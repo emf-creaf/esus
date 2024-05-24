@@ -67,10 +67,9 @@ test_that("fia_plot_table_process works as intended", {
 
   expected_names <- c(
     "year", "id_unique_code", "country", "state_code", "state_ab", "state_name",
-    "county_code", "plot", "p3panel", "p2veg_sampling_status_cd", "p2veg_samplig_level_detail_cd",
-    "rscd", "design_code", "coordx", "coordx_last_recorded", "coordy", "coordy_last_recorded",
-    "coord_sys", "elev", "elev_last_recorded", "aspect", "aspect_last_recorded", "slope",
-    "slope_last_recorded"
+    "county_code", "plot", "p3panel", "p2veg_sampling_status_cd", "p2veg_sampling_level_detail_cd",
+    "rscd", "design_code", "coordx",  "coordy", 
+    "coord_sys", "crs", "elev",  "aspect", "slope"
   )
 
   # object
@@ -222,7 +221,7 @@ test_that("fia_p3_understory_table_process works as intended", {
 
   expected_names <- c(
     "id_unique_code", "year", "state_code", "county_code", "plot", "subplot",
-    "sp_code", "sp_name", "height", "cover", "growth_form"
+    "sp_name", "height", "cover", "growth_form", "sp_code"
   )
 
   # shrub object
@@ -371,7 +370,7 @@ test_that("fia_p2_understory_table_process works as intended", {
 
   expected_names <- c(
     "id_unique_code", "year", "state_code", "county_code", "plot", "subplot",
-    "sp_code", "sp_name", "growth_habit_code", "height", "cover", "growth_form"
+    "sp_name",  "height", "cover", "growth_form", "growth_form_code","sp_code"
   )
 
   # shrub object
@@ -517,11 +516,11 @@ test_that("fia_understory_table_process works as intended", {
     .build_fia_input_with(test_year, test_states, test_plots, test_folder, .verbose = FALSE)
   expected_names_p2 <- c(
     "id_unique_code", "year", "state_code", "county_code", "plot", "subplot",
-    "sp_code", "sp_name", "growth_form_CD", "height", "cover", "growth_form"
+    "sp_name", "height", "cover", "growth_form","growth_form_code", "sp_code"
   )
   expected_names_p3 <- c(
     "id_unique_code", "year", "state_code", "county_code", "plot", "subplot",
-    "sp_code", "sp_name", "height", "cover", "growth_form"
+    "sp_name", "height", "cover", "growth_form", "sp_code"
   )
   # p2 shrubs
   expect_s3_class(
@@ -542,7 +541,7 @@ test_that("fia_understory_table_process works as intended", {
   expect_identical(test_res$year |> unique(), test_year)
   expect_identical(test_res$state_code |> unique(), 2L)
   expect_identical(test_res$county_code |> unique() |> as.character(), test_input$county[7])
-  expect_identical(test_res$growth_form_CD |> unique(), "SH")
+  expect_identical(test_res$growth_form_code |> unique(), "SH")
   # We expect the same results in the general understory function than in the individual
   # ones
   expect_identical(
@@ -768,7 +767,7 @@ test_that("fia_table_process works as intended", {
   expected_names <- c(
     "year", "id_unique_code", "country", "state_code", "state_ab",
     "state_name", "county_code", "plot", "p3panel",
-    "p2veg_sampling_status_cd", "psveg_sampling_level_detail_cd",
+    "p2veg_sampling_status_cd", "p2veg_sampling_level_detail_cd",
     "rscd", "design_code", "coordx", "coordy", "coord_sys", "crs",
     "elev", "aspect", "slope", "tree", "understory", "regen", "subplot"
     # "soils"

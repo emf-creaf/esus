@@ -565,7 +565,7 @@ fia_plot_table_process <- function(
       "crs", 
       elev = "ELEV",
       aspect = "ASPECT",
-      slppe = "SLOPE"
+      slope = "SLOPE"
     ) |>
     # dplyr::rename(
     #   YEAR = "INVYR",
@@ -692,7 +692,7 @@ fia_understory_table_process <- function(
     if (p2_rows > 0) {
       # join p3 and those species of p2 not present in p3
       understory_info <- p2_info |>
-        dplyr::filter(!.data$SP_NAME %in% unique(p3_info$SP_NAME)) |>
+        dplyr::filter(!.data$sp_name %in% unique(p3_info$sp_name)) |>
         dplyr::bind_rows(p3_info)
       return(understory_info)
     }
@@ -828,11 +828,9 @@ fia_p3_understory_table_process <- function(
       "id_unique_code", "INVYR", "STATECD", "COUNTYCD", "PLOT", "SUBP",
       "SPECIES_SYMBOL", "SP_NAME", "Height", "COVER_PCT", "GROWTH_HABIT"
     ) |>
-    dplyr::rename(year = "INVYR", sp_code = "SPECIES_SYMBOL", cover = "COVER_PCT",
-                  state_code = "STATECD", county_code = "COUNTYCD", plot = "PLOT",
-                  subplot = "SUBP", growth_form = "GROWTH_HABIT", 
-                  sp_name = "SP_NAME", height = "Height", 
-                  species_symbol = "SPECIES_SYMBOL"
+    dplyr::rename(year = "INVYR",state_code = "STATECD", county_code = "COUNTYCD", plot = "PLOT",
+                  subplot = "SUBP", sp_name = "SP_NAME", height = "Height",
+                  cover = "COVER_PCT", growth_form = "GROWTH_HABIT", sp_code = "SPECIES_SYMBOL"
                   ) |>
     dplyr::distinct() |>
     dplyr::as_tibble()
@@ -947,13 +945,13 @@ fia_p2_understory_table_process <- function(
     # we select final variables
     dplyr::select(
       "id_unique_code", "INVYR", "STATECD", "COUNTYCD", "PLOT", "SUBP",
-      "SPECIES_SYMBOL", "SP_NAME", "GROWTH_HABIT_CD", "Height", "COVER_PCT", "GROWTH_HABIT"
+      "SP_NAME", "GROWTH_HABIT_CD", "Height", "COVER_PCT", "GROWTH_HABIT",
+      "SPECIES_SYMBOL"
     ) |>
-    dplyr::rename(year = "INVYR", sp_code = "SPECIES_SYMBOL", cover = "COVER_PCT",
-                  state_code = "STATECD", county_code = "COUNTYCD", plot = "PLOT",
-                  subplot = "SUBP", height = "Height", cover = "COVER_PCT", sp_name =
-                    "SP_NAME", species_symbol = "SPECIES_SYMBOL", growth_form = "GROWTH_HABIT",
-                  growth_form_code = "GROWTH_HABIT_CD"
+    dplyr::rename( year = "INVYR",state_code = "STATECD", county_code = "COUNTYCD", plot = "PLOT",
+                  subplot = "SUBP", sp_name = "SP_NAME", 
+                  height = "Height",cover = "COVER_PCT", growth_form = "GROWTH_HABIT",
+                  growth_form_code = "GROWTH_HABIT_CD", sp_code = "SPECIES_SYMBOL",
                   ) |>
     # We have repeated rows after the selection because we summarised shrubs species. We remove with
     # distinct
