@@ -393,10 +393,10 @@ create_filter_list_ffi <- function(plots_info) {
   data_processed <- dtplyr::lazy_dt(data_processed, immutable = TRUE)
 
   # we need the filtering vars in case they are missing (some tables dont have them)
-  if (!("plot" %in% data_processed$vars)) {
+  if (!("PLOT" %in% data_processed$vars)) {
     data_processed <- data_processed |>
       dplyr::mutate(
-        plot = plot
+        PLOT = plot
       )
   }
 
@@ -415,17 +415,17 @@ create_filter_list_ffi <- function(plots_info) {
       # value at most recent year
       var_value <- data_processed |>
         dplyr::filter(
-          .data$plot == plot,
+          .data$PLOT == plot,
           {{ filter_nas }}
         ) |>
-        dplyr::filter(.data$year == .year_fun(.data$year, na.rm = TRUE)) |>
+        dplyr::filter(.data$YEAR == .year_fun(.data$YEAR, na.rm = TRUE)) |>
         dplyr::pull({{ var }})
 
       # value at queried year
       var_orig_value <- data_processed |>
         dplyr::filter(
-          .data$plot == plot,
-          .data$year == year
+          .data$PLOT == plot,
+          .data$YEAR == year
         ) |>
         dplyr::pull({{ var }})
 
